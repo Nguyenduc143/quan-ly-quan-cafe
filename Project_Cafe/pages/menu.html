@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Menu - Coffee Shop BOH</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-coffee"></i>
+                <h3>Coffee BOH</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="../index.html" class="nav-item" id="navDashboard">
+                    <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+                </a>
+                <a href="menu.html" class="nav-item active" id="navMenu">
+                    <i class="fas fa-mug-hot"></i> <span>Quản lý Menu</span>
+                </a>
+                <a href="orders.html" class="nav-item" id="navOrders">
+                    <i class="fas fa-shopping-cart"></i> <span>Đơn hàng</span>
+                </a>
+                <a href="tables.html" class="nav-item" id="navTables">
+                    <i class="fas fa-table"></i> <span>Sơ đồ bàn</span>
+                </a>
+                <a href="inventory.html" class="nav-item" id="navInventory">
+                    <i class="fas fa-warehouse"></i> <span>Kho nguyên liệu</span>
+                </a>
+                <a href="employees.html" class="nav-item" id="navEmployees">
+                    <i class="fas fa-users"></i> <span>Nhân viên</span>
+                </a>
+                <a href="reports.html" class="nav-item" id="navReports">
+                    <i class="fas fa-file-alt"></i> <span>Báo cáo</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="currentUser">Admin</span>
+                </div>
+                <button id="logoutBtn" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button id="toggleSidebar" class="btn-icon">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Quản lý Menu</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Menu Content -->
+            <div class="dashboard-container">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchProduct" placeholder="Tìm kiếm sản phẩm...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="categoryFilter">
+                            <option value="all">Tất cả danh mục</option>
+                            <option value="Cà phê">Cà phê</option>
+                            <option value="Trà sữa">Trà sữa</option>
+                            <option value="Sinh tố">Sinh tố</option>
+                            <option value="Bánh ngọt">Bánh ngọt</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                        <button class="btn btn-primary" id="addProductBtn">
+                            <i class="fas fa-plus"></i> Thêm sản phẩm
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="product-grid" id="productsGrid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeProductModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="card">
+                <div class="card-header">
+                    <h3 id="modalTitle"><i class="fas fa-mug-hot"></i> Thêm sản phẩm mới</h3>
+                </div>
+                <div class="card-body">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <div class="form-group">
+                            <label>Tên sản phẩm *</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Danh mục *</label>
+                                <select id="productCategory" required>
+                                    <option value="">Chọn danh mục</option>
+                                    <option value="Cà phê">Cà phê</option>
+                                    <option value="Trà sữa">Trà sữa</option>
+                                    <option value="Sinh tố">Sinh tố</option>
+                                    <option value="Bánh ngọt">Bánh ngọt</option>
+                                    <option value="Khác">Khác</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Giá (VNĐ) *</label>
+                                <input type="number" id="productPrice" required min="0" step="1000">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>URL hình ảnh</label>
+                            <input type="text" id="productImage" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label>Mô tả</label>
+                            <textarea id="productDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div style="width: 100px;float:left;padding:0;margin:0;">
+                                Còn hàng
+                            </div>
+                            <div style="width:50;float:left;padding:0;margin:0;">
+                                <label>
+                                    <input type="checkbox" id="productInStock" checked>                                
+                                </label>
+                            </div>                       
+                        </div>
+                        <div class="btn-group" style="clear:both; width:100%">
+                            <button type="submit" class="btn btn-success" style="width:50%">
+                                <i class="fas fa-save"></i> Lưu
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="cancelBtn" style="width:50%">
+                                <i class="fas fa-times"></i> Hủy
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/menu.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+</html>
