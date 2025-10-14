@@ -1,0 +1,97 @@
+[
+  {
+    "ContainingType": "APi_QLyQuanCafe.Controllers.BanController",
+    "Method": "GetAllBan",
+    "RelativePath": "api/Ban",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "APi_QLyQuanCafe.Controllers.BanController",
+    "Method": "ThemBan",
+    "RelativePath": "api/Ban",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ban",
+        "Type": "Models.BanModels",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "APi_QLyQuanCafe.Controllers.BanController",
+    "Method": "CapNhatBan",
+    "RelativePath": "api/Ban",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ban",
+        "Type": "Models.BanModels",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "APi_QLyQuanCafe.Controllers.BanController",
+    "Method": "GetBanById",
+    "RelativePath": "api/Ban/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "APi_QLyQuanCafe.Controllers.BanController",
+    "Method": "XoaBan",
+    "RelativePath": "api/Ban/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "APi_QLyQuanCafe.Controllers.BanController",
+    "Method": "CapNhatTrangThaiBan",
+    "RelativePath": "api/Ban/{id}/trangthai",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "trangThai",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
