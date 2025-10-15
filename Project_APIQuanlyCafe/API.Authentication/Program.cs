@@ -1,0 +1,61 @@
+﻿using DAL;
+using BLL;
+using Microsoft.OpenApi.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddControllers();
+
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+
+// Add Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Authentication API",
+        Version = "v1",
+        Description = "API quản lý xác thực và tài khoản"
+    });
+});
+
+// Add Session support
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout 30 phút
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// Register DatabaseHelper and DAL services
+builder.Services.AddScoped<DatabaseHelper>();
+builder.Services.AddScoped<AuthenticationDAL>();
+
+// Register BLL services
+builder.Services.AddScoped<AuthenticationBLL>();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Authentication API V1");
+        c.RoutePrefix = "swagger"; // Để truy cập qua /swagger
+    });
+}
+
+// Add Session middleware
+app.UseSession();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
