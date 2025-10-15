@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\API.Products\\API.Products.csproj": {}
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Products\\API.Products.csproj": {}
   },
   "projects": {
-    "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\API.Products\\API.Products.csproj": {
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Products\\API.Products.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\API.Products\\API.Products.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Products\\API.Products.csproj",
         "projectName": "API.Products",
-        "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\API.Products\\API.Products.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\API.Products\\obj\\",
+        "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Products\\API.Products.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Products\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -33,14 +33,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
-                "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\BLL\\BLL.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj"
               },
-              "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
-                "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
               },
-              "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
-                "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj"
               }
             }
           }
@@ -55,7 +55,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -109,24 +109,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
         "projectName": "BLL",
-        "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\BLL\\obj\\",
+        "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -142,11 +142,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
-                "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
               },
-              "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
-                "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj"
               }
             }
           }
@@ -161,7 +161,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -208,24 +208,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\obj\\",
+        "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -241,8 +241,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
-                "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj"
               }
             }
           }
@@ -257,7 +257,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -304,24 +304,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\Models.csproj",
-        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\Models\\obj\\",
+        "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -349,7 +349,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -396,7 +396,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
