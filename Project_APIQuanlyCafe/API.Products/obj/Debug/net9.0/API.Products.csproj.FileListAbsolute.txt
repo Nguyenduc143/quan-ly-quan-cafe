@@ -1,8 +1,0 @@
-D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Products\obj\Debug\net9.0\API.Products.csproj.AssemblyReference.cache
-D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Products\obj\Debug\net9.0\rpswa.dswa.cache.json
-D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Products\obj\Debug\net9.0\API.Products.GeneratedMSBuildEditorConfig.editorconfig
-D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Products\obj\Debug\net9.0\API.Products.AssemblyInfoInputs.cache
-D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Products\obj\Debug\net9.0\API.Products.AssemblyInfo.cs
-D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Products\obj\Debug\net9.0\API.Products.csproj.CoreCompileInputs.cache
-D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Products\obj\Debug\net9.0\API.Products.MvcApplicationPartsAssemblyInfo.cs
-D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Products\obj\Debug\net9.0\API.Products.MvcApplicationPartsAssemblyInfo.cache
