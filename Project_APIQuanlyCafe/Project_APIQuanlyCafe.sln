@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Reports", "API.Reports\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Invoices", "API.Invoices\API.Invoices.csproj", "{7305DAFF-2044-46D5-B4F4-A9820F679F8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Payment", "API.Payment\API.Payment.csproj", "{2A499CF5-35F6-4796-91B1-EE389F37F368}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Payment", "API.Payment\API.Payment.csproj", "{F29121D3-83BA-4B06-B140-A63B44708F54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,10 +83,10 @@ Global
 		{7305DAFF-2044-46D5-B4F4-A9820F679F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7305DAFF-2044-46D5-B4F4-A9820F679F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7305DAFF-2044-46D5-B4F4-A9820F679F8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A499CF5-35F6-4796-91B1-EE389F37F368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A499CF5-35F6-4796-91B1-EE389F37F368}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A499CF5-35F6-4796-91B1-EE389F37F368}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A499CF5-35F6-4796-91B1-EE389F37F368}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F29121D3-83BA-4B06-B140-A63B44708F54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F29121D3-83BA-4B06-B140-A63B44708F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F29121D3-83BA-4B06-B140-A63B44708F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F29121D3-83BA-4B06-B140-A63B44708F54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
