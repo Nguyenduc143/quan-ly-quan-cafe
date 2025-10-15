@@ -5309,11 +5309,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj",
+      "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj",
       "projectName": "Models",
-      "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj",
+      "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj",
       "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\obj\\",
+      "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

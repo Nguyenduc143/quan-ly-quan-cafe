@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\API.Payment\\API.Payment.csproj": {}
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Payment\\API.Payment.csproj": {}
   },
   "projects": {
-    "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\API.Payment\\API.Payment.csproj": {
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Payment\\API.Payment.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\API.Payment\\API.Payment.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Payment\\API.Payment.csproj",
         "projectName": "API.Payment",
-        "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\API.Payment\\API.Payment.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Payment\\API.Payment.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\API.Payment\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\API.Payment\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,14 +33,14 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
-                "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\BLL\\BLL.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj"
               },
-              "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
-                "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
               },
-              "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
-                "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj"
               }
             }
           }
@@ -89,14 +89,14 @@
         }
       }
     },
-    "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
         "projectName": "BLL",
-        "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\BLL\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -118,11 +118,11 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
-                "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
               },
-              "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
-                "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj"
               }
             }
           }
@@ -188,14 +188,14 @@
         }
       }
     },
-    "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\DAL\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -217,8 +217,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
-                "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj"
+              "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+                "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj"
               }
             }
           }
@@ -284,14 +284,14 @@
         }
       }
     },
-    "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+    "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj",
+        "projectUniqueName": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\Models.csproj",
+        "projectPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\Models.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\Models\\obj\\",
+        "outputPath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

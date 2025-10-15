@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ee0oJw21Adg=",
+  "dgSpecHash": "vEV9nlOg5ZE=",
   "success": true,
-  "projectFilePath": "D:\\web API\\Huy\\Huy\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
+  "projectFilePath": "C:\\Users\\ADMIN\\quan-ly-quan-cafe\\Project_APIQuanlyCafe\\BLL\\BLL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ADMIN\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
