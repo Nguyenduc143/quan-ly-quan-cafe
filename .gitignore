@@ -24,32 +24,12 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-## Visual Studio cache files
-*.VC.db
-*.VC.VC.opendb
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
-*.userprefs
-
-## Visual Studio profiler
-*.psess
-*.vsp
-*.vspx
-*.sap
-
-## Visual Studio Trace Files
-*.e2e
-
 ## Build files
 *.dll
 *.exe
 *.pdb
 *.cache
 *.vsidx
-*.vspscc
-*.vssscc
 
 ## Project-specific
 *.v2
@@ -61,35 +41,18 @@ applicationhost.config
 DocumentLayout.json
 DocumentLayout.backup.json
 
-## ReSharper
-_ReSharper*/
-*.[Rr]e[Ss]harper
-*.DotSettings.user
+## Compressed files (optional - bỏ dòng này nếu muốn upload file .rar)
+*.rar
+*.zip
+*.7z
 
 ## NuGet Packages
 *.nupkg
 **/packages/*
 !**/packages/build/
-*.nuget.props
-*.nuget.targets
-
-## Compressed files
-*.rar
-*.zip
-*.7z
-*.tar
-*.gz
 
 ## Others
 *.log
 *.tmp
 *.temp
 *~
-
-## Windows
-Thumbs.db
-Desktop.ini
-
-## macOS
-.DS_StoreProject_APIQuanLyCafe/.vs/
-Project_APIQuanLyCafe/.vs/
