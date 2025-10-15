@@ -1,0 +1,8 @@
+D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Inventorys\obj\Debug\net9.0\API.Inventorys.csproj.AssemblyReference.cache
+D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Inventorys\obj\Debug\net9.0\rpswa.dswa.cache.json
+D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Inventorys\obj\Debug\net9.0\API.Inventorys.GeneratedMSBuildEditorConfig.editorconfig
+D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Inventorys\obj\Debug\net9.0\API.Inventorys.AssemblyInfoInputs.cache
+D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Inventorys\obj\Debug\net9.0\API.Inventorys.AssemblyInfo.cs
+D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Inventorys\obj\Debug\net9.0\API.Inventorys.csproj.CoreCompileInputs.cache
+D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Inventorys\obj\Debug\net9.0\API.Inventorys.MvcApplicationPartsAssemblyInfo.cs
+D:\PTPM_DV\APi_QLyQuanCafe\Đức\Project_APIQuanlyCafe\API.Inventorys\obj\Debug\net9.0\API.Inventorys.MvcApplicationPartsAssemblyInfo.cache
