@@ -2,19 +2,36 @@
 using System.Data.SqlClient;
 using System.Data;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace DAL
 {
     public class BanDAL
     {
         private readonly DatabaseHelper _dbHelper;
+        private const int MaxLength = 100;
 
         public BanDAL(DatabaseHelper dbHelper)
         {
             _dbHelper = dbHelper;
         }
 
-        // Hàm kiểm tra TENBAN đã tồn tại
+        private bool IsValidTenBan(string tenBan)
+        {
+            if (string.IsNullOrWhiteSpace(tenBan) || tenBan.Length > MaxLength)
+                return false;
+            // Only letters, numbers, and spaces allowed
+            return Regex.IsMatch(tenBan, @"^[\p{L}\p{N} ]+$");
+        }
+
+        private bool IsValidTrangThai(string trangThai)
+        {
+            if (string.IsNullOrWhiteSpace(trangThai) || trangThai.Length > MaxLength)
+                return false;
+            // Chỉ cho phép chữ, số và khoảng trắng
+            return Regex.IsMatch(trangThai, @"^[\p{L}\p{N} ]+$");
+        }
+
         public bool IsTenBanExists(string tenBan)
         {
             var sql = "SELECT COUNT(1) FROM Ban WHERE TENBAN = @TENBAN";
@@ -30,11 +47,13 @@ namespace DAL
 
         public int ThemBan(BanModels ban)
         {
-            // Kiểm tra TENBAN đã tồn tại chưa
-            if (IsTenBanExists(ban.TENBAN))
-                return -1; // Trả về -1 nếu trùng
+            // Validate TENBAN and TRANGTHAI
+            if (!IsValidTenBan(ban.TENBAN) || !IsValidTrangThai(ban.TRANGTHAI))
+                return -2; // Invalid input
 
-            // Bỏ cột ID khỏi INSERT vì là identity column (tự động tăng)
+            if (IsTenBanExists(ban.TENBAN))
+                return -1; // Duplicate
+
             var sql = "INSERT INTO Ban (TENBAN, TRANGTHAI) VALUES (@TENBAN, @TRANGTHAI)";
             var parameters = new SqlParameter[]
             {
@@ -42,7 +61,6 @@ namespace DAL
                 new SqlParameter("@TRANGTHAI", ban.TRANGTHAI)
             };
 
-            // Trả về ID vừa được tạo
             return _dbHelper.ExecuteInsertAndGetId(sql, parameters);
         }
 
@@ -83,17 +101,38 @@ namespace DAL
 
         public int CapNhatBan(BanModels ban)
         {
+            // Validate TENBAN and TRANGTHAI
+            if (!IsValidTenBan(ban.TENBAN) || !IsValidTrangThai(ban.TRANGTHAI))
+                return -2; // Invalid input
+
+            // Check for duplicate TENBAN with another ID
+            var sqlCheck = "SELECT COUNT(1) FROM Ban WHERE TENBAN = @TENBAN AND ID <> @ID";
+            var parametersCheck = new SqlParameter[]
+            {
+        new SqlParameter("@TENBAN", ban.TENBAN),
+        new SqlParameter("@ID", ban.ID)
+            };
+            DataTable dt = _dbHelper.ExecuteQuery(sqlCheck, parametersCheck);
+            if (dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0][0]) > 0)
+                return -1; // Duplicate name
+
             var sql = "UPDATE Ban SET TENBAN = @TENBAN, TRANGTHAI = @TRANGTHAI WHERE ID = @ID";
             var parameters = new SqlParameter[]
             {
-                new SqlParameter("@ID", ban.ID),
-                new SqlParameter("@TENBAN", ban.TENBAN),
-                new SqlParameter("@TRANGTHAI", ban.TRANGTHAI)
+        new SqlParameter("@ID", ban.ID),
+        new SqlParameter("@TENBAN", ban.TENBAN),
+        new SqlParameter("@TRANGTHAI", ban.TRANGTHAI)
             };
             return _dbHelper.ExecuteNonQuery(sql, parameters);
         }
+
+
         public int CapNhatTrangThaiBan(int id, string trangThai)
         {
+            // Validate TRANGTHAI
+            if (!IsValidTrangThai(trangThai))
+                return -2; // Invalid input
+
             var sql = "UPDATE Ban SET TRANGTHAI = @TRANGTHAI WHERE ID = @ID";
             var parameters = new SqlParameter[]
             {
@@ -102,8 +141,10 @@ namespace DAL
             };
             return _dbHelper.ExecuteNonQuery(sql, parameters);
         }
+
         public int XoaBan(int id)
         {
+            // No validation needed for delete, but you can add checks if required
             var sql = "DELETE FROM Ban WHERE ID = @ID";
             var parameters = new SqlParameter[]
             {
