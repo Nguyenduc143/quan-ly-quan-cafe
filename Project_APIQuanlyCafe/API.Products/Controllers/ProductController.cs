@@ -43,16 +43,13 @@ namespace APi_QLyQuanCafe.Controllers
         [HttpPost("monan")]
         public IActionResult ThemMonAn([FromBody] ProductModels monAn)
         {
-            var error = ValidateMonAn(monAn);
-            if (error != null)
-                return BadRequest(new { Message = error });
-
             int newId = _productBll.ThemMonAn(monAn);
+            if (newId == -2)
+                return BadRequest(new { Message = "Tên món ăn không hợp lệ (không ký tự đặc biệt, tối đa 100 ký tự)." });
             if (newId == -1)
                 return BadRequest(new { Message = "Tên món ăn đã tồn tại, vui lòng chọn tên khác." });
             return Ok(new { Message = "Thêm món ăn thành công", ID = newId, Data = monAn });
         }
-
 
         // Cập nhật món ăn
         [HttpPut("monan")]
@@ -104,3 +101,4 @@ namespace APi_QLyQuanCafe.Controllers
 
     }
 }
+
