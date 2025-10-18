@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Shop BOH - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal" style="display: flex;">
+        <div class="modal-content login-box">
+            <h2><i class="fas fa-coffee"></i> Coffee Shop BOH</h2>
+            <p>Hệ thống quản lý quán cà phê</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Tên đăng nhập</label>
+                    <input type="text" id="username" placeholder="admin hoặc staff" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Đăng nhập</button>
+                <div class="login-hint">
+                    <small>
+                        <strong>Tài khoản demo:</strong><br>
+                        Admin: admin / admin123<br>
+                    </small>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-coffee"></i>
+                <h3>Coffee BOH</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item active" id="navDashboard">
+                    <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+                </a>
+                <a href="pages/menu.html" class="nav-item" id="navMenu">
+                    <i class="fas fa-mug-hot"></i> <span>Quản lý Menu</span>
+                </a>
+                <a href="pages/orders.html" class="nav-item" id="navOrders">
+                    <i class="fas fa-shopping-cart"></i> <span>Đơn hàng</span>
+                </a>
+                <a href="pages/tables.html" class="nav-item" id="navTables">
+                    <i class="fas fa-table"></i> <spa activen>Sơ đồ bàn</span>
+                </a>
+                <a href="pages/inventory.html" class="nav-item" id="navInventory">
+                    <i class="fas fa-warehouse"></i> <span>Kho nguyên liệu</span>
+                </a>
+                <a href="pages/employees.html" class="nav-item" id="navEmployees">
+                    <i class="fas fa-users"></i> <span>Nhân viên</span>
+                </a>
+                <a href="pages/reports.html" class="nav-item" id="navReports">
+                    <i class="fas fa-file-alt"></i> <span>Báo cáo</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="currentUser">Admin</span>
+                </div>
+                <button id="logoutBtn" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button id="toggleSidebar" class="btn-icon">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon" id="themeToggle" title="Chuyển đổi theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="user-menu">
+                        <span id="currentDateTime"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-container">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Doanh thu hôm nay</h3>
+                            <p class="stat-value" id="todayRevenue">0 đ</p>
+                            <span class="stat-change positive">+12.5%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Đơn hàng hôm nay</h3>
+                            <p class="stat-value" id="todayOrders">0</p>
+                            <span class="stat-change positive">+8.2%</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-mug-hot"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Sản phẩm</h3>
+                            <p class="stat-value" id="totalProducts">0</p>
+                            <span class="stat-change">Trong menu</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Nhân viên</h3>
+                            <p class="stat-value" id="totalEmployees">0</p>
+                            <span class="stat-change">Đang làm việc</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders & Quick Actions -->
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-clock"></i> Đơn hàng gần đây</h3>
+                            <a href="pages/orders.html" class="btn btn-sm">Xem tất cả</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table" id="recentOrdersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã đơn</th>
+                                            <th>Thời gian</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="4" class="text-center">Chưa có đơn hàng nào</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-fire"></i> Sản phẩm bán chạy</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="topProductsList">
+                                <div class="empty-state">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <p>Chưa có dữ liệu bán hàng</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card" id="quickActionsCard">
+                    <div class="card-header">
+                        <h3><i class="fas fa-bolt"></i> Thao tác nhanh</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions">
+                            <a href="pages/orders.html" class="quick-action-btn">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Tạo đơn mới</span>
+                            </a>
+                            <a href="pages/menu.html" class="quick-action-btn">
+                                <i class="fas fa-coffee"></i>
+                                <span>Thêm sản phẩm</span>
+                            </a>
+                            <a href="pages/employees.html" class="quick-action-btn">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Thêm nhân viên</span>
+                            </a>
+                            <a href="pages/reports.html" class="quick-action-btn">
+                                <i class="fas fa-download"></i>
+                                <span>Xuất báo cáo</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
