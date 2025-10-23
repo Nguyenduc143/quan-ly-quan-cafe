@@ -45,25 +45,6 @@ namespace DAL
             return false;
         }
 
-        public int ThemBan(BanModels ban)
-        {
-            // Validate TENBAN and TRANGTHAI
-            if (!IsValidTenBan(ban.TENBAN) || !IsValidTrangThai(ban.TRANGTHAI))
-                return -2; // Invalid input
-
-            if (IsTenBanExists(ban.TENBAN))
-                return -1; // Duplicate
-
-            var sql = "INSERT INTO Ban (TENBAN, TRANGTHAI) VALUES (@TENBAN, @TRANGTHAI)";
-            var parameters = new SqlParameter[]
-            {
-                new SqlParameter("@TENBAN", ban.TENBAN),
-                new SqlParameter("@TRANGTHAI", ban.TRANGTHAI)
-            };
-
-            return _dbHelper.ExecuteInsertAndGetId(sql, parameters);
-        }
-
         public List<BanModels> GetAllBan()
         {
             var list = new List<BanModels>();
@@ -80,7 +61,29 @@ namespace DAL
             }
             return list;
         }
+        public List<BanModels> GetBanByTrangThai(string trangThai)
+        {
+            if (!IsValidTrangThai(trangThai))
+                return new List<BanModels>();
 
+            var list = new List<BanModels>();
+            var sql = "SELECT ID, TENBAN, TRANGTHAI FROM Ban WHERE TRANGTHAI = @TRANGTHAI";
+            var parameters = new SqlParameter[]
+            {
+                new SqlParameter("@TRANGTHAI", trangThai)
+            };
+            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(new BanModels
+                {
+                    ID = row["ID"] as int?,
+                    TENBAN = row["TENBAN"].ToString(),
+                    TRANGTHAI = row["TRANGTHAI"].ToString()
+                });
+            }
+            return list;
+        }
         public BanModels? GetBanById(int id)
         {
             var sql = "SELECT ID, TENBAN, TRANGTHAI FROM Ban WHERE ID = @ID";
@@ -99,6 +102,24 @@ namespace DAL
             };
         }
 
+        public int ThemBan(BanModels ban)
+        {
+            // Validate TENBAN and TRANGTHAI
+            if (!IsValidTenBan(ban.TENBAN) || !IsValidTrangThai(ban.TRANGTHAI))
+                return -2; // Invalid input
+
+            if (IsTenBanExists(ban.TENBAN))
+                return -1; // Duplicate
+
+            var sql = "INSERT INTO Ban (TENBAN, TRANGTHAI) VALUES (@TENBAN, @TRANGTHAI)";
+            var parameters = new SqlParameter[]
+            {
+                new SqlParameter("@TENBAN", ban.TENBAN),
+                new SqlParameter("@TRANGTHAI", ban.TRANGTHAI)
+            };
+
+            return _dbHelper.ExecuteInsertAndGetId(sql, parameters);
+        }
         public int CapNhatBan(BanModels ban)
         {
             // Validate TENBAN and TRANGTHAI

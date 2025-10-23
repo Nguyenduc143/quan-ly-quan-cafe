@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "93La3awT3qA=",
+  "dgSpecHash": "+piUk7KI4Uc=",
   "success": true,
-  "projectFilePath": "E:\\Năm 2\\WedAPI\\BTL\\Dũng\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
+  "projectFilePath": "E:\\Năm 2\\WedAPI\\BTL\\Project_APIQuanlyCafe\\DAL\\DAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

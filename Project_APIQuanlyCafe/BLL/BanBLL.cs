@@ -23,6 +23,10 @@ namespace BLL
             return _banDal.GetBanById(id);
         }
 
+        public List<BanModels> GetBanByTrangThai(string trangThai)
+        {
+            return _banDal.GetBanByTrangThai(trangThai);
+        }
         public int ThemBan(BanModels ban)
         {
             int newId = _banDal.ThemBan(ban);
@@ -33,7 +37,6 @@ namespace BLL
             ban.ID = newId; // Gán ID vừa tạo vào model
             return newId;
         }
-
 
         public int CapNhatBan(BanModels ban)
         {
