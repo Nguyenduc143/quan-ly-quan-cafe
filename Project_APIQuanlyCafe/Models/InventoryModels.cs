@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +15,7 @@ namespace Models
         public string? GhiChu { get; set; }
     }
 
-    public class SupplierModel
-    {
-        public int Id { get; set; }
-        public string TenNhaCungCap { get; set; } = string.Empty;
-        public string? DiaChi { get; set; }
-        public string? Sdt { get; set; }
-        public string? Email { get; set; }
-    }
+    
 
     public class CreateInventoryRequest
     {
@@ -40,11 +33,5 @@ namespace Models
         public string? GhiChu { get; set; }
     }
 
-    public class CreateSupplierRequest
-    {
-        public string TenNhaCungCap { get; set; } = string.Empty;
-        public string? DiaChi { get; set; }
-        public string? Sdt { get; set; }
-        public string? Email { get; set; }
-    }
+    
 }

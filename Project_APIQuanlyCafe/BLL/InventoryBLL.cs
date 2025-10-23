@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -106,34 +106,6 @@ namespace BLL
             catch (Exception ex)
             {
                 throw new Exception($"Lỗi khi xóa nguyên liệu: {ex.Message}");
-            }
-        }
-
-        public List<SupplierModel> GetAllSuppliers()
-        {
-            try
-            {
-                return _inventoryDAL.GetAllSuppliers();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Lỗi khi lấy danh sách nhà cung cấp: {ex.Message}");
-            }
-        }
-
-        public int CreateSupplier(CreateSupplierRequest request)
-        {
-            try
-            {
-                // Validate input
-                if (string.IsNullOrWhiteSpace(request.TenNhaCungCap))
-                    throw new ArgumentException("Tên nhà cung cấp không được để trống");
-
-                return _inventoryDAL.CreateSupplier(request);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Lỗi khi thêm nhà cung cấp: {ex.Message}");
             }
         }
     }
