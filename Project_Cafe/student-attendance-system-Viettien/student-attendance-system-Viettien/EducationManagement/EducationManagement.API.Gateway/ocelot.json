@@ -1,0 +1,74 @@
+{
+    "Routes": [
+        // ============================================================
+        // 🔹 AUTH SERVICE (Login / Refresh / Logout)
+        // ============================================================
+        {
+            "DownstreamPathTemplate": "/api/auth/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5227
+                }
+            ],
+            "UpstreamPathTemplate": "/api-edu/auth/{everything}",
+            "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+        },
+
+        // ============================================================
+        // 🔹 USER SERVICE (Profile / Update Avatar)
+        // ============================================================
+        {
+            "DownstreamPathTemplate": "/api/users/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5227
+                }
+            ],
+            "UpstreamPathTemplate": "/api-edu/users/{everything}",
+            "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+        },
+
+        // ============================================================
+        // 🔹 ADMIN SERVICE (Roles / Permissions / Users)
+        // ============================================================
+        {
+            "DownstreamPathTemplate": "/api/admin/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5227
+                }
+            ],
+            "UpstreamPathTemplate": "/api-edu/admin/{everything}",
+            "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "OPTIONS" ]
+        },
+
+        // ============================================================
+        // 🔹 STATIC FILES (Uploads - Avatar)
+        // ============================================================
+        {
+            "DownstreamPathTemplate": "/uploads/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 5227
+                }
+            ],
+            "UpstreamPathTemplate": "/uploads/{everything}",
+            "UpstreamHttpMethod": [ "GET" ]
+        }
+    ],
+
+    // ============================================================
+    // 🔹 GLOBAL CONFIGURATION
+    // ============================================================
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:5090"
+    }
+}
