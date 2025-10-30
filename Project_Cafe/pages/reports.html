@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo cáo & Thống kê - Coffee Shop BOH</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-coffee"></i>
+                <h3>Coffee BOH</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="../index.html" class="nav-item" id="navDashboard">
+                    <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+                </a>
+                <a href="menu.html" class="nav-item" id="navMenu">
+                    <i class="fas fa-mug-hot"></i> <span>Quản lý Menu</span>
+                </a>
+                <a href="orders.html" class="nav-item" id="navOrders">
+                    <i class="fas fa-shopping-cart"></i> <span>Đơn hàng</span>
+                </a>
+                <a href="tables.html" class="nav-item" id="navTables">
+                    <i class="fas fa-table"></i> <span>Sơ đồ bàn</span>
+                </a>
+                <a href="inventory.html" class="nav-item" id="navInventory">
+                    <i class="fas fa-warehouse"></i> <span>Kho nguyên liệu</span>
+                </a>
+                <a href="employees.html" class="nav-item" id="navEmployees">
+                    <i class="fas fa-users"></i> <span>Nhân viên</span>
+                </a>
+                <a href="reports.html" class="nav-item active" id="navReports">
+                    <i class="fas fa-file-alt"></i> <span>Báo cáo</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="currentUser">Admin</span>
+                </div>
+                <button id="logoutBtn" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left">
+                    <button id="toggleSidebar" class="btn-icon">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Báo cáo & Thống kê</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard-container">
+                <!-- Filter -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Từ ngày</label>
+                                <input type="date" id="startDate">
+                            </div>
+                            <div class="form-group">
+                                <label>Đến ngày</label>
+                                <input type="date" id="endDate">
+                            </div>
+                            <div class="form-group" style="display: flex; align-items: flex-end;">
+                                <button class="btn btn-primary" id="generateReportBtn">
+                                    <i class="fas fa-chart-bar"></i> Tạo báo cáo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Tổng doanh thu</h3>
+                            <p class="stat-value" id="totalRevenue">0 đ</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Tổng đơn hàng</h3>
+                            <p class="stat-value" id="totalOrders">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Trung bình/đơn</h3>
+                            <p class="stat-value" id="avgOrder">0 đ</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-mug-hot"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Sản phẩm bán</h3>
+                            <p class="stat-value" id="totalProducts">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Products -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-fire"></i> Top 5 sản phẩm bán chạy</h3>
+                        <div class="btn-group">
+                            <select id="exportFormat" class="form-control">
+                                <option value="csv">Xuất CSV</option>
+                                <option value="excel">Xuất Excel</option>
+                                <option value="pdf">Xuất PDF</option>
+                            </select>
+                            <button class="btn btn-sm btn-success" id="exportBtn">
+                                <i class="fas fa-download"></i> Xuất báo cáo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="topProductsTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Sản phẩm</th>
+                                        <th>Số lượng</th>
+                                        <th>Doanh thu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="4" class="text-center">Chưa có dữ liệu</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders by Status -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-pie"></i> Đơn hàng theo trạng thái</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="ordersByStatus"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/reports.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+</html>

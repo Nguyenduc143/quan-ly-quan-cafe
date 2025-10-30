@@ -22,9 +22,28 @@ namespace QuanlyCafe.API.Admin.Controllers
         /// </summary>
         /// <returns>Danh sách đơn hàng</returns>
         [HttpGet]
-        public ActionResult<List<OrderModel>> GetAllOrders()
+        public ActionResult<object> GetAllOrders()
         {
-            return Ok(_orderBll.GetAllOrders());
+            try
+            {
+                var orders = _orderBll.GetAllOrders();
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Lấy danh sách đơn hàng thành công",
+                    Data = orders,
+                    Count = orders.Count
+                });
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
 
         /// <summary>
@@ -33,11 +52,36 @@ namespace QuanlyCafe.API.Admin.Controllers
         /// <param name="id">ID của đơn hàng</param>
         /// <returns>Chi tiết đơn hàng</returns>
         [HttpGet("{id}")]
-        public ActionResult<OrderModel> GetOrderById(int id)
+        public ActionResult<object> GetOrderById(int id)
         {
-            var order = _orderBll.GetOrderById(id);
-            if (order == null) return NotFound();
-            return Ok(order);
+            try
+            {
+                var order = _orderBll.GetOrderById(id);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Lấy thông tin đơn hàng thành công",
+                    Data = order
+                });
+            }
+            catch (System.ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
+            catch (System.Exception ex)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
 
         /// <summary>
@@ -46,11 +90,48 @@ namespace QuanlyCafe.API.Admin.Controllers
         /// <param name="request">Thông tin đơn hàng mới</param>
         /// <returns>ID của đơn hàng được tạo</returns>
         [HttpPost]
-        public ActionResult<int> CreateOrder([FromBody] CreateOrderRequest request)
+        public ActionResult<object> CreateOrder([FromBody] CreateOrderRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var id = _orderBll.CreateOrder(request);
-            return Ok(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = "Dữ liệu đầu vào không hợp lệ",
+                    Data = ModelState
+                });
+            }
+
+            try
+            {
+                var orderId = _orderBll.CreateOrder(request);
+                var orderDetails = _orderBll.GetOrderById(orderId);
+
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Tạo đơn hàng thành công",
+                    Data = orderDetails
+                });
+            }
+            catch (System.ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
 
         /// <summary>
@@ -60,12 +141,66 @@ namespace QuanlyCafe.API.Admin.Controllers
         /// <param name="request">Thông tin cập nhật</param>
         /// <returns>Kết quả cập nhật</returns>
         [HttpPut("{id}")]
-        public IActionResult UpdateOrder(int id, [FromBody] UpdateOrderRequest request)
+        public ActionResult<object> UpdateOrder(int id, [FromBody] UpdateOrderRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var result = _orderBll.UpdateOrder(id, request);
-            if (!result) return NotFound();
-            return NoContent();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = "Dữ liệu đầu vào không hợp lệ",
+                    Data = ModelState
+                });
+            }
+
+            try
+            {
+                var result = _orderBll.UpdateOrder(id, request);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Cập nhật đơn hàng thành công",
+                    Data = (object)null
+                });
+            }
+            catch (System.ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
+            catch (System.Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy"))
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        Message = ex.Message,
+                        Data = (object)null
+                    });
+                }
+
+                if (ex.Message.Contains("Không thể cập nhật"))
+                {
+                    return Conflict(new
+                    {
+                        Success = false,
+                        Message = ex.Message,
+                        Data = (object)null
+                    });
+                }
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
 
         /// <summary>
@@ -74,11 +209,56 @@ namespace QuanlyCafe.API.Admin.Controllers
         /// <param name="id">ID của đơn hàng</param>
         /// <returns>Kết quả xóa</returns>
         [HttpDelete("{id}")]
-        public IActionResult DeleteOrder(int id)
+        public ActionResult<object> DeleteOrder(int id)
         {
-            var result = _orderBll.DeleteOrder(id);
-            if (!result) return NotFound();
-            return NoContent();
+            try
+            {
+                var result = _orderBll.DeleteOrder(id);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Xóa đơn hàng thành công",
+                    Data = (object)null
+                });
+            }
+            catch (System.ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
+            catch (System.Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy"))
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        Message = ex.Message,
+                        Data = (object)null
+                    });
+                }
+
+                if (ex.Message.Contains("Không thể xóa"))
+                {
+                    return Conflict(new
+                    {
+                        Success = false,
+                        Message = ex.Message,
+                        Data = (object)null
+                    });
+                }
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
 
         /// <summary>
@@ -88,12 +268,58 @@ namespace QuanlyCafe.API.Admin.Controllers
         /// <param name="request">Thông tin trạng thái mới</param>
         /// <returns>Kết quả cập nhật trạng thái</returns>
         [HttpPatch("{id}/status")]
-        public IActionResult UpdateOrderStatus(int id, [FromBody] UpdateOrderStatusRequest request)
+        public ActionResult<object> UpdateOrderStatus(int id, [FromBody] UpdateOrderStatusRequest request)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            var result = _orderBll.UpdateOrderStatus(id, request);
-            if (!result) return NotFound();
-            return NoContent();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = "Dữ liệu đầu vào không hợp lệ",
+                    Data = ModelState
+                });
+            }
+
+            try
+            {
+                var result = _orderBll.UpdateOrderStatus(id, request);
+                string statusMessage = request.TrangThaiHD == 1 ? "Đã thanh toán" : "Chưa thanh toán";
+                
+                return Ok(new
+                {
+                    Success = true,
+                    Message = $"Cập nhật trạng thái đơn hàng thành công - {statusMessage}",
+                    Data = (object)null
+                });
+            }
+            catch (System.ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
+            catch (System.Exception ex)
+            {
+                if (ex.Message.Contains("Không tìm thấy"))
+                {
+                    return NotFound(new
+                    {
+                        Success = false,
+                        Message = ex.Message,
+                        Data = (object)null
+                    });
+                }
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
 
         /// <summary>
@@ -102,9 +328,37 @@ namespace QuanlyCafe.API.Admin.Controllers
         /// <param name="tableId">ID của bàn</param>
         /// <returns>Danh sách đơn hàng của bàn</returns>
         [HttpGet("table/{tableId}")]
-        public ActionResult<List<OrderModel>> GetOrdersByTableId(int tableId)
+        public ActionResult<object> GetOrdersByTableId(int tableId)
         {
-            return Ok(_orderBll.GetOrdersByTableId(tableId));
+            try
+            {
+                var orders = _orderBll.GetOrdersByTableId(tableId);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = $"Lấy danh sách đơn hàng của bàn {tableId} thành công",
+                    Data = orders,
+                    Count = orders.Count
+                });
+            }
+            catch (System.ArgumentException ex)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = (object)null
+                });
+            }
         }
     }
 }

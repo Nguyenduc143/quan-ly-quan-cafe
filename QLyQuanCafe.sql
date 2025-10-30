@@ -1,3 +1,4 @@
+﻿
 ﻿-- Tạo database
 CREATE DATABASE QLyQuanCafe
 GO
@@ -22,7 +23,7 @@ CREATE TABLE NhanVien
 CREATE TABLE TaiKhoan
 (
 	tenDangNhap NVARCHAR(100) NOT NULL PRIMARY KEY,
-	tenHienThi NVARCHAR(100) NOT NULL DEFAULT N'NgDucHuy',
+	tenHienThi NVARCHAR(100) NOT NULL DEFAULT N'Admin',
 	matKhau NVARCHAR(1000) NOT NULL DEFAULT 0,
 	loaiTaiKhoan INT NOT NULL DEFAULT 0, -- 1: admin || 0: nhân viên
 	idNhanVien INT
@@ -55,17 +56,6 @@ CREATE TABLE MonAn
 
 	FOREIGN KEY (idDanhMuc) REFERENCES DanhMucMonAn(id)
 )
-
-CREATE TABLE CongThucMonAn
-(
-    idMonAn INT NOT NULL,
-    idNguyenLieu INT NOT NULL,
-    soLuong FLOAT NOT NULL, -- Số lượng nguyên liệu cần cho 1 món (ví dụ: 0.1 kg trà đen)
-    donViTinh NVARCHAR(50) NOT NULL,
-    PRIMARY KEY (idMonAn, idNguyenLieu),
-    FOREIGN KEY (idMonAn) REFERENCES MonAn(id),
-    FOREIGN KEY (idNguyenLieu) REFERENCES KhoNguyenLieu(id)
-);
 
 -- 6. HÓA ĐƠN BÁN
 CREATE TABLE HoaDonBan
@@ -112,7 +102,16 @@ CREATE TABLE KhoNguyenLieu
 	soLuongTon FLOAT NOT NULL DEFAULT 0,
 	ghiChu NVARCHAR(255)
 )
-
+CREATE TABLE CongThucMonAn
+(
+    idMonAn INT NOT NULL,
+    idNguyenLieu INT NOT NULL,
+    soLuong FLOAT NOT NULL, -- Số lượng nguyên liệu cần cho 1 món (ví dụ: 0.1 kg trà đen)
+    donViTinh NVARCHAR(50) NOT NULL,
+    PRIMARY KEY (idMonAn, idNguyenLieu),
+    FOREIGN KEY (idMonAn) REFERENCES MonAn(id),
+    FOREIGN KEY (idNguyenLieu) REFERENCES KhoNguyenLieu(id)
+);
 -- 10. HÓA ĐƠN NHẬP
 CREATE TABLE HoaDonNhap
 (
@@ -158,323 +157,1033 @@ CREATE TABLE BaoCaoDoanhThu
     CONSTRAINT CHK_TuNgay_DenNgay CHECK (tuNgay <= denNgay)
 );
 
- 
-INSERT INTO TaiKhoan (tenDangNhap, tenHienThi, matKhau, loaiTaiKhoan, idNhanVien) VALUES
-('admin',N'admin','1',1, 9),
-('duchuy', N'Đức Huy', '1', 0,1),
-('vanHung', N'Văn Hùng', '1', 0,2),
-('thuTran', N'Thị Thu', '1', 0,3),
-('minhHoang', N'Minh Hoàng', '1', 0,4),
-('ngocAnh', N'Ngọc Ánh', '1', 0,5),
-('quangAnh', N'Quang Anh', '1', 0,6),
-('haiYen', N'Hải Yến', '1', 0,7),
-('vanTu', N'Văn Tú', '1', 0,8),
-('nhatMinh', N'Nhật Minh', '1', 0,10);
-select * from TaiKhoan
+SELECT * FROM NhanVien;
+SELECT * FROM TaiKhoan;
+SELECT * FROM Ban;
+SELECT * FROM DanhMucMonAn;
+SELECT * FROM MonAn;
+SELECT * FROM CongThucMonAn;
+SELECT * FROM HoaDonBan;
+SELECT * FROM ChiTietHoaDonBan;
+SELECT * FROM NhaCungCap;
+SELECT * FROM KhoNguyenLieu;
+SELECT * FROM HoaDonNhap;
+SELECT * FROM ChiTietHoaDonNhap;
+SELECT * FROM BaoCaoDoanhThu;
 
-INSERT INTO NhanVien (hoTen, ngaySinh, gioiTinh, sdt, diaChi) VALUES
-(N'Nguyễn Đức Huy', '2005-01-25', N'Nam', '0336113905', N'Hưng Yên'),
-(N'Nguyễn Văn Hùng', '1995-08-20', N'Nam', '0902222222', N'HCM'),
-(N'Trần Thị Thu', '2000-01-15', N'Nữ', '0903333333', N'Đà Nẵng'),
-(N'Phạm Minh Hoàng', '1997-03-09', N'Nam', '0904444444', N'Hải Phòng'),
-(N'Vũ Ngọc Ánh', '1998-11-21', N'Nữ', '0905555555', N'Cần Thơ'),
-(N'Bùi Quang Anh', '1996-07-04', N'Nam', '0906666666', N'Hà Nội'),
-(N'Lương Hải Yến', '1999-09-30', N'Nữ', '0907777777', N'Nghệ An'),
-(N'Đinh Văn Tú', '1995-02-18', N'Nam', '0908888888', N'Bình Dương'),
-(N'Hồ Thị Hằng', '1998-12-25', N'Nữ', '0909999999', N'Quảng Ninh'),
-(N'Nguyễn Nhật Minh', '2001-04-01', N'Nam', '0901234567', N'TP.HCM');
-SELECT * FROM NhanVien
+INSERT INTO NhanVien (hoTen, ngaySinh, gioiTinh, sdt, diaChi, Luong, ChucVu)
+VALUES
+(N'Nguyễn Văn Đức', '2005-03-14', N'Nam', '0967688908', N'Khoái Châu, Hưng Yên', 10000000, N'Quản lý'),
+(N'Bùi Trí Dũng', '2005-09-25', N'Nam', '0867438232', N'Mỹ Hào, Hưng Yên', 8000000, N'Thu ngân'),
+(N'Nguyễn Đức Huy', '2005-01-25', N'Nam', '0336113905', N'Khoái Châu, Hưng Yên', 8000000, N'Phục vụ'),
+(N'Huy Đức Dũng', '2005-01-01', N'Nam', '0123456789', N'Hưng Yên', 8000000, N'Pha chế');
 
-INSERT INTO DanhMucMonAn (tenDanhMuc) VALUES
-(N'Trà sữa'),
-(N'Trà trái cây'),
-(N'Topping'),
-(N'Bánh ngọt'),
-(N'Nước ép'),
-(N'Cà phê'),
-(N'Sữa chua'),
-(N'Trà nóng'),
-(N'Snack'),
-(N'Đặc biệt'),
-(N'Combo'),
-(N'Macchiato'),
-(N'Trà sữa không đường'),
-(N'Sữa tươi trân châu'),
-(N'Trà sữa vị trái cây'),
-(N'Trà chanh'),
-(N'Soda Ý'),
-(N'Mocha/Cacao'),
-(N'Nước khoáng'),
-(N'Trà Sữa Nhật Bản'),
-(N'Trà Sữa Hàn Quốc');
-SELECT * FROM DanhMucMonAn
+INSERT INTO TaiKhoan (tenDangNhap, tenHienThi, matKhau, loaiTaiKhoan, idNhanVien)
+VALUES
+(N'admin', N'NguyenVanDuc', N'admin123', 1, 1),
+(N'dung', N'BuiTriDung', N'dung123', 0, 2),
+(N'huy', N'NguyenDucHuy', N'123', 0, 3),
+(N'phache', N'phache', N'staff123', 0, 4);
 
-INSERT INTO MonAn (tenMonAn, idDanhMuc, giaTien) VALUES
-(N'Trà sữa trân châu đường đen', 1, 35000),
-(N'Trà sữa socola', 1, 33000),
-(N'Trà sữa khoai môn', 1, 34000),
+INSERT INTO Ban (tenBan, trangThai)
+VALUES
+(N'Bàn 1', N'Trống'),
+(N'Bàn 2', N'Trống'),
+(N'Bàn 3', N'Trống'),
+(N'Bàn 4', N'Trống');
 
-(N'Trà đào', 2, 30000),
-(N'Trà vải', 2, 30000),
-(N'Trà cam xả', 2, 32000),
+INSERT INTO DanhMucMonAn (tenDanhMuc)
+VALUES
+(N'Cà phê truyền thống'),
+(N'Cà phê máy'),
+(N'Cà phê đá xay'),
+(N'Trà và sinh tố'),
+(N'Đồ ăn nhẹ'),
+(N'Đồ uống đặc biệt'),
+(N'Sữa chua và đá bào'),
+(N'Nước đóng chai');
 
-(N'Trân châu đen', 3, 5000),
-(N'Trân châu trắng', 3, 6000),
-(N'Pudding trứng', 3, 7000),
+INSERT INTO MonAn (tenMonAn, idDanhMuc, giaTien)
+VALUES
+-- 1️ Cà phê truyền thống
+(N'Cà phê sữa đá', 1, 25000),
+(N'Cà phê đen đá', 1, 20000),
+(N'Bạc xỉu', 1, 25000),
+(N'Cà phê sữa nóng', 1, 27000),
+(N'Cà phê đen nóng', 1, 22000),
 
-(N'Bánh tiramisu', 4, 25000),
-(N'Bánh flan', 4, 20000),
-(N'Bánh su kem', 4, 22000),
+-- 2️ Cà phê máy
+(N'Espresso', 2, 35000),
+(N'Cappuccino', 2, 40000),
+(N'Latte', 2, 42000),
+(N'Mocha', 2, 45000),
+(N'Americano', 2, 38000),
 
-(N'Nước ép cam', 5, 28000),
-(N'Nước ép dứa', 5, 29000),
-(N'Nước ép ổi', 5, 27000),
+-- 3️ Cà phê đá xay
+(N'Caramel đá xay', 3, 45000),
+(N'Mocha đá xay', 3, 48000),
+(N'Cookie đá xay', 3, 47000),
+(N'Chocolate đá xay', 3, 46000),
 
-(N'Cà phê sữa đá', 6, 27000),
-(N'Cà phê đen', 6, 25000),
-(N'Bạc xỉu', 6, 29000),
+-- 4️ Trà và sinh tố
+(N'Trà đào cam sả', 4, 40000),
+(N'Trà vải', 4, 38000),
+(N'Trà sữa trân châu', 4, 42000),
+(N'Sinh tố bơ', 4, 45000),
+(N'Sinh tố xoài', 4, 45000),
+(N'Nước ép cam', 4, 40000),
 
+-- 5️ Đồ ăn nhẹ
+(N'Bánh flan', 5, 20000),
+(N'Sandwich trứng', 5, 30000),
+(N'Bánh mì bơ tỏi', 5, 25000),
+(N'Bánh cookie hạnh nhân', 5, 28000),
+(N'Tiramisu mini', 5, 35000),
+
+-- 6️Đồ uống đặc biệt
+(N'Cà phê muối', 6, 42000),
+(N'Matcha cream cheese', 6, 45000),
+(N'Cacao kem sữa', 6, 43000),
+
+-- 7️ Sữa chua & đá bào
 (N'Sữa chua nếp cẩm', 7, 30000),
 (N'Sữa chua trái cây', 7, 32000),
-(N'Sữa chua nha đam', 7, 31000),
+(N'Đá bào trái cây tổng hợp', 7, 35000),
 
-(N'Trà gừng nóng', 8, 26000),
-(N'Trà đào nóng', 8, 27000),
-(N'Trà chanh nóng', 8, 25000),
+-- 8️ Nước đóng chai
+(N'Nước suối Aquafina', 8, 15000),
+(N'Nước suối Lavie', 8, 15000),
+(N'Coca-Cola', 8, 18000),
+(N'Pepsi', 8, 18000),
+(N'Sprite', 8, 18000);
 
-(N'Snack rong biển', 9, 15000),
-(N'Snack khoai tây', 9, 18000),
-(N'Snack phô mai', 9, 17000),
+INSERT INTO NhaCungCap (tenNhaCungCap, diaChi, sdt, email)
+VALUES
+(N'Công ty TNHH Coffee Bean Việt Nam', N'12 Nguyễn Thị Minh Khai, Q1, TP.HCM', N'0909123456', N'info@coffeebean.vn'),
+(N'Công ty CP Sữa Việt', N'25 Lý Thường Kiệt, Q10, TP.HCM', N'0909345678', N'contact@sua.vn'),
+(N'Nhà phân phối Bánh Ngọt Ánh Dương', N'88 Hai Bà Trưng, Hà Nội', N'0912233445', N'sales@anhduongbakery.vn');
 
-(N'Trà sữa trứng muối', 10, 38000),
-(N'Trà sữa kem cheese', 10, 39000),
-(N'Trà sữa sầu riêng', 10, 37000),
+INSERT INTO KhoNguyenLieu (tenNguyenLieu, donViTinh, soLuongTon, ghiChu)
+VALUES
+(N'Hạt cà phê Arabica', N'kg', 20, N'Dùng cho cà phê pha máy'),
+(N'Hạt cà phê Robusta', N'kg', 30, N'Dùng cho cà phê phin'),
+(N'Sữa đặc', N'lít', 10, N'Lon 380g pha chế'),
+(N'Sữa tươi', N'lít', 15, N'Sữa thanh trùng'),
+(N'Bột cacao', N'kg', 5, N'Dùng cho mocha, cacao sữa'),
+(N'Bột matcha', N'kg', 3, N'Dùng cho matcha cream cheese'),
+(N'Trà đào', N'gói', 10, N'Pha trà đào cam sả'),
+(N'Đường cát', N'kg', 10, N'Pha chế chung'),
+(N'Đá viên', N'kg', 100, N'Đá lạnh dùng cho đồ uống'),
+(N'Hoa quả tươi', N'kg', 8, N'Dùng cho sinh tố và nước ép');
 
-(N'Combo trà sữa + bánh flan', 11, 50000),
-(N'Combo trà trái cây + snack', 11, 45000),
-(N'Combo cà phê + bánh su kem', 11, 47000),
+INSERT INTO CongThucMonAn (idMonAn, idNguyenLieu, soLuong, donViTinh)
+VALUES
+-- Cà phê sữa đá
+(1, 2, 0.02, N'kg'), -- Robusta
+(1, 3, 0.05, N'lít'),
+(1, 9, 0.2, N'kg'),
 
-(N'Matcha macchiato', 12, 39000),
-(N'Chocolate macchiato', 12, 38000),
-(N'Milo macchiato', 12, 37000),
+-- Espresso
+(3, 1, 0.02, N'kg'),
+(3, 9, 0.1, N'kg'),
 
-(N'Trà sữa không đường nguyên chất', 13, 30000),
-(N'Trà sữa không đường trân châu trắng', 13, 31000),
-(N'Trà sữa không đường kem cheese', 13, 32000),
+-- Latte
+(8, 1, 0.02, N'kg'),
+(8, 4, 0.15, N'lít'),
 
-(N'Sữa tươi trân châu hoàng kim', 14, 36000),
-(N'Sữa tươi trân châu baby', 14, 35000),
-(N'Sữa tươi trân châu dâu', 14, 37000),
+-- Trà đào cam sả
+(15, 7, 0.02, N'gói'),
+(15, 10, 0.05, N'kg'),
 
-(N'Trà sữa việt quất', 15, 34000),
-(N'Trà sữa xoài', 15, 33000),
-(N'Trà sữa chanh leo', 15, 32000),
+-- Sinh tố bơ
+(18, 10, 0.1, N'kg'),
+(18, 4, 0.1, N'lít'),
+(18, 8, 0.02, N'kg'),
 
-(N'Trà chanh truyền thống', 16, 27000),
-(N'Trà chanh sả', 16, 28000),
-(N'Trà chanh gừng', 16, 29000),
+-- Cà phê muối
+(26, 2, 0.02, N'kg'),
+(26, 3, 0.05, N'lít'),
+(26, 9, 0.2, N'kg');
 
-(N'Soda dâu', 17, 30000),
-(N'Soda việt quất', 17, 31000),
-(N'Soda chanh', 17, 32000),
+INSERT INTO HoaDonNhap (idNhanVien, idNhaCungCap, ngayNhap, tongTien)
+VALUES
+(1, 1, GETDATE()-10, 500000),
+(1, 2, GETDATE()-7, 350000),
+(1, 3, GETDATE()-3, 250000);
 
-(N'Mocha đá xay', 18, 35000),
-(N'Cacao nóng', 18, 34000),
-(N'Cacao sữa đá', 18, 33000),
+INSERT INTO ChiTietHoaDonNhap (idHoaDonNhap, idNguyenLieu, donViTinh, soLuong, donGia)
+VALUES
+(1, 1, N'kg', 10, 20000),
+(1, 2, N'kg', 10, 18000),
+(2, 3, N'lít', 5, 30000),
+(2, 4, N'lít', 10, 25000),
+(3, 5, N'kg', 2, 70000),
+(3, 6, N'kg', 1, 90000);
 
-(N'Nước khoáng Lavie', 19, 15000),
-(N'Nước khoáng Aquafina', 19, 15000),
-(N'Nước khoáng Dasani', 19, 15000),
+INSERT INTO HoaDonBan (thoiDiemVao, thoiDiemRa, idBanAn, trangThaiHD, idNhanVien)
+VALUES
+(GETDATE()-1, GETDATE()-1+0.02, 1, 1, 1),
+(GETDATE()-0.5, GETDATE()-0.5+0.03, 2, 1, 1),
+(GETDATE(), NULL, 3, 0, 1);
 
-(N'Trà sữa sakura', 20, 39000),
-(N'Trà sữa matcha Nhật', 20, 40000),
-(N'Trà sữa houjicha', 20, 42000),
+INSERT INTO ChiTietHoaDonBan (idHoaDonBan, idMonAn, soLuong)
+VALUES
+(1, 1, 2), -- 2 cà phê sữa đá
+(1, 15, 1), -- 1 trà đào cam sả
+(2, 8, 1),  -- 1 Latte
+(2, 18, 1), -- 1 Sinh tố bơ
+(3, 3, 1);  -- 1 Espresso (chưa thanh toán)
 
-(N'Trà sữa chuối', 21, 37000),
-(N'Trà sữa đào Hàn', 21, 38000),
-(N'Trà sữa caramel', 21, 39000);
-SELECT * FROM MonAn
+INSERT INTO BaoCaoDoanhThu (tuNgay, denNgay, tongSoHoaDonBan, tongSoHoaDonNhap, tongDoanhThuBan, tongChiPhiNhap, tongDoanhThu, idNhanVien, ghiChu)
+VALUES
+('2025-10-01', '2025-10-17', 2, 3, 370000, 1100000, -730000, 1, N'Tháng 10: Lỗ do nhập hàng đầu kỳ');
 
-INSERT INTO CongThucMonAn (idMonAn, idNguyenLieu, soLuong, donViTinh) VALUES
--- Trà sữa trân châu đường đen (idMonAn = 15)
-(15, 12, 0.1, N'gói'),    -- Lá trà đen
-(15, 13, 0.2, N'kg'),     -- Sữa bột
-(15, 14, 0.05, N'kg'),    -- Đường trắng
-(15, 18, 0.05, N'kg'),    -- Trân châu đen sống
+--Kiểm tra nhanh
+SELECT COUNT(*) AS SoMonAn FROM MonAn;
+SELECT COUNT(*) AS SoHoaDonBan FROM HoaDonBan;
+SELECT COUNT(*) AS SoNhaCungCap FROM NhaCungCap;
+SELECT COUNT(*) AS SoNguyenLieu FROM KhoNguyenLieu;
+SELECT COUNT(*) AS SoCongThuc FROM CongThucMonAn;
 
--- Trà sữa socola (idMonAn = 16)
-(16, 12, 0.1, N'gói'),    -- Lá trà đen
-(16, 13, 0.2, N'kg'),     -- Sữa bột
-(16, 72, 0.02, N'gói'),   -- Bột cacao
+--Proc
+-- 1. Check if table name exists
+CREATE PROCEDURE sp_CheckTenBanExists
+    @TENBAN NVARCHAR(100)
+AS
+BEGIN
+    SELECT COUNT(1) AS Count FROM Ban WHERE TENBAN = @TENBAN;
+END
+GO
 
--- Trà sữa khoai môn (idMonAn = 17)
-(17, 12, 0.1, N'gói'),    -- Lá trà đen
-(17, 13, 0.2, N'kg'),     -- Sữa bột
--- Giả định thêm tinh chất khoai môn (idNguyenLieu = 75)
-(17, 75, 0.03, N'lít'),   -- Tinh chất khoai môn (giả định)
+-- 2. Get all tables
+CREATE PROCEDURE sp_GetAllBan
+AS
+BEGIN
+    SELECT ID, TENBAN, TRANGTHAI FROM Ban;
+END
+GO
 
--- Trà đào (idMonAn = 18)
-(18, 15, 0.1, N'hộp'),    -- Trà đào túi lọc
-(18, 14, 0.02, N'kg'),    -- Đường trắng
-(18, 48, 0.3, N'lít'),    -- Nước sôi
+-- 3. Get tables by status
+CREATE PROCEDURE sp_GetBanByTrangThai
+    @TRANGTHAI NVARCHAR(100)
+AS
+BEGIN
+    SELECT ID, TENBAN, TRANGTHAI FROM Ban WHERE TRANGTHAI = @TRANGTHAI;
+END
+GO
 
--- Trà vải (idMonAn = 19)
-(19, 12, 0.05, N'gói'),   -- Lá trà đen
-(19, 16, 0.05, N'lít'),   -- Syrup vải
-(19, 14, 0.02, N'kg'),    -- Đường trắng
-(19, 48, 0.3, N'lít'),    -- Nước sôi
+-- 4. Get table by ID
+CREATE PROCEDURE sp_GetBanById
+    @ID INT
+AS
+BEGIN
+    SELECT ID, TENBAN, TRANGTHAI FROM Ban WHERE ID = @ID;
+END
+GO
 
--- Trà cam xả (idMonAn = 20)
-(20, 12, 0.05, N'gói'),   -- Lá trà đen
-(20, 17, 0.05, N'lít'),   -- Syrup cam xả
-(20, 14, 0.02, N'kg'),    -- Đường trắng
-(20, 48, 0.3, N'lít'),    -- Nước sôi
+-- 5. Insert new table
+CREATE PROCEDURE sp_ThemBan
+    @TENBAN NVARCHAR(100),
+    @TRANGTHAI NVARCHAR(100)
+AS
+BEGIN
+    INSERT INTO Ban (TENBAN, TRANGTHAI) VALUES (@TENBAN, @TRANGTHAI);
+    SELECT SCOPE_IDENTITY() AS NewID;
+END
+GO
 
--- Trân châu đen (idMonAn = 21)
-(21, 18, 0.05, N'kg'),    -- Trân châu đen sống
+-- 6. Check duplicate name for update
+CREATE PROCEDURE sp_CheckTenBanExistsForUpdate
+    @TENBAN NVARCHAR(100),
+    @ID INT
+AS
+BEGIN
+    SELECT COUNT(1) AS Count FROM Ban WHERE TENBAN = @TENBAN AND ID <> @ID;
+END
+GO
 
--- Trân châu trắng (idMonAn = 22)
-(22, 19, 0.05, N'kg'),    -- Trân châu trắng sống
+-- 7. Update table
+CREATE PROCEDURE sp_CapNhatBan
+    @ID INT,
+    @TENBAN NVARCHAR(100),
+    @TRANGTHAI NVARCHAR(100)
+AS
+BEGIN
+    UPDATE Ban SET TENBAN = @TENBAN, TRANGTHAI = @TRANGTHAI WHERE ID = @ID;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
--- Pudding trứng (idMonAn = 23)
-(23, 20, 0.02, N'kg'),    -- Bột flan
-(23, 13, 0.05, N'kg'),    -- Sữa bột
+-- 8. Update table status
+CREATE PROCEDURE sp_CapNhatTrangThaiBan
+    @ID INT,
+    @TRANGTHAI NVARCHAR(100)
+AS
+BEGIN
+    UPDATE Ban SET TRANGTHAI = @TRANGTHAI WHERE ID = @ID;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
--- Bánh tiramisu (idMonAn = 24)
-(24, 21, 0.05, N'kg'),    -- Bột bánh tiramisu
-(24, 22, 0.02, N'lít'),   -- Whipping cream
-(24, 23, 0.01, N'kg');    -- Bơ lạt
-SELECT * FROM CongThucMonAn;
-SELECT * FROM KhoNguyenLieu;
+-- 9. Delete table
+CREATE PROCEDURE sp_XoaBan
+    @ID INT
+AS
+BEGIN
+    DELETE FROM Ban WHERE ID = @ID;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+-- Product & Category Stored Procedures
 
-INSERT INTO HoaDonBan (thoiDiemVao, thoiDiemRa, idBanAn, trangThaiHD, idNhanVien) VALUES
-(GETDATE(), NULL, 1, 0, 1),
-(GETDATE(), GETDATE(), 2, 1, 2),
-(GETDATE(), NULL, 3, 0, 3),
-(GETDATE(), GETDATE(), 4, 1, 4),
-(GETDATE(), NULL, 5, 0, 5),
-(GETDATE(), GETDATE(), 6, 1, 6),
-(GETDATE(), NULL, 7, 0, 7),
-(GETDATE(), GETDATE(), 8, 1, 8),
-(GETDATE(), NULL, 9, 0, 9),
-(GETDATE(), GETDATE(), 10, 1, 10);
-SELECT * FROM HoaDonBan
+-- 1. Check if product name exists
+CREATE PROCEDURE sp_CheckProductNameExists
+    @tenMonAn NVARCHAR(100),
+    @exceptId INT = NULL
+AS
+BEGIN
+    IF @exceptId IS NULL
+        SELECT COUNT(1) AS Count FROM MonAn WHERE tenMonAn = @tenMonAn;
+    ELSE
+        SELECT COUNT(1) AS Count FROM MonAn WHERE tenMonAn = @tenMonAn AND id <> @exceptId;
+END
+GO
 
-INSERT INTO ChiTietHoaDonBan (idHoaDonBan, idMonAn, soLuong) VALUES
-(14, 29, 2),
-(15, 34, 1),
-(16, 23, 1),
-(17, 46, 3),
-(18, 53, 1),
-(19, 65, 1),
-(20, 37, 2),
-(21, 58, 1),
-(22, 19, 2),
-(23, 17, 1);
-SELECT * FROM ChiTietHoaDonBan
+-- 2. Check if category name exists
+CREATE PROCEDURE sp_CheckCategorieNameExists
+    @tenDanhMuc NVARCHAR(100),
+    @exceptId INT = NULL
+AS
+BEGIN
+    IF @exceptId IS NULL
+        SELECT COUNT(1) AS Count FROM DanhMucMonAn WHERE tenDanhMuc = @tenDanhMuc;
+    ELSE
+        SELECT COUNT(1) AS Count FROM DanhMucMonAn WHERE tenDanhMuc = @tenDanhMuc AND id <> @exceptId;
+END
+GO
 
-INSERT INTO KhoNguyenLieu (tenNguyenLieu, donViTinh, soLuongTon, ghiChu) VALUES
-(N'Lá trà đen', N'gói', 50, N'Pha trà sữa'),
-(N'Sữa bột', N'kg', 30, N'Dùng pha trà sữa'),
-(N'Đường trắng', N'kg', 100, N'Ngọt'),
+-- 3. Get all categories
+CREATE PROCEDURE sp_GetAllDanhMuc
+AS
+BEGIN
+    SELECT ID, TENDANHMUC FROM DanhMucMonAn;
+END
+GO
 
-(N'Trà đào túi lọc', N'hộp', 20, N'Dùng pha trà'),
-(N'Syrup vải', N'lít', 25, N'Tạo vị trái cây'),
-(N'Syrup cam xả', N'lít', 15, N'Tạo hương'),
+-- 4. Get all products with categories
+CREATE PROCEDURE sp_GetAllMonAn
+AS
+BEGIN
+    SELECT m.ID, m.TENMONAN, m.GIATIEN, d.TENDANHMUC
+    FROM MonAn m
+    INNER JOIN DanhMucMonAn d ON m.IDDANHMUC = d.ID;
+END
+GO
 
-(N'Trân châu đen sống', N'kg', 40, N'Topping phổ biến'),
-(N'Trân châu trắng sống', N'kg', 30, N'Trắng trong'),
-(N'Bột flan', N'kg', 10, N'Làm pudding'),
+-- 5. Get products by category
+CREATE PROCEDURE sp_GetMonAnByDanhMuc
+    @idDanhMuc INT
+AS
+BEGIN
+    SELECT m.ID, m.TENMONAN, m.GIATIEN, d.TENDANHMUC
+    FROM MonAn m
+    INNER JOIN DanhMucMonAn d ON m.IDDANHMUC = d.ID
+    WHERE m.IDDANHMUC = @idDanhMuc;
+END
+GO
 
-(N'Bột bánh tiramisu', N'kg', 10, N'Bánh ngọt'),
-(N'Whipping cream', N'lít', 12, N'Làm bánh'),
-(N'Bơ lạt', N'kg', 8, N'Nguyên liệu bánh'),
+-- 6. Add new category
+CREATE PROCEDURE sp_ThemDanhMuc
+    @tenDanhMuc NVARCHAR(100)
+AS
+BEGIN
+    INSERT INTO DanhMucMonAn (tenDanhMuc) VALUES (@tenDanhMuc);
+    SELECT SCOPE_IDENTITY() AS NewID;
+END
+GO
 
-(N'Cam tươi', N'quả', 50, N'Ép nước'),
-(N'Dứa', N'quả', 40, N'Ép nước'),
-(N'Ổi', N'quả', 35, N'Ép nước'),
+-- 7. Add new product
+CREATE PROCEDURE sp_ThemMonAn
+    @tenMonAn NVARCHAR(100),
+    @idDanhMuc INT,
+    @giaTien FLOAT
+AS
+BEGIN
+    INSERT INTO MonAn (tenMonAn, idDanhMuc, giaTien) VALUES (@tenMonAn, @idDanhMuc, @giaTien);
+    SELECT SCOPE_IDENTITY() AS NewID;
+END
+GO
 
-(N'Hạt cà phê rang', N'kg', 20, N'Pha máy'),
-(N'Sữa đặc', N'lít', 25, N'Bạc xỉu'),
-(N'Nước lọc', N'lít', 100, N'Pha cà phê'),
+-- 8. Update product
+CREATE PROCEDURE sp_CapNhatMonAn
+    @id INT,
+    @tenMonAn NVARCHAR(100),
+    @idDanhMuc INT,
+    @giaTien FLOAT
+AS
+BEGIN
+    UPDATE MonAn SET tenMonAn = @tenMonAn, idDanhMuc = @idDanhMuc, giaTien = @giaTien WHERE id = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
-(N'Sữa chua hộp', N'hộp', 30, N'Nguyên liệu chính'),
-(N'Nếp cẩm', N'kg', 10, N'Sữa chua nếp cẩm'),
-(N'Nha đam tươi', N'kg', 12, N'Sữa chua nha đam'),
+-- 9. Update category
+CREATE PROCEDURE sp_CapNhatDanhMuc
+    @id INT,
+    @tenDanhMuc NVARCHAR(100)
+AS
+BEGIN
+    UPDATE DanhMucMonAn SET tenDanhMuc = @tenDanhMuc WHERE id = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
-(N'Trà gừng', N'gói', 20, N'Trà nóng'),
-(N'Trà đào túi lọc', N'gói', 18, N'Trà nóng'),
-(N'Trà chanh túi lọc', N'gói', 15, N'Trà nóng'),
+-- 10. Delete product
+CREATE PROCEDURE sp_XoaMonAn
+    @id INT
+AS
+BEGIN
+    DELETE FROM MonAn WHERE ID = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
-(N'Snack rong biển gói', N'gói', 50, N'Ăn vặt'),
-(N'Snack khoai', N'gói', 60, N'Ăn vặt'),
-(N'Snack phô mai', N'gói', 55, N'Ăn vặt'),
+-- Authentication Stored Procedures
 
-(N'Bột trứng muối', N'gói', 10, N'Topping đặc biệt'),
-(N'Kem cheese', N'lít', 8, N'Ngậy béo'),
-(N'Tinh chất sầu riêng', N'lít', 5, N'Mùi mạnh'),
+-- 1. Check if account exists
+CREATE PROCEDURE sp_CheckTaiKhoanExists
+    @tenDangNhap NVARCHAR(100)
+AS
+BEGIN
+    SELECT COUNT(1) AS Count FROM TaiKhoan WHERE tenDangNhap = @tenDangNhap;
+END
+GO
 
-(N'Hộp combo', N'hộp', 30, N'Đóng gói combo'),
-(N'Tem combo', N'cái', 60, N'Dán ngoài combo'),
-(N'Bánh su kem', N'cái', 20, N'Dùng trong combo'),
+-- 2. Add new account
+CREATE PROCEDURE sp_ThemTaiKhoan
+    @tenDangNhap NVARCHAR(100),
+    @tenHienThi NVARCHAR(200),
+    @matKhau NVARCHAR(255),
+    @loaiTaiKhoan INT,
+    @idNhanVien INT = NULL
+AS
+BEGIN
+    INSERT INTO TaiKhoan (tenDangNhap, tenHienThi, matKhau, loaiTaiKhoan, idNhanVien) 
+    VALUES (@tenDangNhap, @tenHienThi, @matKhau, @loaiTaiKhoan, @idNhanVien);
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
-(N'Bột matcha', N'gói', 15, N'Macchiato'),
-(N'Bột milo', N'gói', 10, N'Macchiato'),
-(N'Kem tươi', N'lít', 8, N'Macchiato'),
+-- 3. Login authentication
+CREATE PROCEDURE sp_DangNhap
+    @tenDangNhap NVARCHAR(100),
+    @matKhau NVARCHAR(255)
+AS
+BEGIN
+    SELECT tenDangNhap, tenHienThi, matKhau, loaiTaiKhoan, idNhanVien 
+    FROM TaiKhoan 
+    WHERE tenDangNhap = @tenDangNhap AND matKhau = @matKhau;
+END
+GO
 
-(N'Lá trà oolong', N'gói', 20, N'Trà sữa không đường'),
-(N'Nước sôi', N'lít', 100, N'Dùng pha'),
-(N'Kem không đường', N'lít', 10, N'Ít calo'),
+-- 4. Get account by username
+CREATE PROCEDURE sp_GetTaiKhoanByTenDangNhap
+    @tenDangNhap NVARCHAR(100)
+AS
+BEGIN
+    SELECT tenDangNhap, tenHienThi, matKhau, loaiTaiKhoan, idNhanVien 
+    FROM TaiKhoan 
+    WHERE tenDangNhap = @tenDangNhap;
+END
+GO
 
-(N'Sữa tươi', N'lít', 40, N'Sữa tươi trân châu'),
-(N'Trân châu hoàng kim', N'kg', 25, N'Trân châu đặc biệt'),
-(N'Siro dâu', N'lít', 18, N'Topping'),
+-- 5. Change password
+CREATE PROCEDURE sp_DoiMatKhau
+    @tenDangNhap NVARCHAR(100),
+    @matKhau NVARCHAR(255)
+AS
+BEGIN
+    UPDATE TaiKhoan SET matKhau = @matKhau WHERE tenDangNhap = @tenDangNhap;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
-(N'Syrup việt quất', N'lít', 10, N'Vị trái cây'),
-(N'Syrup xoài', N'lít', 12, N'Vị trái cây'),
-(N'Syrup chanh leo', N'lít', 14, N'Vị trái cây'),
+-- 6. Check old password
+CREATE PROCEDURE sp_KiemTraMatKhauCu
+    @tenDangNhap NVARCHAR(100),
+    @matKhau NVARCHAR(255)
+AS
+BEGIN
+    SELECT COUNT(1) AS Count FROM TaiKhoan WHERE tenDangNhap = @tenDangNhap AND matKhau = @matKhau;
+END
+GO
 
-(N'Chanh tươi', N'quả', 60, N'Trà chanh'),
-(N'Sả tươi', N'cây', 25, N'Chanh sả'),
-(N'Gừng tươi', N'kg', 15, N'Chanh gừng'),
+-- 7. Get all accounts
+CREATE PROCEDURE sp_GetAllTaiKhoan
+AS
+BEGIN
+    SELECT tenDangNhap, tenHienThi, loaiTaiKhoan, idNhanVien FROM TaiKhoan;
+END
+GO
 
-(N'Syrup dâu', N'lít', 20, N'Soda'),
-(N'Syrup việt quất', N'lít', 18, N'Soda'),
-(N'Soda base', N'lít', 30, N'Nước nền'),
+-- Employees Stored Procedures - Updated với cột cụ thể
 
-(N'Bột mocha', N'gói', 12, N'Mocha đá xay'),
-(N'Bột cacao', N'gói', 14, N'Nóng/lạnh'),
-(N'Sữa tươi có đường', N'lít', 20, N'Cacao đá'),
+-- 1. Get all employees
+CREATE PROCEDURE sp_GetAllEmployees
+AS
+BEGIN
+    SELECT id, hoTen, ngaySinh, gioiTinh, sdt, diaChi, Luong, ChucVu 
+    FROM NhanVien;
+END
+GO
 
-(N'Nước Lavie', N'chai', 50, N'Nước uống'),
-(N'Nước Aquafina', N'chai', 40, N'Nước uống'),
-(N'Nước Dasani', N'chai', 30, N'Nước uống'),
+-- 2. Get employee by ID
+CREATE PROCEDURE sp_GetEmployeeById
+    @id INT
+AS
+BEGIN
+    SELECT id, hoTen, ngaySinh, gioiTinh, sdt, diaChi, Luong, ChucVu 
+    FROM NhanVien 
+    WHERE id = @id;
+END
+GO
 
-(N'Bột sakura', N'gói', 10, N'Trà Nhật'),
-(N'Bột matcha Nhật', N'gói', 8, N'Trà Nhật'),
-(N'Bột houjicha', N'gói', 5, N'Trà Nhật'),
+-- 3. Create new employee
+CREATE PROCEDURE sp_CreateEmployee
+    @hoTen NVARCHAR(255),
+    @ngaySinh DATETIME = NULL,
+    @gioiTinh NVARCHAR(10) = NULL,
+    @sdt NVARCHAR(20) = NULL,
+    @diaChi NVARCHAR(500) = NULL,
+    @Luong INT = NULL,
+    @ChucVu NVARCHAR(100) = NULL
+AS
+BEGIN
+    INSERT INTO NhanVien (hoTen, ngaySinh, gioiTinh, sdt, diaChi, Luong, ChucVu) 
+    VALUES (@hoTen, @ngaySinh, @gioiTinh, @sdt, @diaChi, @Luong, @ChucVu);
+    SELECT SCOPE_IDENTITY() AS NewID;
+END
+GO
 
-(N'Tinh chất chuối', N'lít', 10, N'Hàn Quốc'),
-(N'Tinh chất đào', N'lít', 10, N'Hàn Quốc'),
-(N'Tinh chất caramel', N'lít', 10, N'Hàn Quốc');
-SELECT * FROM KhoNguyenLieu
+-- 4. Update employee
+CREATE PROCEDURE sp_UpdateEmployee
+    @id INT,
+    @hoTen NVARCHAR(255),
+    @ngaySinh DATETIME = NULL,
+    @gioiTinh NVARCHAR(10) = NULL,
+    @sdt NVARCHAR(20) = NULL,
+    @diaChi NVARCHAR(500) = NULL,
+    @Luong INT = NULL,
+    @ChucVu NVARCHAR(100) = NULL
+AS
+BEGIN
+    UPDATE NhanVien 
+    SET hoTen = @hoTen, ngaySinh = @ngaySinh, gioiTinh = @gioiTinh, 
+        sdt = @sdt, diaChi = @diaChi, Luong = @Luong, ChucVu = @ChucVu 
+    WHERE id = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
+-- 5. Delete employee
+CREATE PROCEDURE sp_DeleteEmployee
+    @id INT
+AS
+BEGIN
+    DELETE FROM NhanVien WHERE id = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
-INSERT INTO NhaCungCap (tenNhaCungCap, diaChi, sdt, email) VALUES
-(N'Công ty Nguyên liệu ABC', N'Hà Nội', '0911111111', 'abc@nguyenlieu.com'),
-(N'Trân Châu Việt', N'TPHCM', '0922222222', 'tran.chau@viet.vn'),
-(N'Đường Nâu Co.', N'Đồng Nai', '0933333333', 'duongnau@co.com'),
-(N'Công ty Trà Xanh', N'Lâm Đồng', '0944444444', 'traxanh@ld.com'),
-(N'Fruit Fresh', N'HCM', '0955555555', 'fruit@fresh.com'),
-(N'Sữa Thật', N'Hà Nội', '0966666666', 'sua@that.vn'),
-(N'Bánh Ngọt Co.', N'TPHCM', '0977777777', 'banhngot@co.vn'),
-(N'Nước Ép Tự Nhiên', N'Cần Thơ', '0988888888', 'nuocep@natural.com'),
-(N'Thực Phẩm Sạch', N'Hà Nội', '0999999999', 'sach@thucpham.vn'),
-(N'Nguyên Liệu Số 1', N'Đà Nẵng', '0900000000', 'so1@nguyenlieu.com'),
-(N'Công ty bánh kẹo Oishi', N'Hà Nội', '0900000999', 'oishi@bimbim.com');
-SELECT * FROM NhaCungCap;
+-- Inventory Stored Procedures
 
+-- 1. Get all inventory items
+CREATE PROCEDURE sp_GetAllInventory
+AS
+BEGIN
+    SELECT id, tenNguyenLieu, donViTinh, soLuongTon, ghiChu 
+    FROM KhoNguyenLieu 
+    ORDER BY tenNguyenLieu;
+END
+GO
 
+-- 2. Get inventory item by ID
+CREATE PROCEDURE sp_GetInventoryById
+    @id INT
+AS
+BEGIN
+    SELECT id, tenNguyenLieu, donViTinh, soLuongTon, ghiChu 
+    FROM KhoNguyenLieu 
+    WHERE id = @id;
+END
+GO
+
+-- 3. Create new inventory item
+CREATE PROCEDURE sp_CreateInventory
+    @tenNguyenLieu NVARCHAR(255),
+    @donViTinh NVARCHAR(50) = NULL,
+    @soLuongTon FLOAT,
+    @ghiChu NVARCHAR(500) = NULL
+AS
+BEGIN
+    INSERT INTO KhoNguyenLieu (tenNguyenLieu, donViTinh, soLuongTon, ghiChu) 
+    VALUES (@tenNguyenLieu, @donViTinh, @soLuongTon, @ghiChu);
+    SELECT SCOPE_IDENTITY() AS NewID;
+END
+GO
+
+-- 4. Update inventory item
+CREATE PROCEDURE sp_UpdateInventory
+    @id INT,
+    @tenNguyenLieu NVARCHAR(255),
+    @donViTinh NVARCHAR(50) = NULL,
+    @soLuongTon FLOAT,
+    @ghiChu NVARCHAR(500) = NULL
+AS
+BEGIN
+    UPDATE KhoNguyenLieu 
+    SET tenNguyenLieu = @tenNguyenLieu, donViTinh = @donViTinh, 
+        soLuongTon = @soLuongTon, ghiChu = @ghiChu 
+    WHERE id = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- 5. Delete inventory item
+CREATE PROCEDURE sp_DeleteInventory
+    @id INT
+AS
+BEGIN
+    DELETE FROM KhoNguyenLieu WHERE id = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- Invoice Stored Procedures
+
+-- 1. Get paid invoices
+CREATE PROCEDURE sp_GetPaidInvoices
+AS
+BEGIN
+    SELECT id, thoiDiemVao, thoiDiemRa, idBanAn, trangThaiHD, idNhanVien 
+    FROM HoaDonBan 
+    WHERE trangThaiHD = 1
+    ORDER BY thoiDiemVao DESC;
+END
+GO
+
+-- 2. Get paid invoice by ID
+CREATE PROCEDURE sp_GetPaidInvoiceById
+    @id INT
+AS
+BEGIN
+    SELECT id, thoiDiemVao, thoiDiemRa, idBanAn, trangThaiHD, idNhanVien 
+    FROM HoaDonBan 
+    WHERE id = @id AND trangThaiHD = 1;
+END
+GO
+
+-- 3. Get print invoice by ID (with table and employee names)
+CREATE PROCEDURE sp_GetPrintInvoiceById
+    @id INT
+AS
+BEGIN
+    SELECT hd.id, hd.thoiDiemVao, hd.thoiDiemRa, hd.idBanAn, hd.trangThaiHD, hd.idNhanVien,
+           b.tenBan as TenBanAn, nv.hoTen as TenNhanVien
+    FROM HoaDonBan hd
+    LEFT JOIN Ban b ON hd.idBanAn = b.id
+    LEFT JOIN NhanVien nv ON hd.idNhanVien = nv.id
+    WHERE hd.id = @id AND hd.trangThaiHD = 1;
+END
+GO
+
+-- 4. Check invoice payment status
+CREATE PROCEDURE sp_IsInvoicePaid
+    @id INT
+AS
+BEGIN
+    SELECT trangThaiHD FROM HoaDonBan WHERE id = @id;
+END
+GO
+
+-- 5. Get invoice details (without price)
+CREATE PROCEDURE sp_GetInvoiceDetails
+    @invoiceId INT
+AS
+BEGIN
+    SELECT ct.id, ct.idHoaDonBan, ct.idMonAn, ct.soLuong,
+           ma.tenMonAn
+    FROM ChiTietHoaDonBan ct
+    INNER JOIN MonAn ma ON ct.idMonAn = ma.id
+    WHERE ct.idHoaDonBan = @invoiceId;
+END
+GO
+
+-- 6. Get invoice details with price (for printing)
+CREATE PROCEDURE sp_GetInvoiceDetailsWithPrice
+    @invoiceId INT
+AS
+BEGIN
+    SELECT ct.id, ct.idHoaDonBan, ct.idMonAn, ct.soLuong,
+           ma.tenMonAn, ma.giaTien as GiaMonAn
+    FROM ChiTietHoaDonBan ct
+    INNER JOIN MonAn ma ON ct.idMonAn = ma.id
+    WHERE ct.idHoaDonBan = @invoiceId;
+END
+GO
+
+-- Order Stored Procedures
+
+-- 1. Get all orders
+CREATE PROCEDURE sp_GetAllOrders
+AS
+BEGIN
+    SELECT id, thoiDiemVao, thoiDiemRa, idBanan, trangThaiHD, idNhanVien 
+    FROM HoaDonBan;
+END
+GO
+
+-- 2. Get order by ID
+CREATE PROCEDURE sp_GetOrderById
+    @Id INT
+AS
+BEGIN
+    SELECT id, thoiDiemVao, thoiDiemRa, idBanan, trangThaiHD, idNhanVien 
+    FROM HoaDonBan 
+    WHERE id = @Id;
+END
+GO
+
+-- 3. Create new order
+CREATE PROCEDURE sp_CreateOrder
+    @ThoiDiemVao DATETIME,
+    @IdBanan INT,
+    @TrangThaiHD INT,
+    @IdNhanVien INT = NULL
+AS
+BEGIN
+    INSERT INTO HoaDonBan (thoiDiemVao, idBanan, trangThaiHD, idNhanVien) 
+    VALUES (@ThoiDiemVao, @IdBanan, @TrangThaiHD, @IdNhanVien);
+    SELECT SCOPE_IDENTITY() AS NewID;
+END
+GO
+
+-- 4. Update order
+CREATE PROCEDURE sp_UpdateOrder
+    @Id INT,
+    @ThoiDiemRa DATETIME = NULL,
+    @IdNhanVien INT = NULL
+AS
+BEGIN
+    UPDATE HoaDonBan 
+    SET thoiDiemRa = @ThoiDiemRa, idNhanVien = @IdNhanVien 
+    WHERE id = @Id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- 5. Delete order
+CREATE PROCEDURE sp_DeleteOrder
+    @Id INT
+AS
+BEGIN
+    DELETE FROM HoaDonBan WHERE id = @Id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- 6. Update order status
+CREATE PROCEDURE sp_UpdateOrderStatus
+    @Id INT,
+    @TrangThaiHD INT,
+    @ThoiDiemRa DATETIME = NULL
+AS
+BEGIN
+    UPDATE HoaDonBan 
+    SET trangThaiHD = @TrangThaiHD, thoiDiemRa = @ThoiDiemRa 
+    WHERE id = @Id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- 7. Get orders by table ID
+CREATE PROCEDURE sp_GetOrdersByTableId
+    @IdBanan INT
+AS
+BEGIN
+    SELECT id, thoiDiemVao, thoiDiemRa, idBanan, trangThaiHD, idNhanVien 
+    FROM HoaDonBan 
+    WHERE idBanan = @IdBanan;
+END
+GO
+
+-- 8. Get order details
+CREATE PROCEDURE sp_GetOrderDetails
+    @IdHoaDonBan INT
+AS
+BEGIN
+    SELECT idHoaDonBan, idMonAn, soLuong 
+    FROM ChiTietHoaDonBan 
+    WHERE idHoaDonBan = @IdHoaDonBan;
+END
+GO
+
+-- 9. Create order detail
+CREATE PROCEDURE sp_CreateOrderDetail
+    @IdHoaDonBan INT,
+    @IdMonAn INT,
+    @SoLuong INT
+AS
+BEGIN
+    INSERT INTO ChiTietHoaDonBan (idHoaDonBan, idMonAn, soLuong)
+    VALUES (@IdHoaDonBan, @IdMonAn, @SoLuong);
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- 10. Delete order details by order ID
+CREATE PROCEDURE sp_DeleteOrderDetailsByOrderId
+    @IdHoaDonBan INT
+AS
+BEGIN
+    DELETE FROM ChiTietHoaDonBan WHERE idHoaDonBan = @IdHoaDonBan;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- Reports Stored Procedures
+
+-- 1. Get top 5 best selling products
+CREATE PROCEDURE sp_GetTop5BestSellingProducts
+    @TuNgay DATETIME = NULL,
+    @DenNgay DATETIME = NULL
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(4000) = '
+    SELECT TOP 5 
+        m.id AS IdMonAn,
+        m.tenMonAn AS TenMonAn,
+        SUM(ct.soLuong) as TongSoLuongBan,
+        m.giaTien AS GiaBan,
+        SUM(ct.soLuong * m.giaTien) as TongDoanhThu
+    FROM ChiTietHoaDonBan ct
+    INNER JOIN MonAn m ON ct.idMonAn = m.id
+    INNER JOIN HoaDonBan h ON ct.idHoaDonBan = h.id
+    WHERE h.trangThaiHD = 1';
+
+    IF @TuNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao >= @TuNgay';
+    
+    IF @DenNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao <= @DenNgay';
+
+    SET @sql = @sql + '
+    GROUP BY m.id, m.tenMonAn, m.giaTien
+    ORDER BY TongSoLuongBan DESC';
+
+    EXEC sp_executesql @sql, 
+        N'@TuNgay DATETIME, @DenNgay DATETIME', 
+        @TuNgay, @DenNgay;
+END
+GO
+
+-- 2. Get total revenue
+CREATE PROCEDURE sp_GetTotalRevenue
+    @TuNgay DATETIME = NULL,
+    @DenNgay DATETIME = NULL
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(4000) = '
+    SELECT 
+        ISNULL(SUM(ct.soLuong * m.giaTien), 0) as TongDoanhThu,
+        COUNT(DISTINCT h.id) as SoDonHang
+    FROM HoaDonBan h
+    INNER JOIN ChiTietHoaDonBan ct ON h.id = ct.idHoaDonBan
+    INNER JOIN MonAn m ON ct.idMonAn = m.id
+    WHERE h.trangThaiHD = 1';
+
+    IF @TuNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao >= @TuNgay';
+    
+    IF @DenNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao <= @DenNgay';
+
+    EXEC sp_executesql @sql, 
+        N'@TuNgay DATETIME, @DenNgay DATETIME', 
+        @TuNgay, @DenNgay;
+END
+GO
+
+-- 3. Get total products sold
+CREATE PROCEDURE sp_GetTotalProductsSold
+    @TuNgay DATETIME = NULL,
+    @DenNgay DATETIME = NULL
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(4000) = '
+    SELECT 
+        ISNULL(SUM(ct.soLuong), 0) as TongSoLuongDaBan,
+        COUNT(DISTINCT ct.idMonAn) as SoLoaiMonAn
+    FROM ChiTietHoaDonBan ct
+    INNER JOIN HoaDonBan h ON ct.idHoaDonBan = h.id
+    WHERE h.trangThaiHD = 1';
+
+    IF @TuNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao >= @TuNgay';
+    
+    IF @DenNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao <= @DenNgay';
+
+    EXEC sp_executesql @sql, 
+        N'@TuNgay DATETIME, @DenNgay DATETIME', 
+        @TuNgay, @DenNgay;
+END
+GO
+
+-- 4. Get average order value
+CREATE PROCEDURE sp_GetAverageOrderValue
+    @TuNgay DATETIME = NULL,
+    @DenNgay DATETIME = NULL
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(4000) = '
+    SELECT 
+        COUNT(DISTINCT h.id) as TongSoDonHang,
+        ISNULL(SUM(ct.soLuong * m.giaTien), 0) as TongDoanhThu
+    FROM HoaDonBan h
+    INNER JOIN ChiTietHoaDonBan ct ON h.id = ct.idHoaDonBan
+    INNER JOIN MonAn m ON ct.idMonAn = m.id
+    WHERE h.trangThaiHD = 1';
+
+    IF @TuNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao >= @TuNgay';
+    
+    IF @DenNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao <= @DenNgay';
+
+    EXEC sp_executesql @sql, 
+        N'@TuNgay DATETIME, @DenNgay DATETIME', 
+        @TuNgay, @DenNgay;
+END
+GO
+
+-- 5. Get orders summary
+CREATE PROCEDURE sp_GetOrdersSummary
+    @TuNgay DATETIME = NULL,
+    @DenNgay DATETIME = NULL
+AS
+BEGIN
+    DECLARE @sql NVARCHAR(4000) = '
+    SELECT 
+        h.id as IdHoaDonBan,
+        h.thoiDiemVao as NgayBan,
+        CASE h.trangThaiHD 
+            WHEN 0 THEN N''Chưa thanh toán''
+            WHEN 1 THEN N''Đã thanh toán''
+            ELSE N''Không xác định''
+        END as TrangThai,
+        ISNULL(SUM(ct.soLuong * m.giaTien), 0) as TongTien,
+        b.tenBan as TenBan,
+        nv.hoTen as TenNhanVien
+    FROM HoaDonBan h
+    INNER JOIN Ban b ON h.idBanAn = b.id
+    LEFT JOIN NhanVien nv ON h.idNhanVien = nv.id
+    LEFT JOIN ChiTietHoaDonBan ct ON h.id = ct.idHoaDonBan
+    LEFT JOIN MonAn m ON ct.idMonAn = m.id
+    WHERE 1=1';
+
+    IF @TuNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao >= @TuNgay';
+    
+    IF @DenNgay IS NOT NULL
+        SET @sql = @sql + ' AND h.thoiDiemVao <= @DenNgay';
+
+    SET @sql = @sql + '
+    GROUP BY h.id, h.thoiDiemVao, h.trangThaiHD, b.tenBan, nv.hoTen
+    ORDER BY h.thoiDiemVao DESC';
+
+    EXEC sp_executesql @sql, 
+        N'@TuNgay DATETIME, @DenNgay DATETIME', 
+        @TuNgay, @DenNgay;
+END
+GO
+
+-- Suppliers Stored Procedures
+
+-- 1. Get all suppliers
+CREATE PROCEDURE sp_GetAllSuppliers
+AS
+BEGIN
+    SELECT id, tenNhaCungCap, diaChi, sdt, email 
+    FROM NhaCungCap 
+    ORDER BY tenNhaCungCap;
+END
+GO
+
+-- 2. Get supplier by ID
+CREATE PROCEDURE sp_GetSupplierById
+    @id INT
+AS
+BEGIN
+    SELECT id, tenNhaCungCap, diaChi, sdt, email 
+    FROM NhaCungCap 
+    WHERE id = @id;
+END
+GO
+
+-- 3. Create new supplier (for CreateSupplierRequest)
+CREATE PROCEDURE sp_CreateSupplierFromRequest
+    @tenNhaCungCap NVARCHAR(255),
+    @diaChi NVARCHAR(500) = NULL,
+    @sdt NVARCHAR(20) = NULL,
+    @email NVARCHAR(100) = NULL
+AS
+BEGIN
+    INSERT INTO NhaCungCap (tenNhaCungCap, diaChi, sdt, email) 
+    VALUES (@tenNhaCungCap, @diaChi, @sdt, @email);
+    SELECT SCOPE_IDENTITY() AS NewID;
+END
+GO
+
+-- 4. Create new supplier (for SupplierModel)
+CREATE PROCEDURE sp_CreateSupplier
+    @tenNhaCungCap NVARCHAR(255),
+    @diaChi NVARCHAR(500) = NULL,
+    @sdt NVARCHAR(20) = NULL,
+    @email NVARCHAR(100) = NULL
+AS
+BEGIN
+    INSERT INTO NhaCungCap (tenNhaCungCap, diaChi, sdt, email) 
+    VALUES (@tenNhaCungCap, @diaChi, @sdt, @email);
+    SELECT SCOPE_IDENTITY() AS NewID;
+END
+GO
+
+-- 5. Update supplier
+CREATE PROCEDURE sp_UpdateSupplier
+    @id INT,
+    @tenNhaCungCap NVARCHAR(255),
+    @diaChi NVARCHAR(500) = NULL,
+    @sdt NVARCHAR(20) = NULL,
+    @email NVARCHAR(100) = NULL
+AS
+BEGIN
+    UPDATE NhaCungCap 
+    SET tenNhaCungCap = @tenNhaCungCap, diaChi = @diaChi, sdt = @sdt, email = @email 
+    WHERE id = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- 6. Delete supplier
+CREATE PROCEDURE sp_DeleteSupplier
+    @id INT
+AS
+BEGIN
+    DELETE FROM NhaCungCap WHERE id = @id;
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
 
 
 
