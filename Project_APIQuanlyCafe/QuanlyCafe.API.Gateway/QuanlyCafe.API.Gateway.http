@@ -1,6 +1,0 @@
-@QuanlyCafe.API.Gateway_HostAddress = http://localhost:5058
-
-GET {{QuanlyCafe.API.Gateway_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\QuanlyCafe.API.Staff.props" />
-</Project>
