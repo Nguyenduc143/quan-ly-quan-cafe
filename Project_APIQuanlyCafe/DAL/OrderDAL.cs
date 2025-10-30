@@ -9,239 +9,182 @@ namespace DAL
 {
     public class OrderDAL
     {
-        private readonly string _connectionString;
+        private readonly DatabaseHelper _dbHelper;
 
-        public OrderDAL(IConfiguration configuration)
+        public OrderDAL(DatabaseHelper dbHelper)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _dbHelper = dbHelper;
         }
 
         public List<OrderModel> GetAllOrders()
         {
             var orders = new List<OrderModel>();
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("SELECT * FROM HoaDonBan", conn))
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetAllOrders");
+
+            foreach (DataRow row in dt.Rows)
             {
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var order = MapOrder(reader);
-                        order.ChiTietHoaDonBan = GetOrderDetails(order.Id);
-                        orders.Add(order);
-                    }
-                }
+                var order = MapOrderFromDataRow(row);
+                order.ChiTietHoaDonBan = GetOrderDetails(order.Id);
+                orders.Add(order);
             }
+
             return orders;
         }
 
         public OrderModel GetOrderById(int id)
         {
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("SELECT * FROM HoaDonBan WHERE id = @Id", conn))
+            SqlParameter[] parameters = { new SqlParameter("@Id", id) };
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetOrderById", parameters);
+
+            if (dt.Rows.Count > 0)
             {
-                cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        var order = MapOrder(reader);
-                        order.ChiTietHoaDonBan = GetOrderDetails(order.Id);
-                        return order;
-                    }
-                }
+                var order = MapOrderFromDataRow(dt.Rows[0]);
+                order.ChiTietHoaDonBan = GetOrderDetails(order.Id);
+                return order;
             }
+
             return null;
         }
 
         public int CreateOrder(CreateOrderRequest request)
         {
-            int newOrderId;
-            using (var conn = new SqlConnection(_connectionString))
+            SqlParameter[] orderParams = {
+                new SqlParameter("@ThoiDiemVao", DateTime.Now),
+                new SqlParameter("@IdBanan", request.IdBan),
+                new SqlParameter("@TrangThaiHD", 0),
+                new SqlParameter("@IdNhanVien", (object?)request.IdNhanVien ?? DBNull.Value)
+            };
+
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_CreateOrder", orderParams);
+            int newOrderId = 0;
+
+            if (dt.Rows.Count > 0)
             {
-                conn.Open();
-                using (var tran = conn.BeginTransaction())
+                newOrderId = Convert.ToInt32(dt.Rows[0]["NewID"]);
+
+                // Add order details
+                foreach (var detail in request.ChiTietHoaDonBan)
                 {
-                    using (var cmd = new SqlCommand(
-                        @"INSERT INTO HoaDonBan (thoiDiemVao, idBanan, trangThaiHD, idNhanVien) 
-                          OUTPUT INSERTED.id
-                          VALUES (@ThoiDiemVao, @IdBanan, @TrangThaiHD, @IdNhanVien)", conn, tran))
-                    {
-                        cmd.Parameters.AddWithValue("@ThoiDiemVao", DateTime.Now);
-                        cmd.Parameters.AddWithValue("@IdBanan", request.IdBan);
-                        cmd.Parameters.AddWithValue("@TrangThaiHD", 0);
-                        cmd.Parameters.AddWithValue("@IdNhanVien", (object?)request.IdNhanVien ?? DBNull.Value);
-
-                        newOrderId = (int)cmd.ExecuteScalar();
-                    }
-
-                    foreach (var detail in request.ChiTietHoaDonBan)
-                    {
-                        using (var cmdDetail = new SqlCommand(
-                            @"INSERT INTO ChiTietHoaDonBan (idHoaDonBan, idMonAn, soLuong)
-                              VALUES (@IdHoaDonBan, @IdMonAn, @SoLuong)", conn, tran))
-                        {
-                            cmdDetail.Parameters.AddWithValue("@IdHoaDonBan", newOrderId);
-                            cmdDetail.Parameters.AddWithValue("@IdMonAn", detail.IdMonAn);
-                            cmdDetail.Parameters.AddWithValue("@SoLuong", detail.SoLuong);
-                            cmdDetail.ExecuteNonQuery();
-                        }
-                    }
-                    tran.Commit();
+                    SqlParameter[] detailParams = {
+                        new SqlParameter("@IdHoaDonBan", newOrderId),
+                        new SqlParameter("@IdMonAn", detail.IdMonAn),
+                        new SqlParameter("@SoLuong", detail.SoLuong)
+                    };
+                    _dbHelper.ExecuteStoredProcedure("sp_CreateOrderDetail", detailParams);
                 }
             }
+
             return newOrderId;
         }
 
         public bool UpdateOrder(int id, UpdateOrderRequest request)
         {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (var tran = conn.BeginTransaction())
-                {
-                    using (var cmd = new SqlCommand(
-                        @"UPDATE HoaDonBan SET 
-                            thoiDiemRa = @ThoiDiemRa,
-                            idNhanVien = @IdNhanVien
-                          WHERE id = @Id", conn, tran))
-                    {
-                        cmd.Parameters.AddWithValue("@ThoiDiemRa", (object?)request.ThoiDiemRa ?? DBNull.Value);
-                        cmd.Parameters.AddWithValue("@IdNhanVien", (object?)request.IdNhanVien ?? DBNull.Value);
-                        cmd.Parameters.AddWithValue("@Id", id);
-                        cmd.ExecuteNonQuery();
-                    }
+            // Update main order
+            SqlParameter[] orderParams = {
+                new SqlParameter("@Id", id),
+                new SqlParameter("@ThoiDiemRa", (object?)request.ThoiDiemRa ?? DBNull.Value),
+                new SqlParameter("@IdNhanVien", (object?)request.IdNhanVien ?? DBNull.Value)
+            };
 
-                    if (request.ChiTietHoaDonBan != null)
-                    {
-                        using (var cmdDel = new SqlCommand(
-                            "DELETE FROM ChiTietHoaDonBan WHERE idHoaDonBan = @IdHoaDonBan", conn, tran))
-                        {
-                            cmdDel.Parameters.AddWithValue("@IdHoaDonBan", id);
-                            cmdDel.ExecuteNonQuery();
-                        }
-                        foreach (var detail in request.ChiTietHoaDonBan)
-                        {
-                            using (var cmdDetail = new SqlCommand(
-                                @"INSERT INTO ChiTietHoaDonBan (idHoaDonBan, idMonAn, soLuong)
-                                  VALUES (@IdHoaDonBan, @IdMonAn, @SoLuong)", conn, tran))
-                            {
-                                cmdDetail.Parameters.AddWithValue("@IdHoaDonBan", id);
-                                cmdDetail.Parameters.AddWithValue("@IdMonAn", detail.IdMonAn);
-                                cmdDetail.Parameters.AddWithValue("@SoLuong", detail.SoLuong);
-                                cmdDetail.ExecuteNonQuery();
-                            }
-                        }
-                    }
-                    tran.Commit();
+            DataTable orderResult = _dbHelper.ExecuteStoredProcedure("sp_UpdateOrder", orderParams);
+            bool success = orderResult.Rows.Count > 0 && Convert.ToInt32(orderResult.Rows[0]["RowsAffected"]) > 0;
+
+            // Update order details if provided
+            if (request.ChiTietHoaDonBan != null && success)
+            {
+                // Delete existing details
+                SqlParameter[] deleteParams = { new SqlParameter("@IdHoaDonBan", id) };
+                _dbHelper.ExecuteStoredProcedure("sp_DeleteOrderDetailsByOrderId", deleteParams);
+
+                // Add new details
+                foreach (var detail in request.ChiTietHoaDonBan)
+                {
+                    SqlParameter[] detailParams = {
+                        new SqlParameter("@IdHoaDonBan", id),
+                        new SqlParameter("@IdMonAn", detail.IdMonAn),
+                        new SqlParameter("@SoLuong", detail.SoLuong)
+                    };
+                    _dbHelper.ExecuteStoredProcedure("sp_CreateOrderDetail", detailParams);
                 }
             }
-            return true;
+
+            return success;
         }
 
         public bool DeleteOrder(int id)
         {
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (var tran = conn.BeginTransaction())
-                {
-                    using (var cmdDetail = new SqlCommand(
-                        "DELETE FROM ChiTietHoaDonBan WHERE idHoaDonBan = @Id", conn, tran))
-                    {
-                        cmdDetail.Parameters.AddWithValue("@Id", id);
-                        cmdDetail.ExecuteNonQuery();
-                    }
-                    using (var cmd = new SqlCommand(
-                        "DELETE FROM HoaDonBan WHERE id = @Id", conn, tran))
-                    {
-                        cmd.Parameters.AddWithValue("@Id", id);
-                        var result = cmd.ExecuteNonQuery() > 0;
-                        tran.Commit();
-                        return result;
-                    }
-                }
-            }
+            // Delete order details first
+            SqlParameter[] deleteDetailsParams = { new SqlParameter("@IdHoaDonBan", id) };
+            _dbHelper.ExecuteStoredProcedure("sp_DeleteOrderDetailsByOrderId", deleteDetailsParams);
+
+            // Delete main order
+            SqlParameter[] deleteOrderParams = { new SqlParameter("@Id", id) };
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_DeleteOrder", deleteOrderParams);
+
+            return dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
         }
 
         public bool UpdateOrderStatus(int id, UpdateOrderStatusRequest request)
         {
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand(
-                @"UPDATE HoaDonBan SET 
-                    trangThaiHD = @TrangThaiHD,
-                    thoiDiemRa = @ThoiDiemRa
-                  WHERE id = @Id", conn))
-            {
-                cmd.Parameters.AddWithValue("@TrangThaiHD", request.TrangThaiHD);
-                cmd.Parameters.AddWithValue("@ThoiDiemRa", (object?)request.ThoiDiemRa ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@Id", id);
+            SqlParameter[] parameters = {
+                new SqlParameter("@Id", id),
+                new SqlParameter("@TrangThaiHD", request.TrangThaiHD),
+                new SqlParameter("@ThoiDiemRa", (object?)request.ThoiDiemRa ?? DBNull.Value)
+            };
 
-                conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
-            }
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_UpdateOrderStatus", parameters);
+            return dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
         }
 
         public List<OrderModel> GetOrdersByTableId(int tableId)
         {
             var orders = new List<OrderModel>();
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("SELECT * FROM HoaDonBan WHERE idBanan = @IdBanan", conn))
+            SqlParameter[] parameters = { new SqlParameter("@IdBanan", tableId) };
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetOrdersByTableId", parameters);
+
+            foreach (DataRow row in dt.Rows)
             {
-                cmd.Parameters.AddWithValue("@IdBanan", tableId);
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var order = MapOrder(reader);
-                        order.ChiTietHoaDonBan = GetOrderDetails(order.Id);
-                        orders.Add(order);
-                    }
-                }
+                var order = MapOrderFromDataRow(row);
+                order.ChiTietHoaDonBan = GetOrderDetails(order.Id);
+                orders.Add(order);
             }
+
             return orders;
         }
 
         private List<OrderDetailModel> GetOrderDetails(int orderId)
         {
             var details = new List<OrderDetailModel>();
-            using (var conn = new SqlConnection(_connectionString))
-            using (var cmd = new SqlCommand("SELECT * FROM ChiTietHoaDonBan WHERE idHoaDonBan = @IdHoaDonBan", conn))
+            SqlParameter[] parameters = { new SqlParameter("@IdHoaDonBan", orderId) };
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetOrderDetails", parameters);
+
+            foreach (DataRow row in dt.Rows)
             {
-                cmd.Parameters.AddWithValue("@IdHoaDonBan", orderId);
-                conn.Open();
-                using (var reader = cmd.ExecuteReader())
+                details.Add(new OrderDetailModel
                 {
-                    while (reader.Read())
-                    {
-                        details.Add(new OrderDetailModel
-                        {
-                            IdHoaDonBan = reader.GetInt32(reader.GetOrdinal("idHoaDonBan")),
-                            IdMonAn = reader.GetInt32(reader.GetOrdinal("idMonAn")),
-                            SoLuong = reader.GetInt32(reader.GetOrdinal("soLuong"))
-                        });
-                    }
-                }
+                    IdHoaDonBan = Convert.ToInt32(row["idHoaDonBan"]),
+                    IdMonAn = Convert.ToInt32(row["idMonAn"]),
+                    SoLuong = Convert.ToInt32(row["soLuong"])
+                });
             }
+
             return details;
         }
 
-
-        private OrderModel MapOrder(SqlDataReader reader)
+        private OrderModel MapOrderFromDataRow(DataRow row)
         {
             return new OrderModel
             {
-                Id = reader.GetInt32(reader.GetOrdinal("id")),
-                ThoiDiemVao = reader.GetDateTime(reader.GetOrdinal("thoiDiemVao")),
-                ThoiDiemRa = reader.IsDBNull(reader.GetOrdinal("thoiDiemRa")) ? null : reader.GetDateTime(reader.GetOrdinal("thoiDiemRa")),
-                IdBan = reader.GetInt32(reader.GetOrdinal("idBanan")),
-                TrangThaiHD = reader.GetInt32(reader.GetOrdinal("trangThaiHD")),
-                IdNhanVien = reader.IsDBNull(reader.GetOrdinal("idNhanVien")) ? null : reader.GetInt32(reader.GetOrdinal("idNhanVien")),
+                Id = Convert.ToInt32(row["id"]),
+                ThoiDiemVao = Convert.ToDateTime(row["thoiDiemVao"]),
+                ThoiDiemRa = row["thoiDiemRa"] == DBNull.Value ? null : Convert.ToDateTime(row["thoiDiemRa"]),
+                IdBan = Convert.ToInt32(row["idBanan"]),
+                TrangThaiHD = Convert.ToInt32(row["trangThaiHD"]),
+                IdNhanVien = row["idNhanVien"] == DBNull.Value ? null : Convert.ToInt32(row["idNhanVien"]),
                 ChiTietHoaDonBan = new List<OrderDetailModel>()
             };
         }
     }
 }
+
+
