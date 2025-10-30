@@ -20,37 +20,13 @@ namespace DAL
         {
             var products = new List<TopSellingProductModel>();
 
-            string sql = @"
-            SELECT TOP 5 
-                m.id AS IdMonAn,
-                m.tenMonAn AS TenMonAn,
-                SUM(ct.soLuong) as TongSoLuongBan,
-                m.giaTien AS GiaBan,
-                SUM(ct.soLuong * m.giaTien) as TongDoanhThu
-            FROM ChiTietHoaDonBan ct
-            INNER JOIN MonAn m ON ct.idMonAn = m.id
-            INNER JOIN HoaDonBan h ON ct.idHoaDonBan = h.id
-            WHERE h.trangThaiHD = 1";
-
             var parameters = new List<SqlParameter>();
-
             if (tuNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao >= @TuNgay";
                 parameters.Add(new SqlParameter("@TuNgay", tuNgay.Value));
-            }
-
             if (denNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao <= @DenNgay";
                 parameters.Add(new SqlParameter("@DenNgay", denNgay.Value));
-            }
 
-            sql += @"
-            GROUP BY m.id, m.tenMonAn, m.giaTien
-            ORDER BY TongSoLuongBan DESC";
-
-            var dt = _dbHelper.ExecuteQuery(sql, parameters.ToArray());
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetTop5BestSellingProducts", parameters.ToArray());
 
             foreach (DataRow row in dt.Rows)
             {
@@ -70,30 +46,13 @@ namespace DAL
         // Lấy tổng doanh thu
         public RevenueReportModel GetTotalRevenue(DateTime? tuNgay = null, DateTime? denNgay = null)
         {
-            string sql = @"
-            SELECT 
-                ISNULL(SUM(ct.soLuong * m.giaTien), 0) as TongDoanhThu,
-                COUNT(DISTINCT h.id) as SoDonHang
-            FROM HoaDonBan h
-            INNER JOIN ChiTietHoaDonBan ct ON h.id = ct.idHoaDonBan
-            INNER JOIN MonAn m ON ct.idMonAn = m.id
-            WHERE h.trangThaiHD = 1";
-
             var parameters = new List<SqlParameter>();
-
             if (tuNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao >= @TuNgay";
                 parameters.Add(new SqlParameter("@TuNgay", tuNgay.Value));
-            }
-
             if (denNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao <= @DenNgay";
                 parameters.Add(new SqlParameter("@DenNgay", denNgay.Value));
-            }
 
-            var dt = _dbHelper.ExecuteQuery(sql, parameters.ToArray());
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetTotalRevenue", parameters.ToArray());
 
             if (dt.Rows.Count > 0)
             {
@@ -113,29 +72,13 @@ namespace DAL
         // Lấy tổng số lượng sản phẩm đã bán
         public SalesQuantityModel GetTotalProductsSold(DateTime? tuNgay = null, DateTime? denNgay = null)
         {
-            string sql = @"
-            SELECT 
-                ISNULL(SUM(ct.soLuong), 0) as TongSoLuongDaBan,
-                COUNT(DISTINCT ct.idMonAn) as SoLoaiMonAn
-            FROM ChiTietHoaDonBan ct
-            INNER JOIN HoaDonBan h ON ct.idHoaDonBan = h.id
-            WHERE h.trangThaiHD = 1";
-
             var parameters = new List<SqlParameter>();
-
             if (tuNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao >= @TuNgay";
                 parameters.Add(new SqlParameter("@TuNgay", tuNgay.Value));
-            }
-
             if (denNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao <= @DenNgay";
                 parameters.Add(new SqlParameter("@DenNgay", denNgay.Value));
-            }
 
-            var dt = _dbHelper.ExecuteQuery(sql, parameters.ToArray());
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetTotalProductsSold", parameters.ToArray());
 
             if (dt.Rows.Count > 0)
             {
@@ -155,30 +98,13 @@ namespace DAL
         // Lấy trung bình giá trị đơn hàng
         public AverageOrderValueModel GetAverageOrderValue(DateTime? tuNgay = null, DateTime? denNgay = null)
         {
-            string sql = @"
-            SELECT 
-                COUNT(DISTINCT h.id) as TongSoDonHang,
-                ISNULL(SUM(ct.soLuong * m.giaTien), 0) as TongDoanhThu
-            FROM HoaDonBan h
-            INNER JOIN ChiTietHoaDonBan ct ON h.id = ct.idHoaDonBan
-            INNER JOIN MonAn m ON ct.idMonAn = m.id
-            WHERE h.trangThaiHD = 1";
-
             var parameters = new List<SqlParameter>();
-
             if (tuNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao >= @TuNgay";
                 parameters.Add(new SqlParameter("@TuNgay", tuNgay.Value));
-            }
-
             if (denNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao <= @DenNgay";
                 parameters.Add(new SqlParameter("@DenNgay", denNgay.Value));
-            }
 
-            var dt = _dbHelper.ExecuteQuery(sql, parameters.ToArray());
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetAverageOrderValue", parameters.ToArray());
 
             if (dt.Rows.Count > 0)
             {
@@ -204,44 +130,13 @@ namespace DAL
         {
             var orders = new List<OrderSummaryModel>();
 
-            string sql = @"
-            SELECT 
-                h.id as IdHoaDonBan,
-                h.thoiDiemVao as NgayBan,
-                CASE h.trangThaiHD 
-                    WHEN 0 THEN N'Chưa thanh toán'
-                    WHEN 1 THEN N'Đã thanh toán'
-                    ELSE N'Không xác định'
-                END as TrangThai,
-                ISNULL(SUM(ct.soLuong * m.giaTien), 0) as TongTien,
-                b.tenBan as TenBan,
-                nv.hoTen as TenNhanVien
-            FROM HoaDonBan h
-            INNER JOIN Ban b ON h.idBanAn = b.id
-            LEFT JOIN NhanVien nv ON h.idNhanVien = nv.id
-            LEFT JOIN ChiTietHoaDonBan ct ON h.id = ct.idHoaDonBan
-            LEFT JOIN MonAn m ON ct.idMonAn = m.id
-            WHERE 1=1";
-
             var parameters = new List<SqlParameter>();
-
             if (tuNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao >= @TuNgay";
                 parameters.Add(new SqlParameter("@TuNgay", tuNgay.Value));
-            }
-
             if (denNgay.HasValue)
-            {
-                sql += " AND h.thoiDiemVao <= @DenNgay";
                 parameters.Add(new SqlParameter("@DenNgay", denNgay.Value));
-            }
 
-            sql += @"
-            GROUP BY h.id, h.thoiDiemVao, h.trangThaiHD, b.tenBan, nv.hoTen
-            ORDER BY h.thoiDiemVao DESC";
-
-            var dt = _dbHelper.ExecuteQuery(sql, parameters.ToArray());
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetOrdersSummary", parameters.ToArray());
 
             foreach (DataRow row in dt.Rows)
             {
@@ -278,3 +173,4 @@ namespace DAL
         }
     }
 }
+

@@ -21,8 +21,7 @@ namespace DAL
         // Sync methods
         public List<SupplierModel> GetAllSuppliers()
         {
-            string sql = "SELECT id, tenNhaCungCap, diaChi, sdt, email FROM NhaCungCap ORDER BY tenNhaCungCap";
-            DataTable dt = _dbHelper.ExecuteQuery(sql);
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetAllSuppliers");
 
             List<SupplierModel> supplierList = new List<SupplierModel>();
             foreach (DataRow row in dt.Rows)
@@ -37,9 +36,8 @@ namespace DAL
             if (id <= 0)
                 throw new ArgumentException("ID phải lớn hơn 0");
 
-            string sql = "SELECT id, tenNhaCungCap, diaChi, sdt, email FROM NhaCungCap WHERE id = @id";
             SqlParameter[] parameters = { new SqlParameter("@id", id) };
-            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetSupplierById", parameters);
 
             if (dt.Rows.Count == 0)
                 return null;
@@ -55,23 +53,32 @@ namespace DAL
             if (string.IsNullOrWhiteSpace(request.TenNhaCungCap))
                 throw new ArgumentException("Tên nhà cung cấp không được để trống");
 
-            string sql = "INSERT INTO NhaCungCap (tenNhaCungCap, diaChi, sdt, email) VALUES (@tenNhaCungCap, @diaChi, @sdt, @email)";
             SqlParameter[] parameters = {
                 new SqlParameter("@tenNhaCungCap", request.TenNhaCungCap),
                 new SqlParameter("@diaChi", (object?)request.DiaChi ?? DBNull.Value),
                 new SqlParameter("@sdt", (object?)request.Sdt ?? DBNull.Value),
                 new SqlParameter("@email", (object?)request.Email ?? DBNull.Value)
             };
-            return _dbHelper.ExecuteInsertAndGetId(sql, parameters);
+
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_CreateSupplierFromRequest", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["NewID"]);
+            }
+            return 0;
         }
 
         public int CreateSupplier(SupplierModel supplier)
         {
             ValidateSupplier(supplier);
 
-            string sql = "INSERT INTO NhaCungCap (tenNhaCungCap, diaChi, sdt, email) VALUES (@tenNhaCungCap, @diaChi, @sdt, @email)";
             SqlParameter[] parameters = GetSupplierParameters(supplier);
-            return _dbHelper.ExecuteInsertAndGetId(sql, parameters);
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_CreateSupplier", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["NewID"]);
+            }
+            return 0;
         }
 
         public bool UpdateSupplier(int id, SupplierModel supplier)
@@ -81,13 +88,16 @@ namespace DAL
 
             ValidateSupplier(supplier);
 
-            string sql = "UPDATE NhaCungCap SET tenNhaCungCap = @tenNhaCungCap, diaChi = @diaChi, sdt = @sdt, email = @email WHERE id = @id";
             SqlParameter[] parameters = GetSupplierParameters(supplier);
             Array.Resize(ref parameters, parameters.Length + 1);
             parameters[parameters.Length - 1] = new SqlParameter("@id", id);
 
-            int rowsAffected = _dbHelper.ExecuteNonQuery(sql, parameters);
-            return rowsAffected > 0;
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_UpdateSupplier", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
+            }
+            return false;
         }
 
         public bool DeleteSupplier(int id)
@@ -95,11 +105,13 @@ namespace DAL
             if (id <= 0)
                 throw new ArgumentException("ID phải lớn hơn 0");
 
-            string sql = "DELETE FROM NhaCungCap WHERE id = @id";
             SqlParameter[] parameters = { new SqlParameter("@id", id) };
-
-            int rowsAffected = _dbHelper.ExecuteNonQuery(sql, parameters);
-            return rowsAffected > 0;
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_DeleteSupplier", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
+            }
+            return false;
         }
 
         // Private helper methods
@@ -136,3 +148,5 @@ namespace DAL
         }
     }
 }
+
+

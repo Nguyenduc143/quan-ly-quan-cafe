@@ -34,13 +34,12 @@ namespace DAL
 
         public bool IsTenBanExists(string tenBan)
         {
-            var sql = "SELECT COUNT(1) FROM Ban WHERE TENBAN = @TENBAN";
             var parameters = new SqlParameter[]
             {
                 new SqlParameter("@TENBAN", tenBan)
             };
-            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
-            if (dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0][0]) > 0)
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_CheckTenBanExists", parameters);
+            if (dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0]["Count"]) > 0)
                 return true;
             return false;
         }
@@ -48,8 +47,7 @@ namespace DAL
         public List<BanModels> GetAllBan()
         {
             var list = new List<BanModels>();
-            var sql = "SELECT ID, TENBAN, TRANGTHAI FROM Ban";
-            DataTable dt = _dbHelper.ExecuteQuery(sql);
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetAllBan");
             foreach (DataRow row in dt.Rows)
             {
                 list.Add(new BanModels
@@ -61,18 +59,18 @@ namespace DAL
             }
             return list;
         }
+
         public List<BanModels> GetBanByTrangThai(string trangThai)
         {
             if (!IsValidTrangThai(trangThai))
                 return new List<BanModels>();
 
             var list = new List<BanModels>();
-            var sql = "SELECT ID, TENBAN, TRANGTHAI FROM Ban WHERE TRANGTHAI = @TRANGTHAI";
             var parameters = new SqlParameter[]
             {
                 new SqlParameter("@TRANGTHAI", trangThai)
             };
-            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetBanByTrangThai", parameters);
             foreach (DataRow row in dt.Rows)
             {
                 list.Add(new BanModels
@@ -84,14 +82,14 @@ namespace DAL
             }
             return list;
         }
+
         public BanModels? GetBanById(int id)
         {
-            var sql = "SELECT ID, TENBAN, TRANGTHAI FROM Ban WHERE ID = @ID";
             var parameters = new SqlParameter[]
             {
                 new SqlParameter("@ID", id)
             };
-            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetBanById", parameters);
             if (dt.Rows.Count == 0) return null;
             var row = dt.Rows[0];
             return new BanModels
@@ -111,15 +109,20 @@ namespace DAL
             if (IsTenBanExists(ban.TENBAN))
                 return -1; // Duplicate
 
-            var sql = "INSERT INTO Ban (TENBAN, TRANGTHAI) VALUES (@TENBAN, @TRANGTHAI)";
             var parameters = new SqlParameter[]
             {
                 new SqlParameter("@TENBAN", ban.TENBAN),
                 new SqlParameter("@TRANGTHAI", ban.TRANGTHAI)
             };
 
-            return _dbHelper.ExecuteInsertAndGetId(sql, parameters);
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_ThemBan", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["NewID"]);
+            }
+            return 0;
         }
+
         public int CapNhatBan(BanModels ban)
         {
             // Validate TENBAN and TRANGTHAI
@@ -127,26 +130,28 @@ namespace DAL
                 return -2; // Invalid input
 
             // Check for duplicate TENBAN with another ID
-            var sqlCheck = "SELECT COUNT(1) FROM Ban WHERE TENBAN = @TENBAN AND ID <> @ID";
             var parametersCheck = new SqlParameter[]
             {
-        new SqlParameter("@TENBAN", ban.TENBAN),
-        new SqlParameter("@ID", ban.ID)
+                new SqlParameter("@TENBAN", ban.TENBAN),
+                new SqlParameter("@ID", ban.ID)
             };
-            DataTable dt = _dbHelper.ExecuteQuery(sqlCheck, parametersCheck);
-            if (dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0][0]) > 0)
+            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_CheckTenBanExistsForUpdate", parametersCheck);
+            if (dt.Rows.Count > 0 && Convert.ToInt32(dt.Rows[0]["Count"]) > 0)
                 return -1; // Duplicate name
 
-            var sql = "UPDATE Ban SET TENBAN = @TENBAN, TRANGTHAI = @TRANGTHAI WHERE ID = @ID";
             var parameters = new SqlParameter[]
             {
-        new SqlParameter("@ID", ban.ID),
-        new SqlParameter("@TENBAN", ban.TENBAN),
-        new SqlParameter("@TRANGTHAI", ban.TRANGTHAI)
+                new SqlParameter("@ID", ban.ID),
+                new SqlParameter("@TENBAN", ban.TENBAN),
+                new SqlParameter("@TRANGTHAI", ban.TRANGTHAI)
             };
-            return _dbHelper.ExecuteNonQuery(sql, parameters);
+            DataTable result = _dbHelper.ExecuteStoredProcedure("sp_CapNhatBan", parameters);
+            if (result.Rows.Count > 0)
+            {
+                return Convert.ToInt32(result.Rows[0]["RowsAffected"]);
+            }
+            return 0;
         }
-
 
         public int CapNhatTrangThaiBan(int id, string trangThai)
         {
@@ -154,25 +159,31 @@ namespace DAL
             if (!IsValidTrangThai(trangThai))
                 return -2; // Invalid input
 
-            var sql = "UPDATE Ban SET TRANGTHAI = @TRANGTHAI WHERE ID = @ID";
             var parameters = new SqlParameter[]
             {
                 new SqlParameter("@ID", id),
                 new SqlParameter("@TRANGTHAI", trangThai)
             };
-            return _dbHelper.ExecuteNonQuery(sql, parameters);
+            DataTable result = _dbHelper.ExecuteStoredProcedure("sp_CapNhatTrangThaiBan", parameters);
+            if (result.Rows.Count > 0)
+            {
+                return Convert.ToInt32(result.Rows[0]["RowsAffected"]);
+            }
+            return 0;
         }
 
         public int XoaBan(int id)
         {
-            // No validation needed for delete, but you can add checks if required
-            var sql = "DELETE FROM Ban WHERE ID = @ID";
             var parameters = new SqlParameter[]
             {
                 new SqlParameter("@ID", id)
             };
-            return _dbHelper.ExecuteNonQuery(sql, parameters);
+            DataTable result = _dbHelper.ExecuteStoredProcedure("sp_XoaBan", parameters);
+            if (result.Rows.Count > 0)
+            {
+                return Convert.ToInt32(result.Rows[0]["RowsAffected"]);
+            }
+            return 0;
         }
-
     }
 }

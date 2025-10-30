@@ -1,14 +1,14 @@
 # API Gateway - H??ng D?n S? D?ng
 
 ## T?ng Quan
-API Gateway s? d?ng Ocelot ?? ??nh tuy?n c·c request ??n c·c microservices t??ng ?ng:
-- **Admin API**: Ch?y trÍn port 5092
-- **Staff API**: Ch?y trÍn port 5229
-- **Gateway**: Ch?y trÍn port 5000
+API Gateway s? d?ng Ocelot ?? ??nh tuy?n c√°c request ??n c√°c microservices t??ng ?ng:
+- **Admin API**: Ch?y tr√™n port 5092
+- **Staff API**: Ch?y tr√™n port 5229
+- **Gateway**: Ch?y tr√™n port 5000
 
-## C·ch Ch?y
+## C√°ch Ch?y
 
-### 1. Kh?i ??ng c·c services theo th? t?:
+### 1. Kh?i ??ng c√°c services theo th? t?:
 
 #### B??c 1: Kh?i ??ng Admin API
 ```bash
@@ -28,97 +28,97 @@ cd QuanlyCafe.API.Gateway
 dotnet run
 ```
 
-## C?u Tr˙c Routes
+## C?u Tr√∫c Routes
 
 ### Admin API Routes (Prefix: `/admin`)
 
 #### Authentication
 - `POST /admin/api/Authentication/login` - ??ng nh?p
 - `POST /admin/api/Authentication/logout` - ??ng xu?t
-- `GET /admin/api/Authentication/me` - ThÙng tin user hi?n t?i
+- `GET /admin/api/Authentication/me` - Th√¥ng tin user hi?n t?i
 - `POST /admin/api/Authentication/change-password` - ??i m?t kh?u
-- `POST /admin/api/Authentication/register` - ??ng k˝ t‡i kho?n m?i (Admin only)
-- `GET /admin/api/Authentication/status` - Tr?ng th·i ??ng nh?p
-- `GET /admin/api/Authentication/accounts` - Danh s·ch t‡i kho?n (Admin only)
+- `POST /admin/api/Authentication/register` - ??ng k√Ω t√†i kho?n m?i (Admin only)
+- `GET /admin/api/Authentication/status` - Tr?ng th√°i ??ng nh?p
+- `GET /admin/api/Authentication/accounts` - Danh s√°ch t√†i kho?n (Admin only)
 
-#### Product (MÛn ?n & Danh m?c)
-- `GET /admin/api/Product/monan` - L?y t?t c? mÛn ?n
+#### Product (M√≥n ?n & Danh m?c)
+- `GET /admin/api/Product/monan` - L?y t?t c? m√≥n ?n
 - `GET /admin/api/Product/danhmuc` - L?y t?t c? danh m?c
-- `GET /admin/api/Product/monan/danhmuc/{id}` - L?y mÛn ?n theo danh m?c
-- `POST /admin/api/Product/monan` - ThÍm mÛn ?n
-- `PUT /admin/api/Product/monan` - C?p nh?t mÛn ?n
-- `DELETE /admin/api/Product/monan/{id}` - XÛa mÛn ?n
-- `POST /admin/api/Product/danhmuc` - ThÍm danh m?c
+- `GET /admin/api/Product/monan/danhmuc/{id}` - L?y m√≥n ?n theo danh m?c
+- `POST /admin/api/Product/monan` - Th√™m m√≥n ?n
+- `PUT /admin/api/Product/monan` - C?p nh?t m√≥n ?n
+- `DELETE /admin/api/Product/monan/{id}` - X√≥a m√≥n ?n
+- `POST /admin/api/Product/danhmuc` - Th√™m danh m?c
 - `PUT /admin/api/Product/danhmuc` - C?p nh?t danh m?c
 
-#### Employees (Nh‚n viÍn)
-- `GET /admin/api/Employees` - L?y danh s·ch nh‚n viÍn
-- `GET /admin/api/Employees/{id}` - L?y thÙng tin nh‚n viÍn
-- `POST /admin/api/Employees` - ThÍm nh‚n viÍn
-- `PUT /admin/api/Employees/{id}` - C?p nh?t nh‚n viÍn
-- `DELETE /admin/api/Employees/{id}` - XÛa nh‚n viÍn
+#### Employees (Nh√¢n vi√™n)
+- `GET /admin/api/Employees` - L?y danh s√°ch nh√¢n vi√™n
+- `GET /admin/api/Employees/{id}` - L?y th√¥ng tin nh√¢n vi√™n
+- `POST /admin/api/Employees` - Th√™m nh√¢n vi√™n
+- `PUT /admin/api/Employees/{id}` - C?p nh?t nh√¢n vi√™n
+- `DELETE /admin/api/Employees/{id}` - X√≥a nh√¢n vi√™n
 
-#### Ban (B‡n)
-- `GET /admin/api/Ban` - L?y danh s·ch b‡n
-- `GET /admin/api/Ban/{id}` - L?y thÙng tin b‡n
-- `POST /admin/api/Ban` - ThÍm b‡n
-- `PUT /admin/api/Ban/{id}` - C?p nh?t b‡n
-- `DELETE /admin/api/Ban/{id}` - XÛa b‡n
+#### Ban (B√†n)
+- `GET /admin/api/Ban` - L?y danh s√°ch b√†n
+- `GET /admin/api/Ban/{id}` - L?y th√¥ng tin b√†n
+- `POST /admin/api/Ban` - Th√™m b√†n
+- `PUT /admin/api/Ban/{id}` - C?p nh?t b√†n
+- `DELETE /admin/api/Ban/{id}` - X√≥a b√†n
 
-#### Order (HÛa ??n)
-- `GET /admin/api/Order` - L?y danh s·ch hÛa ??n
-- `GET /admin/api/Order/{id}` - L?y chi ti?t hÛa ??n
-- `POST /admin/api/Order` - T?o hÛa ??n
-- `PUT /admin/api/Order/{id}` - C?p nh?t hÛa ??n
-- `DELETE /admin/api/Order/{id}` - XÛa hÛa ??n
-- `PATCH /admin/api/Order/{id}/status` - C?p nh?t tr?ng th·i hÛa ??n
-- `GET /admin/api/Order/table/{tableId}` - L?y hÛa ??n theo b‡n
+#### Order (H√≥a ??n)
+- `GET /admin/api/Order` - L?y danh s√°ch h√≥a ??n
+- `GET /admin/api/Order/{id}` - L?y chi ti?t h√≥a ??n
+- `POST /admin/api/Order` - T?o h√≥a ??n
+- `PUT /admin/api/Order/{id}` - C?p nh?t h√≥a ??n
+- `DELETE /admin/api/Order/{id}` - X√≥a h√≥a ??n
+- `PATCH /admin/api/Order/{id}/status` - C?p nh?t tr?ng th√°i h√≥a ??n
+- `GET /admin/api/Order/table/{tableId}` - L?y h√≥a ??n theo b√†n
 
 #### Inventory (Kho)
-- `GET /admin/api/Inventory` - L?y danh s·ch nguyÍn li?u
-- `GET /admin/api/Inventory/{id}` - L?y thÙng tin nguyÍn li?u
-- `POST /admin/api/Inventory` - ThÍm nguyÍn li?u
-- `PUT /admin/api/Inventory/{id}` - C?p nh?t nguyÍn li?u
-- `DELETE /admin/api/Inventory/{id}` - XÛa nguyÍn li?u
+- `GET /admin/api/Inventory` - L?y danh s√°ch nguy√™n li?u
+- `GET /admin/api/Inventory/{id}` - L?y th√¥ng tin nguy√™n li?u
+- `POST /admin/api/Inventory` - Th√™m nguy√™n li?u
+- `PUT /admin/api/Inventory/{id}` - C?p nh?t nguy√™n li?u
+- `DELETE /admin/api/Inventory/{id}` - X√≥a nguy√™n li?u
 
-#### Suppliers (Nh‡ cung c?p)
-- `GET /admin/api/Suppliers` - L?y danh s·ch nh‡ cung c?p
-- `GET /admin/api/Suppliers/{id}` - L?y thÙng tin nh‡ cung c?p
-- `POST /admin/api/Suppliers` - ThÍm nh‡ cung c?p
-- `PUT /admin/api/Suppliers/{id}` - C?p nh?t nh‡ cung c?p
-- `DELETE /admin/api/Suppliers/{id}` - XÛa nh‡ cung c?p
+#### Suppliers (Nh√† cung c?p)
+- `GET /admin/api/Suppliers` - L?y danh s√°ch nh√† cung c?p
+- `GET /admin/api/Suppliers/{id}` - L?y th√¥ng tin nh√† cung c?p
+- `POST /admin/api/Suppliers` - Th√™m nh√† cung c?p
+- `PUT /admin/api/Suppliers/{id}` - C?p nh?t nh√† cung c?p
+- `DELETE /admin/api/Suppliers/{id}` - X√≥a nh√† cung c?p
 
-#### Reports (B·o c·o)
-- `GET /admin/api/Reports/{everything}` - C·c endpoint b·o c·o
+#### Reports (B√°o c√°o)
+- `GET /admin/api/Reports/{everything}` - C√°c endpoint b√°o c√°o
 
-#### Invoices (HÛa ??n ?„ thanh to·n)
-- `GET /admin/api/Invoices` - L?y danh s·ch hÛa ??n ?„ thanh to·n
-- `GET /admin/api/Invoices/{id}` - L?y chi ti?t hÛa ??n ?„ thanh to·n
-- `POST /admin/api/Invoices/{id}/print` - In hÛa ??n ?„ thanh to·n
+#### Invoices (H√≥a ??n ?√£ thanh to√°n)
+- `GET /admin/api/Invoices` - L?y danh s√°ch h√≥a ??n ?√£ thanh to√°n
+- `GET /admin/api/Invoices/{id}` - L?y chi ti?t h√≥a ??n ?√£ thanh to√°n
+- `POST /admin/api/Invoices/{id}/print` - In h√≥a ??n ?√£ thanh to√°n
 
 ### Staff API Routes (Prefix: `/staff`)
 
 #### Authentication
 - `POST /staff/api/Authentication/login` - ??ng nh?p
 - `POST /staff/api/Authentication/logout` - ??ng xu?t
-- `GET /staff/api/Authentication/me` - ThÙng tin user hi?n t?i
+- `GET /staff/api/Authentication/me` - Th√¥ng tin user hi?n t?i
 - `POST /staff/api/Authentication/change-password` - ??i m?t kh?u
-- `GET /staff/api/Authentication/status` - Tr?ng th·i ??ng nh?p
+- `GET /staff/api/Authentication/status` - Tr?ng th√°i ??ng nh?p
 
-#### Ban (B‡n)
-- `GET /staff/api/Ban` - L?y danh s·ch b‡n
-- `GET /staff/api/Ban/{id}` - L?y thÙng tin b‡n
+#### Ban (B√†n)
+- `GET /staff/api/Ban` - L?y danh s√°ch b√†n
+- `GET /staff/api/Ban/{id}` - L?y th√¥ng tin b√†n
 
-#### Order (HÛa ??n)
-- `GET /staff/api/Order` - L?y danh s·ch hÛa ??n
-- `GET /staff/api/Order/{id}` - L?y chi ti?t hÛa ??n
-- `POST /staff/api/Order` - T?o hÛa ??n
-- `PUT /staff/api/Order/{id}` - C?p nh?t hÛa ??n
-- `DELETE /staff/api/Order/{id}` - XÛa hÛa ??n
-- `PATCH /staff/api/Order/{id}/status` - C?p nh?t tr?ng th·i hÛa ??n
-- `GET /staff/api/Order/table/{tableId}` - L?y hÛa ??n theo b‡n
+#### Order (H√≥a ??n)
+- `GET /staff/api/Order` - L?y danh s√°ch h√≥a ??n
+- `GET /staff/api/Order/{id}` - L?y chi ti?t h√≥a ??n
+- `POST /staff/api/Order` - T?o h√≥a ??n
+- `PUT /staff/api/Order/{id}` - C?p nh?t h√≥a ??n
+- `DELETE /staff/api/Order/{id}` - X√≥a h√≥a ??n
+- `PATCH /staff/api/Order/{id}/status` - C?p nh?t tr?ng th√°i h√≥a ??n
+- `GET /staff/api/Order/table/{tableId}` - L?y h√≥a ??n theo b√†n
 
-## VÌ D? S? D?ng
+## V√≠ D? S? D?ng
 
 ### ??ng nh?p Admin
 ```bash
@@ -130,7 +130,7 @@ curl -X POST http://localhost:5000/admin/api/Authentication/login \
   }'
 ```
 
-### L?y danh s·ch mÛn ?n (qua Gateway)
+### L?y danh s√°ch m√≥n ?n (qua Gateway)
 ```bash
 curl -X GET http://localhost:5000/admin/api/Product/monan
 ```
@@ -145,16 +145,16 @@ curl -X POST http://localhost:5000/staff/api/Authentication/login \
   }'
 ```
 
-### L?y danh s·ch b‡n (Staff - qua Gateway)
+### L?y danh s√°ch b√†n (Staff - qua Gateway)
 ```bash
 curl -X GET http://localhost:5000/staff/api/Ban
 ```
 
 ## API H??ng D?n Chi Ti?t
 
-### PATCH Order API - C?p nh?t tr?ng th·i hÛa ??n
+### PATCH Order API - C?p nh?t tr?ng th√°i h√≥a ??n
 
-#### Admin - C?p nh?t tr?ng th·i hÛa ??n
+#### Admin - C?p nh?t tr?ng th√°i h√≥a ??n
 ```bash
 curl -X PATCH http://localhost:5000/admin/api/Order/1/status \
   -H "Content-Type: application/json" \
@@ -167,7 +167,7 @@ curl -X PATCH http://localhost:5000/admin/api/Order/1/status \
 **Request Body:**
 ```json
 {
-  "trangThaiHD": 1,         // 0: Ch?a thanh to·n, 1: ?„ thanh to·n
+  "trangThaiHD": 1,         // 0: Ch?a thanh to√°n, 1: ?√£ thanh to√°n
   "thoiDiemRa": "2024-01-15T14:30:00"  // Th?i ?i?m ra (optional)
 }
 ```
@@ -176,12 +176,12 @@ curl -X PATCH http://localhost:5000/admin/api/Order/1/status \
 ```json
 {
   "success": true,
-  "message": "C?p nh?t tr?ng th·i ??n h‡ng th‡nh cÙng - ?„ thanh to·n",
+  "message": "C?p nh?t tr?ng th√°i ??n h√†ng th√†nh c√¥ng - ?√£ thanh to√°n",
   "data": null
 }
 ```
 
-#### Staff - C?p nh?t tr?ng th·i hÛa ??n
+#### Staff - C?p nh?t tr?ng th√°i h√≥a ??n
 ```bash
 curl -X PATCH http://localhost:5000/staff/api/Order/1/status \
   -H "Content-Type: application/json" \
@@ -191,9 +191,9 @@ curl -X PATCH http://localhost:5000/staff/api/Order/1/status \
   }'
 ```
 
-### Invoices API - Qu?n l˝ hÛa ??n ?„ thanh to·n
+### Invoices API - Qu?n l√Ω h√≥a ??n ?√£ thanh to√°n
 
-#### L?y danh s·ch hÛa ??n ?„ thanh to·n
+#### L?y danh s√°ch h√≥a ??n ?√£ thanh to√°n
 ```bash
 curl -X GET http://localhost:5000/admin/api/Invoices
 ```
@@ -202,7 +202,7 @@ curl -X GET http://localhost:5000/admin/api/Invoices
 ```json
 {
   "success": true,
-  "message": "L?y danh s·ch hÛa ??n th‡nh cÙng",
+  "message": "L?y danh s√°ch h√≥a ??n th√†nh c√¥ng",
   "data": [
     {
       "id": 1,
@@ -223,7 +223,7 @@ curl -X GET http://localhost:5000/admin/api/Invoices
 }
 ```
 
-#### L?y chi ti?t hÛa ??n ?„ thanh to·n
+#### L?y chi ti?t h√≥a ??n ?√£ thanh to√°n
 ```bash
 curl -X GET http://localhost:5000/admin/api/Invoices/1
 ```
@@ -232,7 +232,7 @@ curl -X GET http://localhost:5000/admin/api/Invoices/1
 ```json
 {
   "success": true,
-  "message": "L?y chi ti?t hÛa ??n th‡nh cÙng",
+  "message": "L?y chi ti?t h√≥a ??n th√†nh c√¥ng",
   "data": {
     "id": 1,
     "thoiDiemVao": "2024-01-15T12:00:00",
@@ -251,7 +251,7 @@ curl -X GET http://localhost:5000/admin/api/Invoices/1
 }
 ```
 
-#### In hÛa ??n ?„ thanh to·n
+#### In h√≥a ??n ?√£ thanh to√°n
 ```bash
 curl -X POST http://localhost:5000/admin/api/Invoices/1/print
 ```
@@ -260,13 +260,13 @@ curl -X POST http://localhost:5000/admin/api/Invoices/1/print
 ```json
 {
   "success": true,
-  "message": "L?y thÙng tin hÛa ??n ?? in th‡nh cÙng",
+  "message": "L?y th√¥ng tin h√≥a ??n ?? in th√†nh c√¥ng",
   "data": {
     "id": 1,
     "thoiDiemVao": "2024-01-15T12:00:00",
     "thoiDiemRa": "2024-01-15T14:30:00",
     "idBanAn": 5,
-    "tenBanAn": "B‡n 5",
+    "tenBanAn": "B√†n 5",
     "tenNhanVien": "Nguy?n V?n A",
     "chiTietHoaDon": [
       {
@@ -281,9 +281,9 @@ curl -X POST http://localhost:5000/admin/api/Invoices/1/print
 }
 ```
 
-### T?o hÛa ??n m?i
+### T?o h√≥a ??n m?i
 
-#### Admin - T?o hÛa ??n
+#### Admin - T?o h√≥a ??n
 ```bash
 curl -X POST http://localhost:5000/admin/api/Order \
   -H "Content-Type: application/json" \
@@ -303,7 +303,7 @@ curl -X POST http://localhost:5000/admin/api/Order \
   }'
 ```
 
-#### Staff - T?o hÛa ??n
+#### Staff - T?o h√≥a ??n
 ```bash
 curl -X POST http://localhost:5000/staff/api/Order \
   -H "Content-Type: application/json" \
@@ -319,59 +319,59 @@ curl -X POST http://localhost:5000/staff/api/Order \
   }'
 ```
 
-### L?y hÛa ??n theo b‡n
+### L?y h√≥a ??n theo b√†n
 
-#### Admin - L?y hÛa ??n theo b‡n
+#### Admin - L?y h√≥a ??n theo b√†n
 ```bash
 curl -X GET http://localhost:5000/admin/api/Order/table/5
 ```
 
-#### Staff - L?y hÛa ??n theo b‡n
+#### Staff - L?y h√≥a ??n theo b√†n
 ```bash
 curl -X GET http://localhost:5000/staff/api/Order/table/5
 ```
 
-## L?u ›
+## L?u √ù
 
-1. **Th? t? kh?i ??ng**: Ph?i kh?i ??ng Admin API v‡ Staff API tr??c khi kh?i ??ng Gateway
+1. **Th? t? kh?i ??ng**: Ph?i kh?i ??ng Admin API v√† Staff API tr??c khi kh?i ??ng Gateway
 2. **Port**: 
    - Gateway: 5000
    - Admin API: 5092
    - Staff API: 5229
-3. **CORS**: ?„ ???c c?u hÏnh cho phÈp t?t c? origins
-4. **Session**: M?i service qu?n l˝ session riÍng, ch?a cÛ shared session
-5. **Tr?ng th·i hÛa ??n**: 
-   - `0`: Ch?a thanh to·n
-   - `1`: ?„ thanh to·n
-6. **Invoices API**: Ch? hi?n th? c·c hÛa ??n ?„ thanh to·n (TrangThaiHD = 1)
+3. **CORS**: ?√£ ???c c?u h√¨nh cho ph√©p t?t c? origins
+4. **Session**: M?i service qu?n l√Ω session ri√™ng, ch?a c√≥ shared session
+5. **Tr?ng th√°i h√≥a ??n**: 
+   - `0`: Ch?a thanh to√°n
+   - `1`: ?√£ thanh to√°n
+6. **Invoices API**: Ch? hi?n th? c√°c h√≥a ??n ?√£ thanh to√°n (TrangThaiHD = 1)
 7. **PATCH vs PUT**: 
-   - `PATCH`: C?p nh?t m?t ph?n (ch? tr?ng th·i)
-   - `PUT`: C?p nh?t to‡n b? thÙng tin hÛa ??n
+   - `PATCH`: C?p nh?t m?t ph?n (ch? tr?ng th√°i)
+   - `PUT`: C?p nh?t to√†n b? th√¥ng tin h√≥a ??n
 
-## C?u HÏnh
+## C?u H√¨nh
 
-File c?u hÏnh routes: `ocelot.json`
+File c?u h√¨nh routes: `ocelot.json`
 
-?? thay ??i port ho?c thÍm routes m?i, ch?nh s?a file `ocelot.json` v‡ restart Gateway.
+?? thay ??i port ho?c th√™m routes m?i, ch?nh s?a file `ocelot.json` v√† restart Gateway.
 
 ## Troubleshooting
 
-### Gateway khÙng k?t n?i ???c v?i services
-- Ki?m tra Admin API v‡ Staff API ?„ ch?y ch?a
+### Gateway kh√¥ng k?t n?i ???c v?i services
+- Ki?m tra Admin API v√† Staff API ?√£ ch?y ch?a
 - Ki?m tra port trong `ocelot.json` kh?p v?i `launchSettings.json` c?a t?ng service
 
 ### CORS errors
-- ?„ c?u hÏnh AllowAnyOrigin trong c? 3 services
+- ?√£ c?u h√¨nh AllowAnyOrigin trong c? 3 services
 
-### Route khÙng ho?t ??ng
-- Ki?m tra c?u tr˙c route trong `ocelot.json`
-- ??m b?o UpstreamPathTemplate v‡ DownstreamPathTemplate ?˙ng format
+### Route kh√¥ng ho?t ??ng
+- Ki?m tra c?u tr√∫c route trong `ocelot.json`
+- ??m b?o UpstreamPathTemplate v√† DownstreamPathTemplate ?√∫ng format
 
-### PATCH API khÙng ho?t ??ng
-- ??m b?o `"Patch"` ???c thÍm v‡o `UpstreamHttpMethod` trong `ocelot.json`
-- Ki?m tra request body ?˙ng format JSON
-- Validate tr?ng th·i hÛa ??n (ch? ch?p nh?n 0 ho?c 1)
+### PATCH API kh√¥ng ho?t ??ng
+- ??m b?o `"Patch"` ???c th√™m v√†o `UpstreamHttpMethod` trong `ocelot.json`
+- Ki?m tra request body ?√∫ng format JSON
+- Validate tr?ng th√°i h√≥a ??n (ch? ch?p nh?n 0 ho?c 1)
 
 ### Invoices API tr? v? empty
-- Ch? hi?n th? hÛa ??n ?„ thanh to·n (TrangThaiHD = 1)
-- Ki?m tra cÛ hÛa ??n n‡o ?„ ???c thanh to·n ch?a
+- Ch? hi?n th? h√≥a ??n ?√£ thanh to√°n (TrangThaiHD = 1)
+- Ki?m tra c√≥ h√≥a ??n n√†o ?√£ ???c thanh to√°n ch?a
