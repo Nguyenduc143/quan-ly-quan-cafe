@@ -95,7 +95,7 @@
         }
       ],
       "UpstreamPathTemplate": "/admin/api/Order/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ]
     },
     {
       "DownstreamPathTemplate": "/api/Order",
@@ -178,7 +178,7 @@
     
     // Invoice Routes - Admin
     {
-      "DownstreamPathTemplate": "/api/Invoice/{everything}",
+      "DownstreamPathTemplate": "/api/Invoices/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -186,11 +186,11 @@
           "Port": 5092
         }
       ],
-      "UpstreamPathTemplate": "/admin/api/Invoice/{everything}",
+      "UpstreamPathTemplate": "/admin/api/Invoices/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Invoice",
+      "DownstreamPathTemplate": "/api/Invoices",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -198,7 +198,7 @@
           "Port": 5092
         }
       ],
-      "UpstreamPathTemplate": "/admin/api/Invoice",
+      "UpstreamPathTemplate": "/admin/api/Invoices",
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
     
@@ -257,7 +257,7 @@
         }
       ],
       "UpstreamPathTemplate": "/staff/api/Order/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ]
     },
     {
       "DownstreamPathTemplate": "/api/Order",
