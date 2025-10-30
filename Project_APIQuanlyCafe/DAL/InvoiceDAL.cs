@@ -21,37 +21,53 @@ namespace DAL
         // Lấy danh sách hóa đơn đã thanh toán
         public List<InvoiceModel> GetPaidInvoices()
         {
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetPaidInvoices");
+            string sql = @"SELECT id, thoiDiemVao, thoiDiemRa, idBanAn, trangThaiHD, idNhanVien 
+                          FROM HoaDonBan 
+                          WHERE trangThaiHD = 1
+                          ORDER BY thoiDiemVao DESC";
+
+            DataTable dt = _dbHelper.ExecuteQuery(sql);
             return ConvertDataTableToInvoiceList(dt);
         }
 
         // Lấy chi tiết hóa đơn theo ID (chỉ hóa đơn đã thanh toán)
         public InvoiceModel? GetPaidInvoiceById(int id)
         {
+            string sql = @"SELECT id, thoiDiemVao, thoiDiemRa, idBanAn, trangThaiHD, idNhanVien 
+                          FROM HoaDonBan 
+                          WHERE id = @id AND trangThaiHD = 1";
+
             SqlParameter[] parameters = {
                 new SqlParameter("@id", id)
             };
 
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetPaidInvoiceById", parameters);
-
+            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
+            
             if (dt.Rows.Count == 0)
                 return null;
 
             var invoice = ConvertDataRowToInvoice(dt.Rows[0]);
             invoice.ChiTietHoaDon = GetInvoiceDetails(id);
-
+            
             return invoice;
         }
 
         // Lấy chi tiết hóa đơn để in
         public PrintInvoiceModel? GetPrintInvoiceById(int id)
         {
+            string sql = @"SELECT hd.id, hd.thoiDiemVao, hd.thoiDiemRa, hd.idBanAn, hd.trangThaiHD, hd.idNhanVien,
+                                 b.tenBan as TenBanAn, nv.hoTen as TenNhanVien
+                          FROM HoaDonBan hd
+                          LEFT JOIN Ban b ON hd.idBanAn = b.id
+                          LEFT JOIN NhanVien nv ON hd.idNhanVien = nv.id
+                          WHERE hd.id = @id AND hd.trangThaiHD = 1";
+
             SqlParameter[] parameters = {
                 new SqlParameter("@id", id)
             };
 
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetPrintInvoiceById", parameters);
-
+            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
+            
             if (dt.Rows.Count == 0)
                 return null;
 
@@ -73,12 +89,13 @@ namespace DAL
         // Kiểm tra trạng thái hóa đơn
         public bool IsInvoicePaid(int id)
         {
+            string sql = "SELECT trangThaiHD FROM HoaDonBan WHERE id = @id";
             SqlParameter[] parameters = {
                 new SqlParameter("@id", id)
             };
 
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_IsInvoicePaid", parameters);
-
+            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
+            
             if (dt.Rows.Count == 0)
                 return false;
 
@@ -88,22 +105,34 @@ namespace DAL
         // Lấy chi tiết hóa đơn
         private List<InvoiceDetailModel> GetInvoiceDetails(int invoiceId)
         {
+            string sql = @"SELECT ct.id, ct.idHoaDonBan, ct.idMonAn, ct.soLuong,
+                                 ma.tenMonAn
+                          FROM ChiTietHoaDonBan ct
+                          INNER JOIN MonAn ma ON ct.idMonAn = ma.id
+                          WHERE ct.idHoaDonBan = @invoiceId";
+
             SqlParameter[] parameters = {
                 new SqlParameter("@invoiceId", invoiceId)
             };
 
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetInvoiceDetails", parameters);
+            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
             return ConvertDataTableToInvoiceDetailList(dt);
         }
 
         // Lấy chi tiết hóa đơn kèm giá để in
         private List<InvoiceDetailModel> GetInvoiceDetailsWithPrice(int invoiceId)
         {
+            string sql = @"SELECT ct.id, ct.idHoaDonBan, ct.idMonAn, ct.soLuong,
+                                 ma.tenMonAn, ma.giaTien as GiaMonAn
+                          FROM ChiTietHoaDonBan ct
+                          INNER JOIN MonAn ma ON ct.idMonAn = ma.id
+                          WHERE ct.idHoaDonBan = @invoiceId";
+
             SqlParameter[] parameters = {
                 new SqlParameter("@invoiceId", invoiceId)
             };
 
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetInvoiceDetailsWithPrice", parameters);
+            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
             return ConvertDataTableToInvoiceDetailListWithPrice(dt);
         }
 
@@ -167,4 +196,3 @@ namespace DAL
         }
     }
 }
-

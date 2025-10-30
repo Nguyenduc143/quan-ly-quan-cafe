@@ -55,31 +55,17 @@ D:\PTPM_DV\QuanLyQuanCafe\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.p
 D:\PTPM_DV\QuanLyQuanCafe\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.genruntimeconfig.cache
 D:\PTPM_DV\QuanLyQuanCafe\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\ref\Models.dll
 D:\PTPM_DV\QuanLyQuanCafe\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.sourcelink.json
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.deps.json
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.runtimeconfig.json
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.dll
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.pdb
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.csproj.AssemblyReference.cache
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.GeneratedMSBuildEditorConfig.editorconfig
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.AssemblyInfoInputs.cache
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.AssemblyInfo.cs
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.csproj.CoreCompileInputs.cache
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.dll
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\refint\Models.dll
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.pdb
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.genruntimeconfig.cache
-E:\Năm 2\WedAPI\BTL\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\ref\Models.dll
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.deps.json
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.runtimeconfig.json
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.dll
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.pdb
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.csproj.AssemblyReference.cache
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.AssemblyInfoInputs.cache
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.AssemblyInfo.cs
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.csproj.CoreCompileInputs.cache
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.dll
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\refint\Models.dll
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.pdb
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.genruntimeconfig.cache
-C:\Users\ADMIN\Downloads\Project_APIQuanlyCafe (1)\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\ref\Models.dll
+D:\web API\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.deps.json
+D:\web API\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.runtimeconfig.json
+D:\web API\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.dll
+D:\web API\Project_APIQuanlyCafe\Models\bin\Debug\net9.0\Models.pdb
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.csproj.AssemblyReference.cache
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.GeneratedMSBuildEditorConfig.editorconfig
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.AssemblyInfoInputs.cache
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.AssemblyInfo.cs
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.csproj.CoreCompileInputs.cache
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.dll
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\refint\Models.dll
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.pdb
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\Models.genruntimeconfig.cache
+D:\web API\Project_APIQuanlyCafe\Models\obj\Debug\net9.0\ref\Models.dll

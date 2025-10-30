@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\Models\\Models.csproj": {}
+    "D:\\web API\\Project_APIQuanlyCafe\\Models\\Models.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+    "D:\\web API\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\Models\\Models.csproj",
+        "projectUniqueName": "D:\\web API\\Project_APIQuanlyCafe\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\Models\\Models.csproj",
+        "projectPath": "D:\\web API\\Project_APIQuanlyCafe\\Models\\Models.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\Models\\obj\\",
+        "outputPath": "D:\\web API\\Project_APIQuanlyCafe\\Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

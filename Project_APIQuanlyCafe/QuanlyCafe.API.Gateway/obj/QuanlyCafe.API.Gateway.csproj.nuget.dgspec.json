@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj": {}
+    "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj": {
+    "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj",
+        "projectUniqueName": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj",
         "projectName": "QuanlyCafe.API.Gateway",
-        "projectPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj",
+        "projectPath": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\obj\\",
+        "outputPath": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

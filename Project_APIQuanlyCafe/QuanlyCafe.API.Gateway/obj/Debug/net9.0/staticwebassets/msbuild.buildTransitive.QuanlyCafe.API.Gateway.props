@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\QuanlyCafe.API.Gateway.props" />
-</Project>

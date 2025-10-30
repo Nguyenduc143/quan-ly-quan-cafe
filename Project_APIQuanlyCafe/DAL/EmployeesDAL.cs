@@ -25,8 +25,8 @@ namespace DAL
 
             await Task.Run(() =>
             {
-                var dt = _dbHelper.ExecuteStoredProcedure("sp_GetAllEmployees");
-
+                var dt = _dbHelper.ExecuteQuery("SELECT * FROM NhanVien");
+                
                 foreach (DataRow row in dt.Rows)
                 {
                     employees.Add(MapDataRowToEmployee(row));
@@ -43,8 +43,8 @@ namespace DAL
             await Task.Run(() =>
             {
                 var parameters = new SqlParameter[] { new SqlParameter("@id", id) };
-                var dt = _dbHelper.ExecuteStoredProcedure("sp_GetEmployeeById", parameters);
-
+                var dt = _dbHelper.ExecuteQuery("SELECT * FROM NhanVien WHERE id = @id", parameters);
+                
                 if (dt.Rows.Count > 0)
                 {
                     employee = MapDataRowToEmployee(dt.Rows[0]);
@@ -60,12 +60,11 @@ namespace DAL
 
             await Task.Run(() =>
             {
+                var sql = @"INSERT INTO NhanVien (hoTen, ngaySinh, gioiTinh, sdt, diaChi, Luong, ChucVu) 
+                           VALUES (@hoTen, @ngaySinh, @gioiTinh, @sdt, @diaChi, @Luong, @ChucVu)";
+                
                 var parameters = GetEmployeeParameters(employee);
-                var dt = _dbHelper.ExecuteStoredProcedure("sp_CreateEmployee", parameters);
-                if (dt.Rows.Count > 0)
-                {
-                    newEmployeeId = Convert.ToInt32(dt.Rows[0]["NewID"]);
-                }
+                newEmployeeId = _dbHelper.ExecuteInsertAndGetId(sql, parameters);
             });
 
             return newEmployeeId;
@@ -77,15 +76,17 @@ namespace DAL
 
             await Task.Run(() =>
             {
+                var sql = @"UPDATE NhanVien 
+                           SET hoTen = @hoTen, ngaySinh = @ngaySinh, gioiTinh = @gioiTinh, 
+                               sdt = @sdt, diaChi = @diaChi, Luong = @Luong, ChucVu = @ChucVu 
+                           WHERE id = @id";
+
                 var parameters = GetEmployeeParameters(employee);
                 Array.Resize(ref parameters, parameters.Length + 1);
                 parameters[parameters.Length - 1] = new SqlParameter("@id", id);
 
-                var dt = _dbHelper.ExecuteStoredProcedure("sp_UpdateEmployee", parameters);
-                if (dt.Rows.Count > 0)
-                {
-                    success = Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
-                }
+                var rowsAffected = _dbHelper.ExecuteNonQuery(sql, parameters);
+                success = rowsAffected > 0;
             });
 
             return success;
@@ -98,11 +99,8 @@ namespace DAL
             await Task.Run(() =>
             {
                 var parameters = new SqlParameter[] { new SqlParameter("@id", id) };
-                var dt = _dbHelper.ExecuteStoredProcedure("sp_DeleteEmployee", parameters);
-                if (dt.Rows.Count > 0)
-                {
-                    success = Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
-                }
+                var rowsAffected = _dbHelper.ExecuteNonQuery("DELETE FROM NhanVien WHERE id = @id", parameters);
+                success = rowsAffected > 0;
             });
 
             return success;
@@ -111,7 +109,7 @@ namespace DAL
         public List<EmployeesModel> GetAll()
         {
             var employees = new List<EmployeesModel>();
-            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetAllEmployees");
+            var dt = _dbHelper.ExecuteQuery("SELECT * FROM NhanVien");
             foreach (DataRow row in dt.Rows)
             {
                 employees.Add(MapDataRowToEmployee(row));
@@ -123,7 +121,7 @@ namespace DAL
         {
             EmployeesModel? employee = null;
             var parameters = new SqlParameter[] { new SqlParameter("@id", id) };
-            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetEmployeeById", parameters);
+            var dt = _dbHelper.ExecuteQuery("SELECT * FROM NhanVien WHERE id = @id", parameters);
             if (dt.Rows.Count > 0)
             {
                 employee = MapDataRowToEmployee(dt.Rows[0]);
@@ -133,38 +131,30 @@ namespace DAL
 
         public int Create(EmployeesModel model)
         {
+            var sql = @"INSERT INTO NhanVien (hoTen, ngaySinh, gioiTinh, sdt, diaChi, Luong, ChucVu) 
+                        VALUES (@hoTen, @ngaySinh, @gioiTinh, @sdt, @diaChi, @Luong, @ChucVu)";
             var parameters = GetEmployeeParameters(model);
-            var dt = _dbHelper.ExecuteStoredProcedure("sp_CreateEmployee", parameters);
-            if (dt.Rows.Count > 0)
-            {
-                return Convert.ToInt32(dt.Rows[0]["NewID"]);
-            }
-            return 0;
+            return _dbHelper.ExecuteInsertAndGetId(sql, parameters);
         }
 
         public bool Update(int id, EmployeesModel model)
         {
+            var sql = @"UPDATE NhanVien 
+                        SET hoTen = @hoTen, ngaySinh = @ngaySinh, gioiTinh = @gioiTinh, 
+                            sdt = @sdt, diaChi = @diaChi, Luong = @Luong, ChucVu = @ChucVu 
+                        WHERE id = @id";
             var parameters = GetEmployeeParameters(model);
             Array.Resize(ref parameters, parameters.Length + 1);
             parameters[parameters.Length - 1] = new SqlParameter("@id", id);
-
-            var dt = _dbHelper.ExecuteStoredProcedure("sp_UpdateEmployee", parameters);
-            if (dt.Rows.Count > 0)
-            {
-                return Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
-            }
-            return false;
+            var rowsAffected = _dbHelper.ExecuteNonQuery(sql, parameters);
+            return rowsAffected > 0;
         }
 
         public bool Delete(int id)
         {
             var parameters = new SqlParameter[] { new SqlParameter("@id", id) };
-            var dt = _dbHelper.ExecuteStoredProcedure("sp_DeleteEmployee", parameters);
-            if (dt.Rows.Count > 0)
-            {
-                return Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
-            }
-            return false;
+            var rowsAffected = _dbHelper.ExecuteNonQuery("DELETE FROM NhanVien WHERE id = @id", parameters);
+            return rowsAffected > 0;
         }
 
         private static EmployeesModel MapDataRowToEmployee(DataRow row)
@@ -197,4 +187,3 @@ namespace DAL
         }
     }
 }
-

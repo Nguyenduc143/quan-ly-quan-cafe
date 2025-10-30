@@ -71,6 +71,8 @@ dotnet run
 - `POST /admin/api/Order` - T?o hóa ??n
 - `PUT /admin/api/Order/{id}` - C?p nh?t hóa ??n
 - `DELETE /admin/api/Order/{id}` - Xóa hóa ??n
+- `PATCH /admin/api/Order/{id}/status` - C?p nh?t tr?ng thái hóa ??n
+- `GET /admin/api/Order/table/{tableId}` - L?y hóa ??n theo bàn
 
 #### Inventory (Kho)
 - `GET /admin/api/Inventory` - L?y danh sách nguyên li?u
@@ -89,12 +91,10 @@ dotnet run
 #### Reports (Báo cáo)
 - `GET /admin/api/Reports/{everything}` - Các endpoint báo cáo
 
-#### Invoice (Phi?u nh?p)
-- `GET /admin/api/Invoice` - L?y danh sách phi?u nh?p
-- `GET /admin/api/Invoice/{id}` - L?y chi ti?t phi?u nh?p
-- `POST /admin/api/Invoice` - T?o phi?u nh?p
-- `PUT /admin/api/Invoice/{id}` - C?p nh?t phi?u nh?p
-- `DELETE /admin/api/Invoice/{id}` - Xóa phi?u nh?p
+#### Invoices (Hóa ??n ?ã thanh toán)
+- `GET /admin/api/Invoices` - L?y danh sách hóa ??n ?ã thanh toán
+- `GET /admin/api/Invoices/{id}` - L?y chi ti?t hóa ??n ?ã thanh toán
+- `POST /admin/api/Invoices/{id}/print` - In hóa ??n ?ã thanh toán
 
 ### Staff API Routes (Prefix: `/staff`)
 
@@ -115,6 +115,8 @@ dotnet run
 - `POST /staff/api/Order` - T?o hóa ??n
 - `PUT /staff/api/Order/{id}` - C?p nh?t hóa ??n
 - `DELETE /staff/api/Order/{id}` - Xóa hóa ??n
+- `PATCH /staff/api/Order/{id}/status` - C?p nh?t tr?ng thái hóa ??n
+- `GET /staff/api/Order/table/{tableId}` - L?y hóa ??n theo bàn
 
 ## Ví D? S? D?ng
 
@@ -148,6 +150,187 @@ curl -X POST http://localhost:5000/staff/api/Authentication/login \
 curl -X GET http://localhost:5000/staff/api/Ban
 ```
 
+## API H??ng D?n Chi Ti?t
+
+### PATCH Order API - C?p nh?t tr?ng thái hóa ??n
+
+#### Admin - C?p nh?t tr?ng thái hóa ??n
+```bash
+curl -X PATCH http://localhost:5000/admin/api/Order/1/status \
+  -H "Content-Type: application/json" \
+  -d '{
+    "trangThaiHD": 1,
+    "thoiDiemRa": "2024-01-15T14:30:00"
+  }'
+```
+
+**Request Body:**
+```json
+{
+  "trangThaiHD": 1,         // 0: Ch?a thanh toán, 1: ?ã thanh toán
+  "thoiDiemRa": "2024-01-15T14:30:00"  // Th?i ?i?m ra (optional)
+}
+```
+
+**Response (Success):**
+```json
+{
+  "success": true,
+  "message": "C?p nh?t tr?ng thái ??n hàng thành công - ?ã thanh toán",
+  "data": null
+}
+```
+
+#### Staff - C?p nh?t tr?ng thái hóa ??n
+```bash
+curl -X PATCH http://localhost:5000/staff/api/Order/1/status \
+  -H "Content-Type: application/json" \
+  -d '{
+    "trangThaiHD": 1,
+    "thoiDiemRa": "2024-01-15T14:30:00"
+  }'
+```
+
+### Invoices API - Qu?n lý hóa ??n ?ã thanh toán
+
+#### L?y danh sách hóa ??n ?ã thanh toán
+```bash
+curl -X GET http://localhost:5000/admin/api/Invoices
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "L?y danh sách hóa ??n thành công",
+  "data": [
+    {
+      "id": 1,
+      "thoiDiemVao": "2024-01-15T12:00:00",
+      "thoiDiemRa": "2024-01-15T14:30:00",
+      "idBanAn": 5,
+      "trangThaiHD": 1,
+      "idNhanVien": 2,
+      "chiTietHoaDon": [
+        {
+          "idHoaDonBan": 1,
+          "idMonAn": 10,
+          "soLuong": 2
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### L?y chi ti?t hóa ??n ?ã thanh toán
+```bash
+curl -X GET http://localhost:5000/admin/api/Invoices/1
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "L?y chi ti?t hóa ??n thành công",
+  "data": {
+    "id": 1,
+    "thoiDiemVao": "2024-01-15T12:00:00",
+    "thoiDiemRa": "2024-01-15T14:30:00",
+    "idBanAn": 5,
+    "trangThaiHD": 1,
+    "idNhanVien": 2,
+    "chiTietHoaDon": [
+      {
+        "idHoaDonBan": 1,
+        "idMonAn": 10,
+        "soLuong": 2
+      }
+    ]
+  }
+}
+```
+
+#### In hóa ??n ?ã thanh toán
+```bash
+curl -X POST http://localhost:5000/admin/api/Invoices/1/print
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "L?y thông tin hóa ??n ?? in thành công",
+  "data": {
+    "id": 1,
+    "thoiDiemVao": "2024-01-15T12:00:00",
+    "thoiDiemRa": "2024-01-15T14:30:00",
+    "idBanAn": 5,
+    "tenBanAn": "Bàn 5",
+    "tenNhanVien": "Nguy?n V?n A",
+    "chiTietHoaDon": [
+      {
+        "idHoaDonBan": 1,
+        "idMonAn": 10,
+        "soLuong": 2
+      }
+    ],
+    "tongTien": 150000
+  },
+  "printTime": "2024-01-15T15:00:00"
+}
+```
+
+### T?o hóa ??n m?i
+
+#### Admin - T?o hóa ??n
+```bash
+curl -X POST http://localhost:5000/admin/api/Order \
+  -H "Content-Type: application/json" \
+  -d '{
+    "idBan": 5,
+    "idNhanVien": 2,
+    "chiTietHoaDonBan": [
+      {
+        "idMonAn": 10,
+        "soLuong": 2
+      },
+      {
+        "idMonAn": 15,
+        "soLuong": 1
+      }
+    ]
+  }'
+```
+
+#### Staff - T?o hóa ??n
+```bash
+curl -X POST http://localhost:5000/staff/api/Order \
+  -H "Content-Type: application/json" \
+  -d '{
+    "idBan": 3,
+    "idNhanVien": 1,
+    "chiTietHoaDonBan": [
+      {
+        "idMonAn": 8,
+        "soLuong": 1
+      }
+    ]
+  }'
+```
+
+### L?y hóa ??n theo bàn
+
+#### Admin - L?y hóa ??n theo bàn
+```bash
+curl -X GET http://localhost:5000/admin/api/Order/table/5
+```
+
+#### Staff - L?y hóa ??n theo bàn
+```bash
+curl -X GET http://localhost:5000/staff/api/Order/table/5
+```
+
 ## L?u Ý
 
 1. **Th? t? kh?i ??ng**: Ph?i kh?i ??ng Admin API và Staff API tr??c khi kh?i ??ng Gateway
@@ -157,6 +340,13 @@ curl -X GET http://localhost:5000/staff/api/Ban
    - Staff API: 5229
 3. **CORS**: ?ã ???c c?u hình cho phép t?t c? origins
 4. **Session**: M?i service qu?n lý session riêng, ch?a có shared session
+5. **Tr?ng thái hóa ??n**: 
+   - `0`: Ch?a thanh toán
+   - `1`: ?ã thanh toán
+6. **Invoices API**: Ch? hi?n th? các hóa ??n ?ã thanh toán (TrangThaiHD = 1)
+7. **PATCH vs PUT**: 
+   - `PATCH`: C?p nh?t m?t ph?n (ch? tr?ng thái)
+   - `PUT`: C?p nh?t toàn b? thông tin hóa ??n
 
 ## C?u Hình
 
@@ -176,3 +366,12 @@ File c?u hình routes: `ocelot.json`
 ### Route không ho?t ??ng
 - Ki?m tra c?u trúc route trong `ocelot.json`
 - ??m b?o UpstreamPathTemplate và DownstreamPathTemplate ?úng format
+
+### PATCH API không ho?t ??ng
+- ??m b?o `"Patch"` ???c thêm vào `UpstreamHttpMethod` trong `ocelot.json`
+- Ki?m tra request body ?úng format JSON
+- Validate tr?ng thái hóa ??n (ch? ch?p nh?n 0 ho?c 1)
+
+### Invoices API tr? v? empty
+- Ch? hi?n th? hóa ??n ?ã thanh toán (TrangThaiHD = 1)
+- Ki?m tra có hóa ??n nào ?ã ???c thanh toán ch?a

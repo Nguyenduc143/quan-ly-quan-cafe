@@ -3441,11 +3441,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Staff\\QuanlyCafe.API.Staff.csproj",
+      "projectUniqueName": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Staff\\QuanlyCafe.API.Staff.csproj",
       "projectName": "QuanlyCafe.API.Staff",
-      "projectPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Staff\\QuanlyCafe.API.Staff.csproj",
+      "projectPath": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Staff\\QuanlyCafe.API.Staff.csproj",
       "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Staff\\obj\\",
+      "outputPath": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Staff\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -3467,14 +3467,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
-              "projectPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\BLL\\BLL.csproj"
+            "D:\\web API\\Project_APIQuanlyCafe\\BLL\\BLL.csproj": {
+              "projectPath": "D:\\web API\\Project_APIQuanlyCafe\\BLL\\BLL.csproj"
             },
-            "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
+            "D:\\web API\\Project_APIQuanlyCafe\\DAL\\DAL.csproj": {
+              "projectPath": "D:\\web API\\Project_APIQuanlyCafe\\DAL\\DAL.csproj"
             },
-            "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
-              "projectPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\Models\\Models.csproj"
+            "D:\\web API\\Project_APIQuanlyCafe\\Models\\Models.csproj": {
+              "projectPath": "D:\\web API\\Project_APIQuanlyCafe\\Models\\Models.csproj"
             }
           }
         }

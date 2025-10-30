@@ -1,7 +1,28 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\",
-  "Documents": [],
+  "WorkspaceRootPath": "D:\\web API\\Project_APIQuanlyCafe\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EC85A7D3-9105-4A24-89DA-1CA3BDBEBB09}|QuanlyCafe.API.Admin\\QuanlyCafe.API.Admin.csproj|d:\\web api\\project_apiquanlycafe\\quanlycafe.api.admin\\controllers\\employeescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC85A7D3-9105-4A24-89DA-1CA3BDBEBB09}|QuanlyCafe.API.Admin\\QuanlyCafe.API.Admin.csproj|solutionrelative:quanlycafe.api.admin\\controllers\\employeescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC3C1D6-AA83-4329-8F26-E3B5D6E4FC61}|DAL\\DAL.csproj|d:\\web api\\project_apiquanlycafe\\dal\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC3C1D6-AA83-4329-8F26-E3B5D6E4FC61}|DAL\\DAL.csproj|solutionrelative:dal\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AC3C1D6-AA83-4329-8F26-E3B5D6E4FC61}|DAL\\DAL.csproj|d:\\web api\\project_apiquanlycafe\\dal\\employeesdal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AC3C1D6-AA83-4329-8F26-E3B5D6E4FC61}|DAL\\DAL.csproj|solutionrelative:dal\\employeesdal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7D7A78D5-A894-4B7E-9CF2-43FD90983486}|BLL\\BLL.csproj|d:\\web api\\project_apiquanlycafe\\bll\\employeesbll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D7A78D5-A894-4B7E-9CF2-43FD90983486}|BLL\\BLL.csproj|solutionrelative:bll\\employeesbll.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0DABA5B2-D36B-44E2-A73D-F06FF98B4109}|Models\\Models.csproj|d:\\web api\\project_apiquanlycafe\\models\\employeesmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0DABA5B2-D36B-44E2-A73D-F06FF98B4109}|Models\\Models.csproj|solutionrelative:models\\employeesmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,6 +59,67 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EmployeesController.cs",
+              "DocumentMoniker": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Admin\\Controllers\\EmployeesController.cs",
+              "RelativeDocumentMoniker": "QuanlyCafe.API.Admin\\Controllers\\EmployeesController.cs",
+              "ToolTip": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Admin\\Controllers\\EmployeesController.cs",
+              "RelativeToolTip": "QuanlyCafe.API.Admin\\Controllers\\EmployeesController.cs",
+              "ViewState": "AgIAAIAAAAAAAAAAAAAlwJMAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T01:19:27.153Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DatabaseHelper.cs",
+              "DocumentMoniker": "D:\\web API\\Project_APIQuanlyCafe\\DAL\\DatabaseHelper.cs",
+              "RelativeDocumentMoniker": "DAL\\DatabaseHelper.cs",
+              "ToolTip": "D:\\web API\\Project_APIQuanlyCafe\\DAL\\DatabaseHelper.cs",
+              "RelativeToolTip": "DAL\\DatabaseHelper.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAmwFAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T01:19:23.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "EmployeesDAL.cs",
+              "DocumentMoniker": "D:\\web API\\Project_APIQuanlyCafe\\DAL\\EmployeesDAL.cs",
+              "RelativeDocumentMoniker": "DAL\\EmployeesDAL.cs",
+              "ToolTip": "D:\\web API\\Project_APIQuanlyCafe\\DAL\\EmployeesDAL.cs",
+              "RelativeToolTip": "DAL\\EmployeesDAL.cs",
+              "ViewState": "AgIAAKAAAAAAAAAAAAAmwL0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T01:19:20.545Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EmployeesBLL.cs",
+              "DocumentMoniker": "D:\\web API\\Project_APIQuanlyCafe\\BLL\\EmployeesBLL.cs",
+              "RelativeDocumentMoniker": "BLL\\EmployeesBLL.cs",
+              "ToolTip": "D:\\web API\\Project_APIQuanlyCafe\\BLL\\EmployeesBLL.cs",
+              "RelativeToolTip": "BLL\\EmployeesBLL.cs",
+              "ViewState": "AgIAAGIAAAAAAAAAAAAqwIAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T01:19:13.689Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EmployeesModel.cs",
+              "DocumentMoniker": "D:\\web API\\Project_APIQuanlyCafe\\Models\\EmployeesModel.cs",
+              "RelativeDocumentMoniker": "Models\\EmployeesModel.cs",
+              "ToolTip": "D:\\web API\\Project_APIQuanlyCafe\\Models\\EmployeesModel.cs",
+              "RelativeToolTip": "Models\\EmployeesModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T01:19:08.993Z"
             }
           ]
         },

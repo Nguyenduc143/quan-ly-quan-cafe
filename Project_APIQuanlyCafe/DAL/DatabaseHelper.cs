@@ -24,28 +24,57 @@ namespace DAL
             return new SqlConnection(_connectionString);
         }
 
- 
-        public DataTable ExecuteStoredProcedure(string procedureName, SqlParameter[]? parameters = null)
+        // Hàm thực thi SELECT trả DataTable 
+        public DataTable ExecuteQuery(string sql, SqlParameter[]? parameters = null)
         {
-            DataTable dataTable = new DataTable();
-            using (SqlConnection connection = GetConnection())
+            using (var conn = GetConnection())
             {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(procedureName, connection))
+                using (var cmd = new SqlCommand(sql, conn))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
                     if (parameters != null)
+                        cmd.Parameters.AddRange(parameters);
+
+                    using (var adapter = new SqlDataAdapter(cmd))
                     {
-                        command.Parameters.AddRange(parameters);
-                    }
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                    {
-                        adapter.Fill(dataTable);
+                        DataTable dt = new DataTable();
+                        adapter.Fill(dt);
+                        return dt;
                     }
                 }
             }
-            return dataTable;
         }
 
+        // Hàm thực thi INSERT / UPDATE / DELETE
+        public int ExecuteNonQuery(string sql, SqlParameter[]? parameters = null)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(sql, conn))
+                {
+                    if (parameters != null)
+                        cmd.Parameters.AddRange(parameters);
+
+                    return cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Hàm thực thi INSERT và trả về ID được tạo
+        public int ExecuteInsertAndGetId(string sql, SqlParameter[]? parameters = null)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(sql + "; SELECT SCOPE_IDENTITY();", conn))
+                {
+                    if (parameters != null)
+                        cmd.Parameters.AddRange(parameters);
+
+                    var result = cmd.ExecuteScalar();
+                    return Convert.ToInt32(result);
+                }
+            }
+        }
     }
 }

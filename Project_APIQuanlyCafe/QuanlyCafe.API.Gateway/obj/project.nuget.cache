@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BpW3SsOsZLQ=",
+  "dgSpecHash": "Hr5EaWK9bJE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ADMIN\\Downloads\\Project_APIQuanlyCafe (1)\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj",
+  "projectFilePath": "D:\\web API\\Project_APIQuanlyCafe\\QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ADMIN\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\ipaddressrange\\6.2.0\\ipaddressrange.6.2.0.nupkg.sha512",

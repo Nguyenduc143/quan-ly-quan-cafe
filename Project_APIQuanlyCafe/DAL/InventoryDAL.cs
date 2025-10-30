@@ -20,8 +20,9 @@ namespace DAL
 
         public List<InventoryModel> GetAllInventory()
         {
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetAllInventory");
-
+            string sql = "SELECT id, tenNguyenLieu, donViTinh, soLuongTon, ghiChu FROM KhoNguyenLieu ORDER BY tenNguyenLieu";
+            DataTable dt = _dbHelper.ExecuteQuery(sql);
+            
             List<InventoryModel> inventoryList = new List<InventoryModel>();
             foreach (DataRow row in dt.Rows)
             {
@@ -39,9 +40,10 @@ namespace DAL
 
         public InventoryModel? GetInventoryById(int id)
         {
+            string sql = "SELECT id, tenNguyenLieu, donViTinh, soLuongTon, ghiChu FROM KhoNguyenLieu WHERE id = @id";
             SqlParameter[] parameters = { new SqlParameter("@id", id) };
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_GetInventoryById", parameters);
-
+            DataTable dt = _dbHelper.ExecuteQuery(sql, parameters);
+            
             if (dt.Rows.Count > 0)
             {
                 DataRow row = dt.Rows[0];
@@ -59,22 +61,19 @@ namespace DAL
 
         public int CreateInventory(CreateInventoryRequest request)
         {
+            string sql = "INSERT INTO KhoNguyenLieu (tenNguyenLieu, donViTinh, soLuongTon, ghiChu) VALUES (@tenNguyenLieu, @donViTinh, @soLuongTon, @ghiChu)";
             SqlParameter[] parameters = {
                 new SqlParameter("@tenNguyenLieu", request.TenNguyenLieu),
                 new SqlParameter("@donViTinh", (object?)request.DonViTinh ?? DBNull.Value),
                 new SqlParameter("@soLuongTon", request.SoLuongTon),
                 new SqlParameter("@ghiChu", (object?)request.GhiChu ?? DBNull.Value)
             };
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_CreateInventory", parameters);
-            if (dt.Rows.Count > 0)
-            {
-                return Convert.ToInt32(dt.Rows[0]["NewID"]);
-            }
-            return 0;
+            return _dbHelper.ExecuteInsertAndGetId(sql, parameters);
         }
 
         public bool UpdateInventory(int id, UpdateInventoryRequest request)
         {
+            string sql = "UPDATE KhoNguyenLieu SET tenNguyenLieu = @tenNguyenLieu, donViTinh = @donViTinh, soLuongTon = @soLuongTon, ghiChu = @ghiChu WHERE id = @id";
             SqlParameter[] parameters = {
                 new SqlParameter("@id", id),
                 new SqlParameter("@tenNguyenLieu", request.TenNguyenLieu),
@@ -82,23 +81,16 @@ namespace DAL
                 new SqlParameter("@soLuongTon", request.SoLuongTon),
                 new SqlParameter("@ghiChu", (object?)request.GhiChu ?? DBNull.Value)
             };
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_UpdateInventory", parameters);
-            if (dt.Rows.Count > 0)
-            {
-                return Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
-            }
-            return false;
+            return _dbHelper.ExecuteNonQuery(sql, parameters) > 0;
         }
 
         public bool DeleteInventory(int id)
         {
+            string sql = "DELETE FROM KhoNguyenLieu WHERE id = @id";
             SqlParameter[] parameters = { new SqlParameter("@id", id) };
-            DataTable dt = _dbHelper.ExecuteStoredProcedure("sp_DeleteInventory", parameters);
-            if (dt.Rows.Count > 0)
-            {
-                return Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
-            }
-            return false;
+            return _dbHelper.ExecuteNonQuery(sql, parameters) > 0;
         }
+
+        
     }
 }
