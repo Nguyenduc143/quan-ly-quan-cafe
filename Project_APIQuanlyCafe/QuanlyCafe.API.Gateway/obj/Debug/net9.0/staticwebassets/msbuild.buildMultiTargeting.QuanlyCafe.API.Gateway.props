@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\QuanlyCafe.API.Gateway.props" />
+</Project>

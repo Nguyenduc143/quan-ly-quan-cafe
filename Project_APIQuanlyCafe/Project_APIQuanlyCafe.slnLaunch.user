@@ -1,0 +1,22 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "QuanlyCafe.API.Admin\\QuanlyCafe.API.Admin.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      },
+      {
+        "Path": "QuanlyCafe.API.Staff\\QuanlyCafe.API.Staff.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      },
+      {
+        "Path": "QuanlyCafe.API.Gateway\\QuanlyCafe.API.Gateway.csproj",
+        "Action": "Start",
+        "DebugTarget": "http"
+      }
+    ]
+  }
+]

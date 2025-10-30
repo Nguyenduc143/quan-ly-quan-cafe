@@ -6,120 +6,195 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models;
+using Microsoft.Extensions.Configuration;
 
 namespace DAL
 {
     public class EmployeesDAL
     {
-        private readonly string _connectionString;
+        private readonly DatabaseHelper _dbHelper;
 
-        public EmployeesDAL(string connectionString)
+        public EmployeesDAL(DatabaseHelper dbHelper)
         {
-            _connectionString = connectionString;
+            _dbHelper = dbHelper;
         }
 
         public async Task<List<EmployeesModel>> GetAllEmployeesAsync()
         {
             var employees = new List<EmployeesModel>();
 
-            using var connection = new SqlConnection(_connectionString);
-            var command = new SqlCommand("SELECT * FROM NhanVien", connection);
-
-            await connection.OpenAsync();
-            using var reader = await command.ExecuteReaderAsync();
-
-            while (await reader.ReadAsync())
+            await Task.Run(() =>
             {
-                employees.Add(MapReaderToEmployee(reader));
-            }
+                var dt = _dbHelper.ExecuteStoredProcedure("sp_GetAllEmployees");
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    employees.Add(MapDataRowToEmployee(row));
+                }
+            });
 
             return employees;
         }
 
         public async Task<EmployeesModel?> GetEmployeeByIdAsync(int id)
         {
-            using var connection = new SqlConnection(_connectionString);
-            var command = new SqlCommand("SELECT * FROM NhanVien WHERE id = @id", connection);
-            command.Parameters.AddWithValue("@id", id);
+            EmployeesModel? employee = null;
 
-            await connection.OpenAsync();
-            using var reader = await command.ExecuteReaderAsync();
-
-            if (await reader.ReadAsync())
+            await Task.Run(() =>
             {
-                return MapReaderToEmployee(reader);
-            }
+                var parameters = new SqlParameter[] { new SqlParameter("@id", id) };
+                var dt = _dbHelper.ExecuteStoredProcedure("sp_GetEmployeeById", parameters);
 
-            return null;
+                if (dt.Rows.Count > 0)
+                {
+                    employee = MapDataRowToEmployee(dt.Rows[0]);
+                }
+            });
+
+            return employee;
         }
 
         public async Task<int> CreateEmployeeAsync(EmployeesModel employee)
         {
-            using var connection = new SqlConnection(_connectionString);
-            var command = new SqlCommand(@"
-                INSERT INTO NhanVien (hoTen, ngaySinh, gioiTinh, sdt, diaChi, Luong, ChucVu) 
-                VALUES (@hoTen, @ngaySinh, @gioiTinh, @sdt, @diaChi, @Luong, @ChucVu);
-                SELECT SCOPE_IDENTITY();", connection);
+            int newEmployeeId = 0;
 
-            AddEmployeeParameters(command, employee);
+            await Task.Run(() =>
+            {
+                var parameters = GetEmployeeParameters(employee);
+                var dt = _dbHelper.ExecuteStoredProcedure("sp_CreateEmployee", parameters);
+                if (dt.Rows.Count > 0)
+                {
+                    newEmployeeId = Convert.ToInt32(dt.Rows[0]["NewID"]);
+                }
+            });
 
-            await connection.OpenAsync();
-            var result = await command.ExecuteScalarAsync();
-            return Convert.ToInt32(result);
+            return newEmployeeId;
         }
 
         public async Task<bool> UpdateEmployeeAsync(int id, EmployeesModel employee)
         {
-            using var connection = new SqlConnection(_connectionString);
-            var command = new SqlCommand(@"
-                UPDATE NhanVien 
-                SET hoTen = @hoTen, ngaySinh = @ngaySinh, gioiTinh = @gioiTinh, 
-                    sdt = @sdt, diaChi = @diaChi, Luong = @Luong, ChucVu = @ChucVu 
-                WHERE id = @id", connection);
+            bool success = false;
 
-            command.Parameters.AddWithValue("@id", id);
-            AddEmployeeParameters(command, employee);
+            await Task.Run(() =>
+            {
+                var parameters = GetEmployeeParameters(employee);
+                Array.Resize(ref parameters, parameters.Length + 1);
+                parameters[parameters.Length - 1] = new SqlParameter("@id", id);
 
-            await connection.OpenAsync();
-            var rowsAffected = await command.ExecuteNonQueryAsync();
-            return rowsAffected > 0;
+                var dt = _dbHelper.ExecuteStoredProcedure("sp_UpdateEmployee", parameters);
+                if (dt.Rows.Count > 0)
+                {
+                    success = Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
+                }
+            });
+
+            return success;
         }
 
         public async Task<bool> DeleteEmployeeAsync(int id)
         {
-            using var connection = new SqlConnection(_connectionString);
-            var command = new SqlCommand("DELETE FROM NhanVien WHERE id = @id", connection);
-            command.Parameters.AddWithValue("@id", id);
+            bool success = false;
 
-            await connection.OpenAsync();
-            var rowsAffected = await command.ExecuteNonQueryAsync();
-            return rowsAffected > 0;
+            await Task.Run(() =>
+            {
+                var parameters = new SqlParameter[] { new SqlParameter("@id", id) };
+                var dt = _dbHelper.ExecuteStoredProcedure("sp_DeleteEmployee", parameters);
+                if (dt.Rows.Count > 0)
+                {
+                    success = Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
+                }
+            });
+
+            return success;
         }
 
-        private static EmployeesModel MapReaderToEmployee(SqlDataReader reader)
+        public List<EmployeesModel> GetAll()
+        {
+            var employees = new List<EmployeesModel>();
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetAllEmployees");
+            foreach (DataRow row in dt.Rows)
+            {
+                employees.Add(MapDataRowToEmployee(row));
+            }
+            return employees;
+        }
+
+        public EmployeesModel GetById(int id)
+        {
+            EmployeesModel? employee = null;
+            var parameters = new SqlParameter[] { new SqlParameter("@id", id) };
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_GetEmployeeById", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                employee = MapDataRowToEmployee(dt.Rows[0]);
+            }
+            return employee!;
+        }
+
+        public int Create(EmployeesModel model)
+        {
+            var parameters = GetEmployeeParameters(model);
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_CreateEmployee", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["NewID"]);
+            }
+            return 0;
+        }
+
+        public bool Update(int id, EmployeesModel model)
+        {
+            var parameters = GetEmployeeParameters(model);
+            Array.Resize(ref parameters, parameters.Length + 1);
+            parameters[parameters.Length - 1] = new SqlParameter("@id", id);
+
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_UpdateEmployee", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
+            }
+            return false;
+        }
+
+        public bool Delete(int id)
+        {
+            var parameters = new SqlParameter[] { new SqlParameter("@id", id) };
+            var dt = _dbHelper.ExecuteStoredProcedure("sp_DeleteEmployee", parameters);
+            if (dt.Rows.Count > 0)
+            {
+                return Convert.ToInt32(dt.Rows[0]["RowsAffected"]) > 0;
+            }
+            return false;
+        }
+
+        private static EmployeesModel MapDataRowToEmployee(DataRow row)
         {
             return new EmployeesModel
             {
-                Id = reader.GetInt32("id"),
-                HoTen = reader.GetString("hoTen"),
-                NgaySinh = reader.IsDBNull("ngaySinh") ? null : reader.GetDateTime("ngaySinh"),
-                GioiTinh = reader.IsDBNull("gioiTinh") ? null : reader.GetString("gioiTinh"),
-                Sdt = reader.IsDBNull("sdt") ? null : reader.GetString("sdt"),
-                DiaChi = reader.IsDBNull("diaChi") ? null : reader.GetString("diaChi"),
-                Luong = reader.IsDBNull("Luong") ? null : reader.GetInt32("Luong"),
-                ChucVu = reader.IsDBNull("ChucVu") ? null : reader.GetString("ChucVu")
+                Id = Convert.ToInt32(row["id"]),
+                HoTen = row["hoTen"].ToString() ?? string.Empty,
+                NgaySinh = row["ngaySinh"] == DBNull.Value ? null : Convert.ToDateTime(row["ngaySinh"]),
+                GioiTinh = row["gioiTinh"] == DBNull.Value ? null : row["gioiTinh"].ToString(),
+                Sdt = row["sdt"] == DBNull.Value ? null : row["sdt"].ToString(),
+                DiaChi = row["diaChi"] == DBNull.Value ? null : row["diaChi"].ToString(),
+                Luong = row["Luong"] == DBNull.Value ? null : Convert.ToInt32(row["Luong"]),
+                ChucVu = row["ChucVu"] == DBNull.Value ? null : row["ChucVu"].ToString()
             };
         }
 
-        private static void AddEmployeeParameters(SqlCommand command, EmployeesModel employee)
+        private static SqlParameter[] GetEmployeeParameters(EmployeesModel employee)
         {
-            command.Parameters.AddWithValue("@hoTen", employee.HoTen);
-            command.Parameters.AddWithValue("@ngaySinh", (object?)employee.NgaySinh ?? DBNull.Value);
-            command.Parameters.AddWithValue("@gioiTinh", (object?)employee.GioiTinh ?? DBNull.Value);
-            command.Parameters.AddWithValue("@sdt", (object?)employee.Sdt ?? DBNull.Value);
-            command.Parameters.AddWithValue("@diaChi", (object?)employee.DiaChi ?? DBNull.Value);
-            command.Parameters.AddWithValue("@Luong", (object?)employee.Luong ?? DBNull.Value);
-            command.Parameters.AddWithValue("@ChucVu", (object?)employee.ChucVu ?? DBNull.Value);
+            return new SqlParameter[]
+            {
+                new SqlParameter("@hoTen", employee.HoTen),
+                new SqlParameter("@ngaySinh", (object?)employee.NgaySinh ?? DBNull.Value),
+                new SqlParameter("@gioiTinh", (object?)employee.GioiTinh ?? DBNull.Value),
+                new SqlParameter("@sdt", (object?)employee.Sdt ?? DBNull.Value),
+                new SqlParameter("@diaChi", (object?)employee.DiaChi ?? DBNull.Value),
+                new SqlParameter("@Luong", (object?)employee.Luong ?? DBNull.Value),
+                new SqlParameter("@ChucVu", (object?)employee.ChucVu ?? DBNull.Value)
+            };
         }
     }
 }
+

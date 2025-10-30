@@ -1,0 +1,168 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using BLL;
+using Models;
+
+namespace QuanlyCafe.API.Admin.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class SuppliersController : ControllerBase
+    {
+        private readonly SuppliersBLL _suppliersBLL;
+
+        public SuppliersController(SuppliersBLL suppliersBLL)
+        {
+            _suppliersBLL = suppliersBLL;
+        }
+
+        /// <summary>
+        /// Lấy danh sách tất cả nhà cung cấp
+        /// </summary>
+        /// <returns>Danh sách nhà cung cấp</returns>
+        [HttpGet]
+        public async Task<ActionResult<List<SupplierModel>>> GetAllSuppliers()
+        {
+            try
+            {
+                var suppliers = await _suppliersBLL.GetAllSuppliersAsync();
+                return Ok(suppliers);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Lấy thông tin chi tiết nhà cung cấp theo ID
+        /// </summary>
+        /// <param name="id">ID của nhà cung cấp</param>
+        /// <returns>Thông tin nhà cung cấp</returns>
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SupplierModel>> GetSupplierById(int id)
+        {
+            try
+            {
+                var supplier = await _suppliersBLL.GetSupplierByIdAsync(id);
+
+                if (supplier == null)
+                {
+                    return NotFound(new { message = "Không tìm thấy nhà cung cấp" });
+                }
+
+                return Ok(supplier);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Thêm nhà cung cấp mới
+        /// </summary>
+        /// <param name="supplier">Thông tin nhà cung cấp</param>
+        /// <returns>Thông tin nhà cung cấp đã tạo</returns>
+        [HttpPost]
+        public async Task<ActionResult<SupplierModel>> CreateSupplier([FromBody] SupplierModel supplier)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var newSupplierId = await _suppliersBLL.CreateSupplierAsync(supplier);
+                var createdSupplier = await _suppliersBLL.GetSupplierByIdAsync(newSupplierId);
+
+                return CreatedAtAction(nameof(GetSupplierById), new { id = newSupplierId }, createdSupplier);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Cập nhật thông tin nhà cung cấp
+        /// </summary>
+        /// <param name="id">ID của nhà cung cấp</param>
+        /// <param name="supplier">Thông tin nhà cung cấp cập nhật</param>
+        /// <returns>Thông tin nhà cung cấp đã cập nhật</returns>
+        [HttpPut("{id}")]
+        public async Task<ActionResult<SupplierModel>> UpdateSupplier(int id, [FromBody] SupplierModel supplier)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var success = await _suppliersBLL.UpdateSupplierAsync(id, supplier);
+
+                if (!success)
+                {
+                    return NotFound(new { message = "Không tìm thấy nhà cung cấp để cập nhật" });
+                }
+
+                var updatedSupplier = await _suppliersBLL.GetSupplierByIdAsync(id);
+                return Ok(updatedSupplier);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server", error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Xóa nhà cung cấp
+        /// </summary>
+        /// <param name="id">ID của nhà cung cấp</param>
+        /// <returns>Kết quả xóa</returns>
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteSupplier(int id)
+        {
+            try
+            {
+                var success = await _suppliersBLL.DeleteSupplierAsync(id);
+
+                if (!success)
+                {
+                    return NotFound(new { message = "Không tìm thấy nhà cung cấp để xóa" });
+                }
+
+                return Ok(new { message = "Xóa nhà cung cấp thành công" });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Lỗi server", error = ex.Message });
+            }
+        }
+    }
+}

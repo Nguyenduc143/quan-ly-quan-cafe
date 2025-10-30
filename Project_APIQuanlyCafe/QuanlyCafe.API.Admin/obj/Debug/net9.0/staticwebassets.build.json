@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "cqA5xcUCv3lOMQIjKqd8/3WnPXHl7IHCfLBrvthd3JA=",
+  "Source": "QuanlyCafe.API.Admin",
+  "BasePath": "_content/QuanlyCafe.API.Admin",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

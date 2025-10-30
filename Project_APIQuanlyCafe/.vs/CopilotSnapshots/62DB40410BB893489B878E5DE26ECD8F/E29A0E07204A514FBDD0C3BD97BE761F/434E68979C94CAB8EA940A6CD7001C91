@@ -1,0 +1,154 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Models;
+
+namespace DAL
+{
+    public class OrderDAL
+    {
+        private readonly string _connectionString;
+
+        public OrderDAL(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        public List<OrderModel> GetAllOrders()
+        {
+            var orders = new List<OrderModel>();
+            using (var conn = new SqlConnection(_connectionString))
+            using (var cmd = new SqlCommand("SELECT * FROM Orders", conn))
+            {
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        orders.Add(MapOrder(reader));
+                    }
+                }
+            }
+            return orders;
+        }
+
+        public OrderModel GetOrderById(int id)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            using (var cmd = new SqlCommand("SELECT * FROM Orders WHERE Id = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                        return MapOrder(reader);
+                }
+            }
+            return null;
+        }
+
+        public int CreateOrder(CreateOrderRequest request)
+        {
+            int newOrderId;
+            using (var conn = new SqlConnection(_connectionString))
+            using (var cmd = new SqlCommand(
+                @"INSERT INTO Orders (ThoiDiemVao, IdBanAn, TrangThaiHD, IdNhanVien) 
+                  OUTPUT INSERTED.Id
+                  VALUES (@ThoiDiemVao, @IdBanAn, @TrangThaiHD, @IdNhanVien)", conn))
+            {
+                cmd.Parameters.AddWithValue("@ThoiDiemVao", DateTime.Now);
+                cmd.Parameters.AddWithValue("@IdBanAn", request.IdBanAn);
+                cmd.Parameters.AddWithValue("@TrangThaiHD", 0); // Default: Chưa thanh toán
+                cmd.Parameters.AddWithValue("@IdNhanVien", (object?)request.IdNhanVien ?? DBNull.Value);
+
+                conn.Open();
+                newOrderId = (int)cmd.ExecuteScalar();
+            }
+            // Optionally: Insert detail orders here if needed
+            return newOrderId;
+        }
+
+        public bool UpdateOrder(int id, UpdateOrderRequest request)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            using (var cmd = new SqlCommand(
+                @"UPDATE Orders SET 
+                    ThoiDiemRa = @ThoiDiemRa,
+                    IdNhanVien = @IdNhanVien
+                  WHERE Id = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@ThoiDiemRa", (object?)request.ThoiDiemRa ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@IdNhanVien", (object?)request.IdNhanVien ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                conn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        public bool DeleteOrder(int id)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            using (var cmd = new SqlCommand("DELETE FROM Orders WHERE Id = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        public bool UpdateOrderStatus(int id, UpdateOrderStatusRequest request)
+        {
+            using (var conn = new SqlConnection(_connectionString))
+            using (var cmd = new SqlCommand(
+                @"UPDATE Orders SET 
+                    TrangThaiHD = @TrangThaiHD,
+                    ThoiDiemRa = @ThoiDiemRa
+                  WHERE Id = @Id", conn))
+            {
+                cmd.Parameters.AddWithValue("@TrangThaiHD", request.TrangThaiHD);
+                cmd.Parameters.AddWithValue("@ThoiDiemRa", (object?)request.ThoiDiemRa ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@Id", id);
+
+                conn.Open();
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        public List<OrderModel> GetOrdersByTableId(int tableId)
+        {
+            var orders = new List<OrderModel>();
+            using (var conn = new SqlConnection(_connectionString))
+            using (var cmd = new SqlCommand("SELECT * FROM Orders WHERE IdBanAn = @IdBanAn", conn))
+            {
+                cmd.Parameters.AddWithValue("@IdBanAn", tableId);
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        orders.Add(MapOrder(reader));
+                    }
+                }
+            }
+            return orders;
+        }
+
+        private OrderModel MapOrder(SqlDataReader reader)
+        {
+            return new OrderModel
+            {
+                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                ThoiDiemVao = reader.GetDateTime(reader.GetOrdinal("ThoiDiemVao")),
+                ThoiDiemRa = reader.IsDBNull(reader.GetOrdinal("ThoiDiemRa")) ? null : reader.GetDateTime(reader.GetOrdinal("ThoiDiemRa")),
+                IdBanAn = reader.GetInt32(reader.GetOrdinal("IdBanAn")),
+                TrangThaiHD = reader.GetInt32(reader.GetOrdinal("TrangThaiHD")),
+                IdNhanVien = reader.IsDBNull(reader.GetOrdinal("IdNhanVien")) ? null : reader.GetInt32(reader.GetOrdinal("IdNhanVien")),
+                // DetailOrders should be loaded separately if needed
+            };
+        }
+    }
+}

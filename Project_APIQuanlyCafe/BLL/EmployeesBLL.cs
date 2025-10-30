@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DAL;
 using Models;
@@ -12,9 +10,9 @@ namespace BLL
     {
         private readonly EmployeesDAL _employeesDAL;
 
-        public EmployeesBLL(string connectionString)
+        public EmployeesBLL(EmployeesDAL employeesDAL)
         {
-            _employeesDAL = new EmployeesDAL(connectionString);
+            _employeesDAL = employeesDAL;
         }
 
         public async Task<List<EmployeesModel>> GetAllEmployeesAsync()
@@ -72,6 +70,12 @@ namespace BLL
 
             return await _employeesDAL.DeleteEmployeeAsync(id);
         }
+
+        public List<EmployeesModel> GetAll() => _employeesDAL.GetAll();
+        public EmployeesModel GetById(int id) => _employeesDAL.GetById(id);
+        public int Create(EmployeesModel model) => _employeesDAL.Create(model);
+        public bool Update(int id, EmployeesModel model) => _employeesDAL.Update(id, model);
+        public bool Delete(int id) => _employeesDAL.Delete(id);
 
         private static void ValidateEmployee(EmployeesModel employee)
         {

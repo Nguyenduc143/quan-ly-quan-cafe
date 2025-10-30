@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DAL;
+using Models;
+
+namespace BLL
+{
+    public class SuppliersBLL
+    {
+        private readonly SuppliersDAL _suppliersDAL;
+
+        public SuppliersBLL(SuppliersDAL suppliersDAL)
+        {
+            _suppliersDAL = suppliersDAL;
+        }
+
+        public List<SupplierModel> GetAllSuppliers()
+        {
+            return _suppliersDAL.GetAllSuppliers();
+        }
+
+        public SupplierModel? GetSupplierById(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentException("ID nhà cung cấp không hợp lệ");
+
+            return _suppliersDAL.GetSupplierById(id);
+        }
+
+        public int CreateSupplier(CreateSupplierRequest request)
+        {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(request.TenNhaCungCap))
+                throw new ArgumentException("Tên nhà cung cấp không được để trống");
+
+            if (request.TenNhaCungCap.Length > 100)
+                throw new ArgumentException("Tên nhà cung cấp không được vượt quá 100 ký tự");
+
+            if (!string.IsNullOrEmpty(request.DiaChi) && request.DiaChi.Length > 255)
+                throw new ArgumentException("Địa chỉ không được vượt quá 255 ký tự");
+
+            if (!string.IsNullOrEmpty(request.Sdt) && request.Sdt.Length > 15)
+                throw new ArgumentException("Số điện thoại không được vượt quá 15 ký tự");
+
+            if (!string.IsNullOrEmpty(request.Email) && request.Email.Length > 100)
+                throw new ArgumentException("Email không được vượt quá 100 ký tự");
+
+            return _suppliersDAL.CreateSupplier(request);
+        }
+
+        public bool UpdateSupplier(int id, UpdateSupplierRequest request)
+        {
+            if (id <= 0)
+                throw new ArgumentException("ID nhà cung cấp không hợp lệ");
+
+            // Validate input
+            if (string.IsNullOrWhiteSpace(request.TenNhaCungCap))
+                throw new ArgumentException("Tên nhà cung cấp không được để trống");
+
+            if (request.TenNhaCungCap.Length > 100)
+                throw new ArgumentException("Tên nhà cung cấp không được vượt quá 100 ký tự");
+
+            if (!string.IsNullOrEmpty(request.DiaChi) && request.DiaChi.Length > 255)
+                throw new ArgumentException("Địa chỉ không được vượt quá 255 ký tự");
+
+            if (!string.IsNullOrEmpty(request.Sdt) && request.Sdt.Length > 15)
+                throw new ArgumentException("Số điện thoại không được vượt quá 15 ký tự");
+
+            if (!string.IsNullOrEmpty(request.Email) && request.Email.Length > 100)
+                throw new ArgumentException("Email không được vượt quá 100 ký tự");
+
+            // Check if supplier exists
+            var existingSupplier = _suppliersDAL.GetSupplierById(id);
+            if (existingSupplier == null)
+                throw new ArgumentException("Không tìm thấy nhà cung cấp");
+
+            return _suppliersDAL.UpdateSupplier(id, request);
+        }
+
+        public bool DeleteSupplier(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentException("ID nhà cung cấp không hợp lệ");
+
+            // Check if supplier exists
+            var existingSupplier = _suppliersDAL.GetSupplierById(id);
+            if (existingSupplier == null)
+                throw new ArgumentException("Không tìm thấy nhà cung cấp");
+
+            return _suppliersDAL.DeleteSupplier(id);
+        }
+    }
+}

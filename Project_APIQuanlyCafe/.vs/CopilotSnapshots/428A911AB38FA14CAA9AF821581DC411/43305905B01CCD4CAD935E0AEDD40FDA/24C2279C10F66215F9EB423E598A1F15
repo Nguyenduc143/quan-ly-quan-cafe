@@ -1,0 +1,139 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Models;
+
+namespace DAL
+{
+    public class SuppliersDAL
+    {
+        private readonly DatabaseHelper _dbHelper;
+
+        public SuppliersDAL(DatabaseHelper dbHelper)
+        {
+            _dbHelper = dbHelper;
+        }
+
+        public List<SupplierModel> GetAllSuppliers()
+        {
+            var suppliers = new List<SupplierModel>();
+            string query = "SELECT id, tenNhaCungCap, diaChi, sdt, email FROM NhaCungCap";
+
+            using (var connection = _dbHelper.GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            suppliers.Add(new SupplierModel
+                            {
+                                Id = reader.GetInt32("id"),
+                                TenNhaCungCap = reader.GetString("tenNhaCungCap"),
+                                DiaChi = reader.IsDBNull("diaChi") ? null : reader.GetString("diaChi"),
+                                Sdt = reader.IsDBNull("sdt") ? null : reader.GetString("sdt"),
+                                Email = reader.IsDBNull("email") ? null : reader.GetString("email")
+                            });
+                        }
+                    }
+                }
+            }
+            return suppliers;
+        }
+
+        public SupplierModel? GetSupplierById(int id)
+        {
+            string query = "SELECT id, tenNhaCungCap, diaChi, sdt, email FROM NhaCungCap WHERE id = @id";
+
+            using (var connection = _dbHelper.GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new SupplierModel
+                            {
+                                Id = reader.GetInt32("id"),
+                                TenNhaCungCap = reader.GetString("tenNhaCungCap"),
+                                DiaChi = reader.IsDBNull("diaChi") ? null : reader.GetString("diaChi"),
+                                Sdt = reader.IsDBNull("sdt") ? null : reader.GetString("sdt"),
+                                Email = reader.IsDBNull("email") ? null : reader.GetString("email")
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public int CreateSupplier(CreateSupplierRequest request)
+        {
+            string query = @"INSERT INTO NhaCungCap (tenNhaCungCap, diaChi, sdt, email) 
+                            OUTPUT INSERTED.id 
+                            VALUES (@tenNhaCungCap, @diaChi, @sdt, @email)";
+
+            using (var connection = _dbHelper.GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@tenNhaCungCap", request.TenNhaCungCap);
+                    command.Parameters.AddWithValue("@diaChi", (object)request.DiaChi ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@sdt", (object)request.Sdt ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@email", (object)request.Email ?? DBNull.Value);
+
+                    return (int)command.ExecuteScalar();
+                }
+            }
+        }
+
+        public bool UpdateSupplier(int id, UpdateSupplierRequest request)
+        {
+            string query = @"UPDATE NhaCungCap 
+                            SET tenNhaCungCap = @tenNhaCungCap, 
+                                diaChi = @diaChi, 
+                                sdt = @sdt, 
+                                email = @email 
+                            WHERE id = @id";
+
+            using (var connection = _dbHelper.GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@tenNhaCungCap", request.TenNhaCungCap);
+                    command.Parameters.AddWithValue("@diaChi", (object)request.DiaChi ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@sdt", (object)request.Sdt ?? DBNull.Value);
+                    command.Parameters.AddWithValue("@email", (object)request.Email ?? DBNull.Value);
+
+                    return command.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+        public bool DeleteSupplier(int id)
+        {
+            string query = "DELETE FROM NhaCungCap WHERE id = @id";
+
+            using (var connection = _dbHelper.GetConnection())
+            {
+                connection.Open();
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    return command.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+    }
+}
