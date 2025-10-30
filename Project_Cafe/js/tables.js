@@ -21,23 +21,51 @@ function checkAuth() {
 }
 
 function setupEventListeners() {
-    document.getElementById('logoutBtn')?.addEventListener('click', () => {
-        removeLocalStorage('currentUser');
-        window.location.href = '../index.html';
-    });
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            removeLocalStorage('currentUser');
+            window.location.href = '../index.html';
+        });
+    }
     
-    document.getElementById('toggleSidebar')?.addEventListener('click', () => {
-        document.querySelector('.sidebar')?.classList.toggle('active');
-    });
+    const toggleSidebar = document.getElementById('toggleSidebar');
+    if (toggleSidebar) {
+        toggleSidebar.addEventListener('click', () => {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.classList.toggle('active');
+        });
+    }
     
-    document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
-    document.getElementById('addTableBtn')?.addEventListener('click', openAddTableModal);
-    document.getElementById('closeModal')?.addEventListener('click', closeTableModal);
-    document.getElementById('cancelBtn')?.addEventListener('click', closeTableModal);
-    document.getElementById('closeDetailModal')?.addEventListener('click', closeDetailModal);
-    document.getElementById('tableForm')?.addEventListener('submit', handleTableFormSubmit);
-    document.getElementById('areaFilter')?.addEventListener('change', renderTables);
-    document.getElementById('statusFilter')?.addEventListener('change', renderTables);
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+    
+    const addTableBtn = document.getElementById('addTableBtn');
+    console.log('addTableBtn:', addTableBtn);
+    if (addTableBtn) {
+        addTableBtn.addEventListener('click', openAddTableModal);
+        console.log('Event listener added to addTableBtn');
+    } else {
+        console.error('addTableBtn not found!');
+    }
+    
+    const closeModal = document.getElementById('closeModal');
+    if (closeModal) closeModal.addEventListener('click', closeTableModal);
+    
+    const cancelBtn = document.getElementById('cancelBtn');
+    if (cancelBtn) cancelBtn.addEventListener('click', closeTableModal);
+    
+    const closeDetailModalBtn = document.getElementById('closeDetailModal');
+    if (closeDetailModalBtn) closeDetailModalBtn.addEventListener('click', closeDetailModal);
+    
+    const tableForm = document.getElementById('tableForm');
+    if (tableForm) tableForm.addEventListener('submit', handleTableFormSubmit);
+    
+    const areaFilter = document.getElementById('areaFilter');
+    if (areaFilter) areaFilter.addEventListener('change', renderTables);
+    
+    const statusFilter = document.getElementById('statusFilter');
+    if (statusFilter) statusFilter.addEventListener('change', renderTables);
     
     // Close modal when clicking outside
     window.addEventListener('click', (e) => {
@@ -453,23 +481,43 @@ function viewOrder(orderId) {
 }
 
 // Modal functions
-function openAddTableModal() {
+window.openAddTableModal = function() {
+    console.log('openAddTableModal called');
     currentEditingTableId = null;
-    document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus"></i> Thêm bàn mới';
-    document.getElementById('tableForm').reset();
     const modal = document.getElementById('tableModal');
+    console.log('Modal element:', modal);
+    
+    if (!modal) {
+        console.error('Modal not found!');
+        alert('Không tìm thấy modal!');
+        return;
+    }
+    
+    const modalTitle = document.getElementById('modalTitle');
+    if (modalTitle) {
+        modalTitle.innerHTML = '<i class="fas fa-plus"></i> Thêm bàn mới';
+    }
+    
+    const tableForm = document.getElementById('tableForm');
+    if (tableForm) {
+        tableForm.reset();
+    }
+    
     modal.style.display = 'flex';
     modal.classList.add('show');
+    console.log('Modal display:', modal.style.display);
+    console.log('Modal classList:', modal.classList);
+    console.log('Modal should be visible now');
 }
 
-function closeTableModal() {
+window.closeTableModal = function() {
     const modal = document.getElementById('tableModal');
     modal.style.display = 'none';
     modal.classList.remove('show');
     currentEditingTableId = null;
 }
 
-function closeDetailModal() {
+window.closeDetailModal = function() {
     const modal = document.getElementById('tableDetailModal');
     modal.style.display = 'none';
     modal.classList.remove('show');

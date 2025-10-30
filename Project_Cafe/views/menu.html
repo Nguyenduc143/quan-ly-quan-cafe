@@ -1,0 +1,292 @@
+<!-- Menu Management View -->
+<div class="dashboard-wrapper" ng-controller="MenuController as vm">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-coffee"></i>
+            <h2>Coffee BOH</h2>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="#!/dashboard" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#!/menu" class="menu-item active">
+                <i class="fas fa-mug-hot"></i>
+                <span>Quản lý Menu</span>
+            </a>
+            <a href="#!/orders" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Đơn hàng</span>
+            </a>
+            <a href="#!/tables" class="menu-item">
+                <i class="fas fa-table"></i>
+                <span>Sơ đồ bàn</span>
+            </a>
+            <a href="#!/inventory" class="menu-item">
+                <i class="fas fa-warehouse"></i>
+                <span>Kho nguyên liệu</span>
+            </a>
+            <a href="#!/employees" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Nhân viên</span>
+            </a>
+            <a href="#!/reports" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Báo cáo</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-bottom">
+            <div class="user-profile">
+                <i class="fas fa-user-circle"></i>
+                <span>{{ vm.currentUser.name || vm.currentUser.username || 'Admin' }}</span>
+            </div>
+            <button ng-click="vm.logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-area">
+        <!-- Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="btn-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Quản lý Menu</h1>
+            </div>
+            <div class="header-right">
+                <button ng-click="vm.toggleTheme()" class="btn-theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <span class="current-time">{{ vm.currentDateTime }}</span>
+            </div>
+        </header>
+
+        <!-- Menu Content -->
+        <div class="content-area">
+            <!-- Toolbar -->
+            <div class="content-card" style="margin-bottom: 25px;">
+                <div class="card-content">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 15px; align-items: center;">
+                        <!-- Search Box - 2x wider -->
+                        <div style="position: relative;">
+                            <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #7f8c8d; z-index: 1;"></i>
+                            <input 
+                                type="text" 
+                                ng-model="vm.searchTerm" 
+                                ng-change="vm.filterProducts()"
+                                placeholder="Tìm kiếm theo tên món ăn hoặc danh mục..."
+                                style="width: 100%; padding: 12px 15px 12px 45px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                                onfocus="this.style.borderColor='#3498db'; this.style.boxShadow='0 0 0 3px rgba(52, 152, 219, 0.1)'"
+                                onblur="this.style.borderColor='#ecf0f1'; this.style.boxShadow='none'">
+                        </div>
+                        
+                        <!-- Category Filter -->
+                        <select 
+                            ng-model="vm.selectedCategory" 
+                            ng-change="vm.filterProducts()"
+                            style="padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; width: 100%; transition: all 0.3s; cursor: pointer;"
+                            onfocus="this.style.borderColor='#3498db'"
+                            onblur="this.style.borderColor='#ecf0f1'">
+                            <option value="all">📋 Tất cả danh mục</option>
+                            <option ng-repeat="category in vm.categories" ng-value="category.idDanhmuc || category.IDDanhmuc">
+                                {{ category.tendanhmuc || category.TENDANHMUC }}
+                            </option>
+                        </select>
+                        
+                        <!-- Add Button -->
+                        <button ng-click="vm.openProductModal()" class="btn btn-primary" style="white-space: nowrap; padding: 12px 24px;">
+                            <i class="fas fa-plus"></i> Thêm món mới
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div ng-if="vm.isLoading" style="text-align: center; padding: 50px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #3498db;"></i>
+                <p style="margin-top: 20px; color: #7f8c8d;">Đang tải dữ liệu...</p>
+            </div>
+
+            <div ng-if="!vm.isLoading && vm.filteredProducts.length === 0" style="text-align: center; padding: 50px;">
+                <i class="fas fa-mug-hot" style="font-size: 64px; color: #dfe6e9;"></i>
+                <p style="margin-top: 20px; color: #7f8c8d; font-size: 16px;">Không tìm thấy món ăn nào</p>
+                <button ng-click="vm.openProductModal()" class="btn btn-primary" style="margin-top: 15px;">
+                    <i class="fas fa-plus"></i> Thêm món đầu tiên
+                </button>
+            </div>
+
+            <div ng-if="!vm.isLoading && vm.filteredProducts.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                <div ng-repeat="product in vm.filteredProducts" class="content-card" style="overflow: hidden; transition: all 0.3s; cursor: pointer;">
+                    <div style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                        <i class="fas fa-coffee" style="font-size: 64px; color: rgba(255,255,255,0.3);"></i>
+                        <div style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #667eea;">
+                            {{ product.categoryName }}
+                        </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <h3 style="font-size: 18px; font-weight: 600; color: #2c3e50; margin: 0 0 10px 0;">{{ product.name }}</h3>
+                        <p style="font-size: 20px; font-weight: 700; color: #e67e22; margin: 0 0 15px 0;">
+                            {{ vm.formatCurrency(product.price) }}
+                        </p>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button ng-click="vm.editProduct(product)" class="btn btn-info btn-sm" style="flex: 1;">
+                                <i class="fas fa-edit"></i> Sửa
+                            </button>
+                            <button ng-click="vm.deleteProduct(product.id)" class="btn btn-danger btn-sm" style="flex: 1;">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Product Modal -->
+    <div ng-if="vm.isModalOpen" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+        <div class="content-card" style="width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease;">
+            <div class="card-title-bar">
+                <h3>
+                    <i class="fas" ng-class="vm.currentProduct.id ? 'fa-edit' : 'fa-plus'"></i>
+                    {{ vm.currentProduct.id ? 'Chỉnh sửa món ăn' : 'Thêm món ăn mới' }}
+                </h3>
+                <button ng-click="vm.closeProductModal()" style="background: none; border: none; font-size: 24px; color: #7f8c8d; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="card-content">
+                <form ng-submit="vm.saveProduct()">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                            Tên món ăn <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            ng-model="vm.currentProduct.name" 
+                            placeholder="Nhập tên món ăn..."
+                            required
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                            Danh mục <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <select 
+                            ng-model="vm.currentProduct.categoryId" 
+                            required
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px;">
+                            <option value="">-- Chọn danh mục --</option>
+                            <option ng-repeat="category in vm.categories" ng-value="category.idDanhmuc || category.IDDanhmuc">
+                                {{ category.tendanhmuc || category.TENDANHMUC }}
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                            Giá tiền (VNĐ) <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            ng-model="vm.currentProduct.price" 
+                            placeholder="Nhập giá..."
+                            min="0"
+                            step="1000"
+                            required
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 25px;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">
+                            <i class="fas fa-save"></i> {{ vm.currentProduct.id ? 'Cập nhật' : 'Thêm mới' }}
+                        </button>
+                        <button type="button" ng-click="vm.closeProductModal()" class="btn btn-secondary" style="flex: 1;">
+                            <i class="fas fa-times"></i> Hủy
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+.btn-info {
+    background: #3498db;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #2980b9;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+}
+</style>
+

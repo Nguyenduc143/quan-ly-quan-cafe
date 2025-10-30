@@ -153,7 +153,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3><i class="fas fa-table"></i> Danh sách bàn</h3>
-                            <button class="btn btn-primary" id="addTableBtn" style="width:200px;">
+                            <button class="btn btn-primary" id="addTableBtn" style="width:200px;" onclick="console.log('Button clicked!'); openAddTableModal();">
                                 <i class="fas fa-plus"></i> Thêm bàn
                             </button>
                     </div>
@@ -170,11 +170,9 @@
     <!-- Add/Edit Table Modal -->
     <div id="tableModal" class="modal">
         <div class="modal-content">
-            <button class="modal-close-btn" onclick="closeTableModal()">
-                <i class="fas fa-times"></i>
-            </button>
             <div class="modal-header">
                 <h3 id="modalTitle"><i class="fas fa-plus"></i> Thêm bàn mới</h3>
+                <button class="close-btn" id="closeModal" onclick="closeTableModal()">&times;</button>
             </div>
             <form id="tableForm">
                 <div class="form-group">
@@ -202,7 +200,7 @@
                     <button type="submit" class="btn btn-success">
                         <i class="fas fa-save"></i> Lưu
                     </button>
-                    <button type="button" class="btn btn-secondary" id="cancelBtn">Hủy</button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn" onclick="closeTableModal()">Hủy</button>
                 </div>
             </form>
         </div>
@@ -213,7 +211,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="detailModalTitle"><i class="fas fa-table"></i> Thông tin bàn</h3>
-                <button class="close-btn" id="closeDetailModal">&times;</button>
+                <button class="close-btn" id="closeDetailModal" onclick="closeDetailModal()">&times;</button>
             </div>
             <div id="tableDetailContent">
                 <!-- Table details will be rendered here -->
