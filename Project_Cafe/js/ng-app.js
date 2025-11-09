@@ -43,7 +43,7 @@
             })
             // Tables
             .when('/tables', {
-                templateUrl: 'pages/tables.html',
+                templateUrl: 'views/tables.html',
                 controller: 'TableController',
                 controllerAs: 'vm',
                 requireAuth: true
