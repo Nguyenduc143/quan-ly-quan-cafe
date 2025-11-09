@@ -117,12 +117,13 @@
             // Make request
             $http(config)
                 .then(function(response) {
-                    deferred.resolve(response.data);
+                    // Return the full response object, not just response.data
+                    deferred.resolve(response);
                 })
                 .catch(function(error) {
                     var errorMessage = getErrorMessage(error);
                     console.error('API Error:', errorMessage, error);
-                    deferred.reject(errorMessage);
+                    deferred.reject(error);
                 });
 
             return deferred.promise;
