@@ -32,6 +32,20 @@
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
     },
     
+    // Employees Account Route - Admin (MUST come before general Employees routes)
+    {
+      "DownstreamPathTemplate": "/api/Employees/{id}/account",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5092
+        }
+      ],
+      "UpstreamPathTemplate": "/admin/api/Employees/{id}/account",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    
     // Employees Routes - Admin
     {
       "DownstreamPathTemplate": "/api/Employees/{everything}",
@@ -69,7 +83,7 @@
         }
       ],
       "UpstreamPathTemplate": "/admin/api/Ban/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete","Patch" ]
     },
     {
       "DownstreamPathTemplate": "/api/Ban",
@@ -81,7 +95,7 @@
         }
       ],
       "UpstreamPathTemplate": "/admin/api/Ban",
-      "UpstreamHttpMethod": [ "Get", "Post" ]
+      "UpstreamHttpMethod": [ "Get", "Post","Put","Delete", "Patch" ]
     },
     
     // Order Routes - Admin
@@ -95,7 +109,7 @@
         }
       ],
       "UpstreamPathTemplate": "/admin/api/Order/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ]
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete","Patch" ]
     },
     {
       "DownstreamPathTemplate": "/api/Order",
@@ -178,7 +192,7 @@
     
     // Invoice Routes - Admin
     {
-      "DownstreamPathTemplate": "/api/Invoices/{everything}",
+      "DownstreamPathTemplate": "/api/Invoice/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -186,11 +200,11 @@
           "Port": 5092
         }
       ],
-      "UpstreamPathTemplate": "/admin/api/Invoices/{everything}",
+      "UpstreamPathTemplate": "/admin/api/Invoice/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Invoices",
+      "DownstreamPathTemplate": "/api/Invoice",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -198,7 +212,57 @@
           "Port": 5092
         }
       ],
-      "UpstreamPathTemplate": "/admin/api/Invoices",
+      "UpstreamPathTemplate": "/admin/api/Invoice",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    
+    // Importedinvoice Routes - Admin
+    {
+      "DownstreamPathTemplate": "/api/Importedinvoice/search",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5092
+        }
+      ],
+      "UpstreamPathTemplate": "/admin/api/Importedinvoice/search",
+      "UpstreamHttpMethod": [ "Get", "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Importedinvoice/{id}/details",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5092
+        }
+      ],
+      "UpstreamPathTemplate": "/admin/api/Importedinvoice/{id}/details",
+      "UpstreamHttpMethod": [ "Get" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Importedinvoice/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5092
+        }
+      ],
+      "UpstreamPathTemplate": "/admin/api/Importedinvoice/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Importedinvoice",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5092
+        }
+      ],
+      "UpstreamPathTemplate": "/admin/api/Importedinvoice",
       "UpstreamHttpMethod": [ "Get", "Post" ]
     },
     
@@ -231,7 +295,7 @@
         }
       ],
       "UpstreamPathTemplate": "/staff/api/Ban/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete","Patch" ]
     },
     {
       "DownstreamPathTemplate": "/api/Ban",
@@ -257,7 +321,7 @@
         }
       ],
       "UpstreamPathTemplate": "/staff/api/Order/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ]
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ]
     },
     {
       "DownstreamPathTemplate": "/api/Order",
