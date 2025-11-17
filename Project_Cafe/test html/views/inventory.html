@@ -1,0 +1,871 @@
+<!-- Inventory View -->
+<div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-coffee"></i>
+            <h2>Coffee BOH</h2>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="#!/dashboard" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#!/menu" class="menu-item">
+                <i class="fas fa-mug-hot"></i>
+                <span>Quản lý Menu</span>
+            </a>
+            <a href="#!/orders" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Đơn hàng</span>
+            </a>
+            <a href="#!/tables" class="menu-item">
+                <i class="fas fa-table"></i>
+                <span>Sơ đồ bàn</span>
+            </a>
+            <a href="#!/inventory" class="menu-item active">
+                <i class="fas fa-warehouse"></i>
+                <span>Kho nguyên liệu</span>
+            </a>
+            <a href="#!/employees" class="menu-item" ng-if="currentUser.role === 'Quản lý'">
+                <i class="fas fa-users"></i>
+                <span>Nhân viên</span>
+            </a>
+            <a href="#!/reports" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Báo cáo</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-bottom">
+            <div class="user-profile">
+                <i class="fas fa-user-circle"></i>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-weight: 600;" title="{{ vm.currentUser.username }}">{{ vm.currentUser.name || 'User' }}</span>
+                    <span style="font-size: 11px; color: #95a5a6;">{{ vm.currentUser.role || 'Nhân viên' }}</span>
+                </div>
+            </div>
+            <button ng-click="vm.logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-area">
+        <!-- Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button ng-click="vm.toggleSidebar()" class="btn-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Kho nguyên liệu</h1>
+            </div>
+            <div class="header-right">
+                <button ng-click="vm.toggleTheme()" class="btn-theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <span class="current-time">{{ vm.currentDateTime }}</span>
+            </div>
+        </header>
+        
+        <!-- Dashboard Content -->
+        <div class="content-area">
+            <!-- Role Info Alert (For non-manager users) -->
+            <div ng-if="!vm.canEdit" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); border-radius: 12px; padding: 18px 24px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);">
+                <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-info-circle" style="font-size: 24px; color: white;"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0 0 6px 0; color: white; font-size: 16px; font-weight: 600;">
+                        <i class="fas fa-eye"></i> Chế độ Chỉ xem
+                    </h4>
+                    <p style="margin: 0; color: rgba(255,255,255,0.95); font-size: 14px; line-height: 1.5;">
+                        Bạn đang xem dữ liệu ở chế độ <strong>Chỉ đọc</strong>. Chỉ <strong>Quản lý</strong> mới có quyền thêm, sửa hoặc xóa dữ liệu.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div style="background: white; border-radius: 8px; padding: 0; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div style="display: flex; border-bottom: 2px solid #f0f0f0;">
+                    <button ng-click="vm.switchTab('materials')" ng-class="{'active': vm.activeTab === 'materials'}" 
+                        style="flex: 1; padding: 16px 24px; background: none; border: none; border-bottom: 3px solid; color: #7f8c8d; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;"
+                        ng-style="{'border-bottom-color': vm.activeTab === 'materials' ? '#3498db' : 'transparent', 'color': vm.activeTab === 'materials' ? '#3498db' : '#7f8c8d'}">
+                        <i class="fas fa-boxes" style="font-size: 18px;"></i>
+                        Nguyên liệu
+                    </button>
+                    <button ng-click="vm.switchTab('suppliers')" ng-class="{'active': vm.activeTab === 'suppliers'}" 
+                        style="flex: 1; padding: 16px 24px; background: none; border: none; border-bottom: 3px solid; color: #7f8c8d; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;"
+                        ng-style="{'border-bottom-color': vm.activeTab === 'suppliers' ? '#3498db' : 'transparent', 'color': vm.activeTab === 'suppliers' ? '#3498db' : '#7f8c8d'}">
+                        <i class="fas fa-truck" style="font-size: 18px;"></i>
+                        Nhà cung cấp
+                    </button>
+                    <button ng-click="vm.switchTab('invoices')" ng-class="{'active': vm.activeTab === 'invoices'}" 
+                        style="flex: 1; padding: 16px 24px; background: none; border: none; border-bottom: 3px solid; color: #7f8c8d; font-weight: 600; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;"
+                        ng-style="{'border-bottom-color': vm.activeTab === 'invoices' ? '#3498db' : 'transparent', 'color': vm.activeTab === 'invoices' ? '#3498db' : '#7f8c8d'}">
+                        <i class="fas fa-file-invoice" style="font-size: 18px;"></i>
+                        Hóa đơn nhập
+                    </button>
+                </div>
+            </div>
+
+            <!-- Materials Tab -->
+            <div ng-show="vm.activeTab === 'materials'">
+                <!-- Statistics Cards -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px;">
+                    <!-- Card 1: Tổng nguyên liệu -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-boxes" style="font-size: 28px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <h3 style="font-size: 32px; font-weight: 700; color: #2c3e50; margin: 0 0 4px 0; line-height: 1;">{{ vm.materials.length }}</h3>
+                            <p style="font-size: 14px; color: #7f8c8d; margin: 0; font-weight: 500;">Tổng nguyên liệu</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Sắp hết hàng -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 28px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <h3 style="font-size: 32px; font-weight: 700; color: #2c3e50; margin: 0 0 4px 0; line-height: 1;">{{ vm.getLowStockCount() }}</h3>
+                            <p style="font-size: 14px; color: #7f8c8d; margin: 0; font-weight: 500;">Sắp hết hàng</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Hết hàng -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-times-circle" style="font-size: 28px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <h3 style="font-size: 32px; font-weight: 700; color: #2c3e50; margin: 0 0 4px 0; line-height: 1;">{{ vm.getOutOfStockCount() }}</h3>
+                            <p style="font-size: 14px; color: #7f8c8d; margin: 0; font-weight: 500;">Hết hàng</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toolbar -->
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <!-- Search Box -->
+                        <div style="position: relative; flex: 2;">
+                            <input 
+                                type="text" 
+                                ng-model="vm.searchTerm"
+                                placeholder="Tìm kiếm nguyên liệu..."
+                                style="width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                                onfocus="this.style.borderColor='#3498db'; this.style.boxShadow='0 0 0 3px rgba(52, 152, 219, 0.08)'"
+                                onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
+                        </div>
+                        
+                        <!-- Status Filter -->
+                        <select 
+                            ng-model="vm.statusFilter"
+                            style="padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; width: auto; transition: all 0.3s; cursor: pointer; background: white;"
+                            onfocus="this.style.borderColor='#3498db'"
+                            onblur="this.style.borderColor='#e0e0e0'">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="in-stock">Còn hàng</option>
+                            <option value="low-stock">Sắp hết</option>
+                            <option value="out-of-stock">Hết hàng</option>
+                        </select>
+                        
+                        <!-- Add Button (Manager only) -->
+                        <button ng-if="vm.canEdit" ng-click="vm.openMaterialModal()" style="padding: 12px 24px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; white-space: nowrap;"
+                            onmouseover="this.style.background='#2980b9'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(52, 152, 219, 0.3)'"
+                            onmouseout="this.style.background='#3498db'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <i class="fas fa-plus"></i>
+                            Thêm nguyên liệu
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Materials Table -->
+                <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;">
+                    <div ng-if="vm.isLoading" style="text-align: center; padding: 80px 20px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #3498db;"></i>
+                        <p style="margin-top: 20px; color: #7f8c8d; font-size: 15px;">Đang tải dữ liệu...</p>
+                    </div>
+
+                    <div ng-if="!vm.isLoading && vm.materials.length === 0" style="text-align: center; padding: 80px 20px;">
+                        <i class="fas fa-boxes" style="font-size: 64px; color: #dfe6e9;"></i>
+                        <p style="margin-top: 20px; color: #95a5a6; font-size: 16px; font-style: italic;">Chưa có nguyên liệu nào</p>
+                        <button ng-click="vm.openMaterialModal()" style="margin-top: 20px; padding: 12px 28px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;"
+                            onmouseover="this.style.background='#2980b9'"
+                            onmouseout="this.style.background='#3498db'">
+                            <i class="fas fa-plus"></i>
+                            Thêm nguyên liệu đầu tiên
+                        </button>
+                    </div>
+
+                    <table ng-if="!vm.isLoading && vm.materials.length > 0" style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Mã NL</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Tên nguyên liệu</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Đơn vị</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Số lượng tồn</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Ghi chú</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Trạng thái</th>
+                                <th style="padding: 16px 20px; text-align: center; font-weight: 600; color: #6c757d; font-size: 13px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="material in vm.materials | filter:vm.filterMaterials" style="border-bottom: 1px solid #f1f3f5; transition: background 0.2s;"
+                                onmouseover="this.style.background='#f8f9fa'"
+                                onmouseout="this.style.background='white'">
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 600; font-size: 14px;">#{{ material.id }}</td>
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 500; font-size: 14px;">{{ material.name }}</td>
+                                <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ material.unit }}</td>
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 600; font-size: 14px;">{{ material.quantity }}</td>
+                                <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ material.note || '-' }}</td>
+                                <td style="padding: 16px 20px;">
+                                    <span style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;"
+                                        ng-style="{
+                                            'background': material.quantity >= 10 ? '#d4edda' : (material.quantity > 0 ? '#fff3cd' : '#f8d7da'),
+                                            'color': material.quantity >= 10 ? '#28a745' : (material.quantity > 0 ? '#ffc107' : '#dc3545')
+                                        }">
+                                        {{ material.quantity >= 10 ? 'Hoạt động' : (material.quantity > 0 ? 'Sắp hết' : 'Hết hàng') }}
+                                    </span>
+                                </td>
+                                <td style="padding: 16px 20px; text-align: center;">
+                                    <button ng-if="vm.canEdit" ng-click="vm.editMaterial(material)" style="padding: 8px 12px; background: #17a2b8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 6px; transition: all 0.2s;"
+                                        onmouseover="this.style.background='#138496'; this.style.transform='translateY(-1px)'"
+                                        onmouseout="this.style.background='#17a2b8'; this.style.transform='translateY(0)'">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button ng-if="vm.canEdit" ng-click="vm.deleteMaterial(material.id)" style="padding: 8px 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;"
+                                        onmouseover="this.style.background='#c82333'; this.style.transform='translateY(-1px)'"
+                                        onmouseout="this.style.background='#dc3545'; this.style.transform='translateY(0)'">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <span ng-if="!vm.canEdit" style="color: #6c757d; font-size: 13px; font-style: italic;">Chỉ xem</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Suppliers Tab -->
+            <div ng-show="vm.activeTab === 'suppliers'">
+                <!-- Suppliers Stats -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 25px;">
+                    <!-- Card 1: Tổng nhà cung cấp -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-truck" style="font-size: 28px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <h3 style="font-size: 32px; font-weight: 700; color: #2c3e50; margin: 0 0 4px 0; line-height: 1;">{{ vm.suppliers.length }}</h3>
+                            <p style="font-size: 14px; color: #7f8c8d; margin: 0; font-weight: 500;">Tổng nhà cung cấp</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Đang hợp tác -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-check-circle" style="font-size: 28px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <h3 style="font-size: 32px; font-weight: 700; color: #2c3e50; margin: 0 0 4px 0; line-height: 1;">{{ vm.suppliers.length }}</h3>
+                            <p style="font-size: 14px; color: #7f8c8d; margin: 0; font-weight: 500;">Đang hợp tác</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suppliers Toolbar -->
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <!-- Search Box -->
+                        <div style="position: relative; flex: 1;">
+                            <input 
+                                type="text" 
+                                ng-model="vm.supplierSearch"
+                                placeholder="Tìm kiếm nhà cung cấp..."
+                                style="width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                                onfocus="this.style.borderColor='#3498db'; this.style.boxShadow='0 0 0 3px rgba(52, 152, 219, 0.08)'"
+                                onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
+                        </div>
+                        
+                        <!-- Add Button (Manager only) -->
+                        <button ng-if="vm.canEdit" ng-click="vm.openSupplierModal()" style="padding: 12px 24px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; white-space: nowrap;"
+                            onmouseover="this.style.background='#2980b9'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(52, 152, 219, 0.3)'"
+                            onmouseout="this.style.background='#3498db'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <i class="fas fa-plus"></i>
+                            Thêm nhà cung cấp
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Suppliers Table -->
+                <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;">
+                    <div ng-if="vm.isLoadingSuppliers" style="text-align: center; padding: 80px 20px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #3498db;"></i>
+                        <p style="margin-top: 20px; color: #7f8c8d; font-size: 15px;">Đang tải dữ liệu...</p>
+                    </div>
+
+                    <div ng-if="!vm.isLoadingSuppliers && vm.suppliers.length === 0" style="text-align: center; padding: 80px 20px;">
+                        <i class="fas fa-truck" style="font-size: 64px; color: #dfe6e9;"></i>
+                        <p style="margin-top: 20px; color: #95a5a6; font-size: 16px; font-style: italic;">Chưa có nhà cung cấp nào</p>
+                        <button ng-click="vm.openSupplierModal()" style="margin-top: 20px; padding: 12px 28px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;"
+                            onmouseover="this.style.background='#2980b9'"
+                            onmouseout="this.style.background='#3498db'">
+                            <i class="fas fa-plus"></i>
+                            Thêm nhà cung cấp đầu tiên
+                        </button>
+                    </div>
+
+                    <table ng-if="!vm.isLoadingSuppliers && vm.suppliers.length > 0" style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Mã NCC</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Tên nhà cung cấp</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Số điện thoại</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Địa chỉ</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Email</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Trạng thái</th>
+                                <th style="padding: 16px 20px; text-align: center; font-weight: 600; color: #6c757d; font-size: 13px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="supplier in vm.suppliers | filter:vm.supplierSearch" style="border-bottom: 1px solid #f1f3f5; transition: background 0.2s;"
+                                onmouseover="this.style.background='#f8f9fa'"
+                                onmouseout="this.style.background='white'">
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 600; font-size: 14px;">#{{ supplier.id }}</td>
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 500; font-size: 14px;">{{ supplier.name }}</td>
+                                <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ supplier.phone }}</td>
+                                <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ supplier.address }}</td>
+                                <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ supplier.email }}</td>
+                                <td style="padding: 16px 20px;">
+                                    <span style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #d4edda; color: #28a745;">
+                                        Hoạt động
+                                    </span>
+                                </td>
+                                <td style="padding: 16px 20px; text-align: center;">
+                                    <button ng-if="vm.canEdit" ng-click="vm.editSupplier(supplier)" style="padding: 8px 12px; background: #17a2b8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 6px; transition: all 0.2s;"
+                                        onmouseover="this.style.background='#138496'; this.style.transform='translateY(-1px)'"
+                                        onmouseout="this.style.background='#17a2b8'; this.style.transform='translateY(0)'">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button ng-if="vm.canEdit" ng-click="vm.deleteSupplier(supplier.id)" style="padding: 8px 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;"
+                                        onmouseover="this.style.background='#c82333'; this.style.transform='translateY(-1px)'"
+                                        onmouseout="this.style.background='#dc3545'; this.style.transform='translateY(0)'">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <span ng-if="!vm.canEdit" style="color: #6c757d; font-size: 13px; font-style: italic;">Chỉ xem</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Invoices Tab -->
+            <div ng-show="vm.activeTab === 'invoices'">
+                <!-- Invoices Stats -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 25px;">
+                    <!-- Card 1: Tổng hóa đơn -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-file-invoice" style="font-size: 28px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <h3 style="font-size: 32px; font-weight: 700; color: #2c3e50; margin: 0 0 4px 0; line-height: 1;">{{ vm.purchases.length }}</h3>
+                            <p style="font-size: 14px; color: #7f8c8d; margin: 0; font-weight: 500;">Tổng hóa đơn</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Tổng giá trị -->
+                    <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 20px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-dollar-sign" style="font-size: 28px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <h3 style="font-size: 32px; font-weight: 700; color: #2c3e50; margin: 0 0 4px 0; line-height: 1;">{{ vm.formatCurrency(vm.getTotalPurchaseValue()) }}</h3>
+                            <p style="font-size: 14px; color: #7f8c8d; margin: 0; font-weight: 500;">Tổng giá trị nhập</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoices Toolbar -->
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <!-- Search Box -->
+                        <div style="position: relative; flex: 1;">
+                            <input 
+                                type="text" 
+                                ng-model="vm.purchaseSearch"
+                                placeholder="Tìm kiếm hóa đơn..."
+                                style="width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                                onfocus="this.style.borderColor='#3498db'; this.style.boxShadow='0 0 0 3px rgba(52, 152, 219, 0.08)'"
+                                onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
+                        </div>
+
+                        <!-- Date Filter -->
+                        <input 
+                            type="date" 
+                            ng-model="vm.purchaseDate"
+                            style="padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s; cursor: pointer;"
+                            onfocus="this.style.borderColor='#3498db'"
+                            onblur="this.style.borderColor='#e0e0e0'">
+                        
+                        <!-- Add Button (Manager only) -->
+                        <button ng-if="vm.canEdit" ng-click="vm.openPurchaseModal()" style="padding: 12px 24px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; white-space: nowrap;"
+                            onmouseover="this.style.background='#2980b9'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(52, 152, 219, 0.3)'"
+                            onmouseout="this.style.background='#3498db'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <i class="fas fa-plus"></i>
+                            Tạo hóa đơn nhập
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Invoices Table -->
+                <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;">
+                    <div ng-if="vm.isLoadingInvoices" style="text-align: center; padding: 80px 20px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #3498db;"></i>
+                        <p style="margin-top: 20px; color: #7f8c8d; font-size: 15px;">Đang tải dữ liệu...</p>
+                    </div>
+
+                    <div ng-if="!vm.isLoadingInvoices && vm.purchases.length === 0" style="text-align: center; padding: 80px 20px;">
+                        <i class="fas fa-file-invoice" style="font-size: 64px; color: #dfe6e9;"></i>
+                        <p style="margin-top: 20px; color: #95a5a6; font-size: 16px; font-style: italic;">Chưa có hóa đơn nhập nào</p>
+                        <button ng-click="vm.openPurchaseModal()" style="margin-top: 20px; padding: 12px 28px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;"
+                            onmouseover="this.style.background='#2980b9'"
+                            onmouseout="this.style.background='#3498db'">
+                            <i class="fas fa-plus"></i>
+                            Tạo hóa đơn nhập đầu tiên
+                        </button>
+                    </div>
+
+                    <table ng-if="!vm.isLoadingInvoices && vm.purchases.length > 0" style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Mã HĐ</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Ngày nhập</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Nhà cung cấp</th>
+                                <th style="padding: 16px 20px; text-align: right; font-weight: 600; color: #6c757d; font-size: 13px;">Tổng tiền</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px;">Trạng thái</th>
+                                <th style="padding: 16px 20px; text-align: center; font-weight: 600; color: #6c757d; font-size: 13px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="invoice in vm.purchases | filter:vm.purchaseSearch" style="border-bottom: 1px solid #f1f3f5; transition: background 0.2s;"
+                                onmouseover="this.style.background='#f8f9fa'"
+                                onmouseout="this.style.background='white'">
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 600; font-size: 14px;">{{ invoice.invoiceCode }}</td>
+                                <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ invoice.date | date:'dd/MM/yyyy' }}</td>
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 500; font-size: 14px;">{{ invoice.supplierName }}</td>
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 600; font-size: 14px; text-align: right;">{{ vm.formatCurrency(invoice.totalAmount) }}</td>
+                                <td style="padding: 16px 20px;">
+                                    <span style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #d4edda; color: #28a745;">
+                                        {{ invoice.status }}
+                                    </span>
+                                </td>
+                                <td style="padding: 16px 20px; text-align: center;">
+                                    <button ng-click="vm.viewPurchaseDetails(invoice)" style="padding: 8px 12px; background: #17a2b8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 6px; transition: all 0.2s;"
+                                        onmouseover="this.style.background='#138496'; this.style.transform='translateY(-1px)'"
+                                        onmouseout="this.style.background='#17a2b8'; this.style.transform='translateY(0)'">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button ng-if="vm.canEdit" ng-click="vm.deletePurchase(invoice.id)" style="padding: 8px 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;"
+                                        onmouseover="this.style.background='#c82333'; this.style.transform='translateY(-1px)'"
+                                        onmouseout="this.style.background='#dc3545'; this.style.transform='translateY(0)'">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </main>
+</div>
+
+<!-- Material Modal -->
+<div ng-if="vm.showMaterialModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+    <div class="content-card" style="width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease;">
+        <div class="card-title-bar">
+            <h3>
+                <i class="fas" ng-class="vm.currentMaterial.id ? 'fa-edit' : 'fa-plus'"></i>
+                {{ vm.currentMaterial.id ? 'Cập nhật nguyên liệu' : 'Thêm nguyên liệu mới' }}
+            </h3>
+            <button ng-click="vm.closeMaterialModal()" style="background: none; border: none; font-size: 24px; color: #7f8c8d; cursor: pointer;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="card-content">
+            <form ng-submit="vm.saveMaterial()">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        Tên nguyên liệu <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        ng-model="vm.currentMaterial.name" 
+                        placeholder="Nhập tên nguyên liệu..."
+                        required
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                            Đơn vị tính <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <select 
+                            ng-model="vm.currentMaterial.unit" 
+                            required
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px;">
+                            <option value="">-- Chọn đơn vị --</option>
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="lít">lít</option>
+                            <option value="ml">ml</option>
+                            <option value="hộp">hộp</option>
+                            <option value="gói">gói</option>
+                            <option value="chai">chai</option>
+                            <option value="lon">lon</option>
+                            <option value="túi">túi</option>
+                            <option value="cái">cái</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                            Số lượng tồn kho <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <input 
+                            type="number" 
+                            ng-model="vm.currentMaterial.quantity" 
+                            min="0" 
+                            step="0.01" 
+                            required
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px;">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        Ghi chú
+                    </label>
+                    <textarea 
+                        ng-model="vm.currentMaterial.note" 
+                        rows="3"
+                        placeholder="Ghi chú thêm về nguyên liệu..."
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; resize: vertical;"></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" ng-click="vm.closeMaterialModal()" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Supplier Modal -->
+<div ng-if="vm.showSupplierModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+    <div style="background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease;">
+        <div style="padding: 24px; border-bottom: 1px solid #ecf0f1; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 20px; font-weight: 600; color: #2c3e50;">
+                <i class="fas" ng-class="vm.currentSupplier.id ? 'fa-edit' : 'fa-plus'" style="margin-right: 8px; color: #3498db;"></i>
+                {{ vm.currentSupplier.id ? 'Cập nhật nhà cung cấp' : 'Thêm nhà cung cấp mới' }}
+            </h3>
+            <button ng-click="vm.closeSupplierModal()" style="background: none; border: none; font-size: 24px; color: #7f8c8d; cursor: pointer; padding: 0; line-height: 1;"
+                onmouseover="this.style.color='#e74c3c'"
+                onmouseout="this.style.color='#7f8c8d'">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div style="padding: 24px;">
+            <form ng-submit="vm.saveSupplier()">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                        Tên nhà cung cấp <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        ng-model="vm.currentSupplier.name" 
+                        placeholder="Nhập tên nhà cung cấp..."
+                        required
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;"
+                        onfocus="this.style.borderColor='#3498db'"
+                        onblur="this.style.borderColor='#e0e0e0'">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                            Số điện thoại <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            ng-model="vm.currentSupplier.phone" 
+                            placeholder="Nhập số điện thoại..."
+                            required
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;"
+                            onfocus="this.style.borderColor='#3498db'"
+                            onblur="this.style.borderColor='#e0e0e0'">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                            Email
+                        </label>
+                        <input 
+                            type="email" 
+                            ng-model="vm.currentSupplier.email"
+                            placeholder="Nhập email..."
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;"
+                            onfocus="this.style.borderColor='#3498db'"
+                            onblur="this.style.borderColor='#e0e0e0'">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                        Địa chỉ <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        ng-model="vm.currentSupplier.address" 
+                        placeholder="Nhập địa chỉ..."
+                        required
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;"
+                        onfocus="this.style.borderColor='#3498db'"
+                        onblur="this.style.borderColor='#e0e0e0'">
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
+                    <button type="button" ng-click="vm.closeSupplierModal()" style="padding: 10px 20px; background: white; color: #7f8c8d; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#f8f9fa'"
+                        onmouseout="this.style.background='white'">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#218838'; this.style.transform='translateY(-1px)'"
+                        onmouseout="this.style.background='#28a745'; this.style.transform='translateY(0)'">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Invoice Modal -->
+<div ng-if="vm.showPurchaseModal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;">
+    <div style="background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease;">
+        <div style="padding: 24px; border-bottom: 1px solid #ecf0f1; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 20px; font-weight: 600; color: #2c3e50;">
+                <i class="fas fa-file-invoice" style="margin-right: 8px; color: #3498db;"></i>
+                {{ vm.currentPurchase.id ? 'Chi tiết hóa đơn' : 'Tạo hóa đơn nhập mới' }}
+            </h3>
+            <button ng-click="vm.closePurchaseModal()" style="background: none; border: none; font-size: 24px; color: #7f8c8d; cursor: pointer; padding: 0; line-height: 1;"
+                onmouseover="this.style.color='#e74c3c'"
+                onmouseout="this.style.color='#7f8c8d'">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div style="padding: 24px;">
+            <form ng-submit="vm.savePurchase()">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                            Mã hóa đơn
+                        </label>
+                        <input 
+                            type="text" 
+                            ng-model="vm.currentPurchase.invoiceCode" 
+                            readonly
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; background: #f8f9fa; color: #6c757d; cursor: not-allowed;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                            Ngày nhập <span style="color: #e74c3c;">*</span>
+                        </label>
+                        <input 
+                            type="date" 
+                            ng-model="vm.currentPurchase.date" 
+                            required
+                            style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;"
+                            onfocus="this.style.borderColor='#3498db'"
+                            onblur="this.style.borderColor='#e0e0e0'">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                        Nhà cung cấp <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <select 
+                        ng-model="vm.currentPurchase.supplierId" 
+                        required
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s;"
+                        onfocus="this.style.borderColor='#3498db'"
+                        onblur="this.style.borderColor='#e0e0e0'">
+                        <option value="">-- Chọn nhà cung cấp --</option>
+                        <option ng-repeat="supplier in vm.suppliers" value="{{ supplier.id }}">{{ supplier.name }}</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                        Tổng tiền <span style="color: #28a745;">(Tự động tính từ chi tiết)</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        ng-model="vm.currentPurchase.totalAmount" 
+                        readonly
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 16px; background: #f8f9fa; cursor: not-allowed; font-weight: 700; color: #28a745;">
+                </div>
+                
+                <!-- Chi tiết hóa đơn (Items) -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 12px; font-weight: 600; color: #2c3e50; font-size: 14px;">
+                        Chi tiết hóa đơn <span style="color: #e74c3c;">*</span>
+                        <span style="font-size: 12px; color: #7f8c8d; font-weight: normal;">(Ít nhất 1 nguyên liệu)</span>
+                    </label>
+                    
+                    <!-- Add Item Form -->
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 10px;">
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: end;">
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #6c757d;">Nguyên liệu</label>
+                                <select ng-model="vm.newItem.materialId" style="width: 100%; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 13px;">
+                                    <option value="">-- Chọn nguyên liệu --</option>
+                                    <option ng-repeat="material in vm.materials" value="{{ material.id }}">{{ material.name }} ({{ material.unit }})</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #6c757d;">Số lượng</label>
+                                <input type="number" ng-model="vm.newItem.quantity" ng-change="vm.calculateItemTotal()" min="0" step="0.01" placeholder="0" style="width: 100%; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 13px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-size: 12px; color: #6c757d;">Đơn giá</label>
+                                <input type="number" ng-model="vm.newItem.price" ng-change="vm.calculateItemTotal()" min="0" step="1000" placeholder="0" style="width: 100%; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 13px;">
+                            </div>
+                            <div>
+                                <button type="button" ng-click="vm.addItemToInvoice()" style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; white-space: nowrap;">
+                                    <i class="fas fa-plus"></i> Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Items List -->
+                    <div ng-if="vm.currentPurchase.items.length > 0" style="border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                            <thead style="background: #f8f9fa;">
+                                <tr>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 1px solid #e0e0e0;">Nguyên liệu</th>
+                                    <th style="padding: 10px; text-align: right; border-bottom: 1px solid #e0e0e0;">Số lượng</th>
+                                    <th style="padding: 10px; text-align: right; border-bottom: 1px solid #e0e0e0;">Đơn giá</th>
+                                    <th style="padding: 10px; text-align: right; border-bottom: 1px solid #e0e0e0;">Thành tiền</th>
+                                    <th style="padding: 10px; text-align: center; border-bottom: 1px solid #e0e0e0; width: 60px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in vm.currentPurchase.items">
+                                    <td style="padding: 10px; border-bottom: 1px solid #f0f0f0;">{{ vm.getMaterialName(item.idNguyenLieu) }}</td>
+                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #f0f0f0;">{{ item.soLuong }}</td>
+                                    <td style="padding: 10px; text-align: right; border-bottom: 1px solid #f0f0f0;">{{ vm.formatCurrency(item.donGia) }}</td>
+                                    <td style="padding: 10px; text-align: right; font-weight: 600; border-bottom: 1px solid #f0f0f0;">{{ vm.formatCurrency(item.soLuong * item.donGia) }}</td>
+                                    <td style="padding: 10px; text-align: center; border-bottom: 1px solid #f0f0f0;">
+                                        <button type="button" ng-click="vm.removeItemFromInvoice($index)" style="padding: 4px 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div ng-if="vm.currentPurchase.items.length === 0" style="padding: 20px; text-align: center; color: #95a5a6; font-style: italic; background: #f8f9fa; border-radius: 8px;">
+                        Chưa có nguyên liệu nào
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
+                    <button type="button" ng-click="vm.closePurchaseModal()" style="padding: 10px 20px; background: white; color: #7f8c8d; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#f8f9fa'"
+                        onmouseout="this.style.background='white'">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#218838'; this.style.transform='translateY(-1px)'"
+                        onmouseout="this.style.background='#28a745'; this.style.transform='translateY(0)'">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #7f8c8d;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    color: #3498db;
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.tab-btn.active {
+    color: #3498db;
+    border-bottom-color: #3498db;
+}
+
+.tab-btn i {
+    margin-right: 8px;
+}
+</style>
