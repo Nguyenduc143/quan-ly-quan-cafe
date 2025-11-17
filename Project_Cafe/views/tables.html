@@ -1,0 +1,718 @@
+<!-- Tables View -->
+<div class="dashboard-wrapper" ng-controller="TableController as vm">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-coffee"></i>
+            <h2>Coffee BOH</h2>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="#!/dashboard" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#!/menu" class="menu-item">
+                <i class="fas fa-mug-hot"></i>
+                <span>Quản lý Menu</span>
+            </a>
+            <a href="#!/orders" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Đơn hàng</span>
+            </a>
+            <a href="#!/tables" class="menu-item active">
+                <i class="fas fa-table"></i>
+                <span>Sơ đồ bàn</span>
+            </a>
+            <a href="#!/inventory" class="menu-item">
+                <i class="fas fa-warehouse"></i>
+                <span>Kho nguyên liệu</span>
+            </a>
+            <a href="#!/employees" class="menu-item" ng-if="currentUser.role === 'Quản lý'">
+                <i class="fas fa-users"></i>
+                <span>Nhân viên</span>
+            </a>
+            <a href="#!/reports" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Báo cáo</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-bottom">
+            <div class="user-profile">
+                <i class="fas fa-user-circle"></i>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-weight: 600;" title="{{ vm.currentUser.username }}">{{ vm.currentUser.name || 'User' }}</span>
+                    <span style="font-size: 11px; color: #95a5a6;">{{ vm.currentUser.role || 'Nhân viên' }}</span>
+                </div>
+            </div>
+            <button ng-click="vm.logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-area">
+        <!-- Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button ng-click="vm.toggleSidebar()" class="btn-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Sơ đồ bàn</h1>
+            </div>
+            <div class="header-right">
+                <button ng-click="vm.toggleTheme()" class="btn-theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <span class="current-time">{{ vm.currentDateTime }}</span>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Stats Summary -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Bàn trống</h3>
+                        <p class="stat-number">{{vm.stats.available}}</p>
+                        <span class="stat-badge">Sẵn sàng</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon pink">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Đang phục vụ</h3>
+                        <p class="stat-number">{{vm.stats.occupied}}</p>
+                        <span class="stat-badge">Có khách</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon cyan">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Đã đặt</h3>
+                        <p class="stat-number">{{vm.stats.reserved}}</p>
+                        <span class="stat-badge">Chờ phục vụ</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-table"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Tổng số bàn</h3>
+                        <p class="stat-number">{{vm.stats.total}}</p>
+                        <span class="stat-badge">Trong hệ thống</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter & Search -->
+            <div class="content-card" style="margin-bottom: 25px;">
+                <div class="card-content">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: center;">
+                        <!-- Search Box -->
+                        <div style="position: relative;">
+                            <i class="fas fa-search" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #7f8c8d; z-index: 1;"></i>
+                            <input 
+                                type="text" 
+                                ng-model="vm.searchTerm" 
+                                ng-change="vm.filterTables()"
+                                placeholder="Tìm kiếm bàn theo tên..."
+                                style="width: 100%; padding: 12px 15px 12px 45px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                                onfocus="this.style.borderColor='#3498db'; this.style.boxShadow='0 0 0 3px rgba(52, 152, 219, 0.1)'"
+                                onblur="this.style.borderColor='#ecf0f1'; this.style.boxShadow='none'">
+                        </div>
+
+                        <!-- Area Filter -->
+                        <select 
+                            ng-model="vm.filters.area" 
+                            ng-change="vm.filterTables()"
+                            style="padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; width: 100%; cursor: pointer; transition: all 0.3s;"
+                            onfocus="this.style.borderColor='#3498db'"
+                            onblur="this.style.borderColor='#ecf0f1'">
+                            <option ng-repeat="area in vm.areaOptions" value="{{area.value}}">{{area.label}}</option>
+                        </select>
+
+                        <!-- Status Filter -->
+                        <select 
+                            ng-model="vm.filters.status" 
+                            ng-change="vm.filterTables()"
+                            style="padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; width: 100%; cursor: pointer; transition: all 0.3s;"
+                            onfocus="this.style.borderColor='#3498db'"
+                            onblur="this.style.borderColor='#ecf0f1'">
+                            <option ng-repeat="status in vm.statusOptions" value="{{status.value}}">{{status.label}}</option>
+                        </select>
+                        
+                        <!-- Add Button -->
+                        <button ng-click="vm.openAddModal()" class="btn btn-primary" style="white-space: nowrap; padding: 12px 24px;">
+                            <i class="fas fa-plus"></i> Thêm bàn
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tables Grid -->
+            <div class="content-card">
+                <div class="card-title-bar">
+                    <h3><i class="fas fa-table"></i> Danh sách bàn</h3>
+                </div>
+                <div class="card-content">
+                    <!-- Empty State -->
+                    <div ng-if="vm.filteredTables.length === 0" style="text-align: center; padding: 50px;">
+                        <i class="fas fa-table" style="font-size: 64px; color: #dfe6e9;"></i>
+                        <p style="margin-top: 20px; color: #7f8c8d; font-size: 16px;">Không tìm thấy bàn nào</p>
+                    </div>
+
+                    <!-- Tables Grid -->
+                    <div ng-if="vm.filteredTables.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                        <div ng-repeat="table in vm.filteredTables" 
+                                 class="content-card" 
+                                 style="overflow: hidden; transition: all 0.3s; cursor: pointer;"
+                                 ng-style="{'border-left': '4px solid ' + vm.getStatusConfig(table.status).color}"
+                                 ng-click="vm.openDetailModal(table)">
+                            
+                            <!-- Card Header with Status Badge -->
+                            <div style="padding: 20px 20px 15px 20px; border-bottom: 1px solid #ecf0f1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h3 style="font-size: 20px; font-weight: 600; color: #2c3e50; margin: 0;">
+                                        <i class="fas fa-table"></i> {{table.name}}
+                                    </h3>
+                                    <span class="badge badge-{{vm.getStatusConfig(table.status).class}}" 
+                                          style="font-size: 11px; padding: 6px 12px; border-radius: 20px; font-weight: 600;">
+                                        <i class="fas fa-{{vm.getStatusConfig(table.status).icon}}"></i> 
+                                        {{vm.getStatusConfig(table.status).label}}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Body -->
+                            <div class="card-content" style="padding: 20px;">
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <div style="display: flex; align-items: center; gap: 10px; color: #7f8c8d; font-size: 14px;">
+                                        <i class="fas fa-chair" style="width: 20px; color: #3498db;"></i>
+                                        <span><strong>{{table.capacity}}</strong> chỗ ngồi</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 10px; color: #7f8c8d; font-size: 14px;">
+                                        <i class="fas fa-map-marker-alt" style="width: 20px; color: #3498db;"></i>
+                                        <span>{{vm.areaLabels[table.area]}}</span>
+                                    </div>
+                                    <div ng-if="table.currentOrderId" style="display: flex; align-items: center; gap: 10px; color: #7f8c8d; font-size: 14px;">
+                                        <i class="fas fa-receipt" style="width: 20px; color: #e67e22;"></i>
+                                        <span>Đơn: <strong>{{table.currentOrderId}}</strong></span>
+                                    </div>
+                                    <div ng-if="table.note" style="display: flex; align-items: center; gap: 10px; color: #7f8c8d; font-size: 14px;">
+                                        <i class="fas fa-sticky-note" style="width: 20px; color: #f39c12;"></i>
+                                        <span style="font-style: italic;">{{table.note}}</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Action Button -->
+                                <button 
+                                    ng-click="vm.changeTableStatus(table.id); $event.stopPropagation()" 
+                                    class="btn btn-primary"
+                                    style="width: 100%; margin-top: 20px; padding: 12px; font-size: 14px; justify-content: center;">
+                                    <i class="fas fa-sync-alt"></i> Đổi trạng thái
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Add/Edit Table Modal -->
+<div ng-if="vm.showAddModal" class="modal-overlay" ng-click="vm.closeModal()">
+    <div class="content-card" ng-click="$event.stopPropagation()" style="width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease;">
+        <div class="card-title-bar">
+            <h3>
+                <i class="fas" ng-class="{'fa-plus': !vm.isEditing, 'fa-edit': vm.isEditing}"></i> 
+                {{vm.isEditing ? 'Chỉnh sửa bàn' : 'Thêm bàn mới'}}
+            </h3>
+            <button ng-click="vm.closeModal()" style="background: none; border: none; font-size: 24px; color: #7f8c8d; cursor: pointer; transition: color 0.3s;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="card-content">
+            <form ng-submit="vm.saveTable()">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        Tên bàn <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        ng-model="vm.tableForm.name" 
+                        placeholder="VD: Bàn 1" 
+                        required
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                        onfocus="this.style.borderColor='#3498db'"
+                        onblur="this.style.borderColor='#ecf0f1'">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        Số chỗ ngồi <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        ng-model="vm.tableForm.capacity" 
+                        min="1" 
+                        max="20" 
+                        placeholder="VD: 4" 
+                        required
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                        onfocus="this.style.borderColor='#3498db'"
+                        onblur="this.style.borderColor='#ecf0f1'">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        Khu vực <span style="color: #e74c3c;">*</span>
+                    </label>
+                    <select 
+                        ng-model="vm.tableForm.area" 
+                        required
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.3s;"
+                        onfocus="this.style.borderColor='#3498db'"
+                        onblur="this.style.borderColor='#ecf0f1'">
+                        <option value="">Chọn khu vực</option>
+                        <option value="indoor">Trong nhà</option>
+                        <option value="outdoor">Ngoài trời</option>
+                        <option value="vip">VIP</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                        Ghi chú
+                    </label>
+                    <textarea 
+                        ng-model="vm.tableForm.note" 
+                        rows="3" 
+                        placeholder="Ghi chú về bàn (tùy chọn)"
+                        style="width: 100%; padding: 12px 15px; border: 1px solid #ecf0f1; border-radius: 8px; font-size: 14px; resize: vertical; transition: all 0.3s;"
+                        onfocus="this.style.borderColor='#3498db'"
+                        onblur="this.style.borderColor='#ecf0f1'"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 25px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                    <button type="button" ng-click="vm.closeModal()" class="btn btn-secondary" style="flex: 1;">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Table Detail Modal -->
+<div ng-if="vm.showDetailModal" class="modal-overlay" ng-click="vm.closeDetailModal()">
+    <div class="content-card" ng-click="$event.stopPropagation()" style="width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease;">
+        <div class="card-title-bar">
+            <h3><i class="fas fa-table"></i> {{vm.currentTable.name}}</h3>
+            <button ng-click="vm.closeDetailModal()" style="background: none; border: none; font-size: 24px; color: #7f8c8d; cursor: pointer; transition: color 0.3s;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="card-content">
+            <!-- Basic Info -->
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h4 style="margin: 0 0 15px 0; font-size: 16px; font-weight: 600; color: #2c3e50;">Thông tin cơ bản</h4>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                    <div>
+                        <strong style="color: #7f8c8d; font-size: 12px;">TRẠNG THÁI</strong>
+                        <p style="margin: 5px 0 0 0;">
+                            <span class="badge badge-{{vm.getStatusConfig(vm.currentTable.status).class}}">
+                                <i class="fas fa-{{vm.getStatusConfig(vm.currentTable.status).icon}}"></i> 
+                                {{vm.getStatusConfig(vm.currentTable.status).label}}
+                            </span>
+                        </p>
+                    </div>
+                    <div>
+                        <strong style="color: #7f8c8d; font-size: 12px;">SỐ CHỖ NGỒI</strong>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">{{vm.currentTable.capacity}} người</p>
+                    </div>
+                    <div>
+                        <strong style="color: #7f8c8d; font-size: 12px;">KHU VỰC</strong>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">{{vm.areaLabels[vm.currentTable.area]}}</p>
+                    </div>
+                    <div ng-if="vm.currentTable.note">
+                        <strong style="color: #7f8c8d; font-size: 12px;">GHI CHÚ</strong>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">{{vm.currentTable.note}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Order Info -->
+            <div ng-if="vm.currentTable.currentOrderId" style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; color: #856404;">
+                    <i class="fas fa-receipt"></i> Đơn hàng hiện tại
+                </h4>
+                <p style="margin: 0 0 10px 0; font-size: 14px; color: #856404;">Mã đơn: <strong>{{vm.currentTable.currentOrderId}}</strong></p>
+                <a href="#!/orders?orderId={{vm.currentTable.currentOrderId}}" class="btn btn-info" style="width: 100%;">
+                    <i class="fas fa-eye"></i> Xem chi tiết đơn hàng
+                </a>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Available Status Actions -->
+                <div ng-if="vm.currentTable.status === 'available'">
+                    <button class="btn btn-success" style="width: 100%;" ng-click="vm.createOrderForTable(vm.currentTable.id)">
+                        <i class="fas fa-plus-circle"></i> Tạo đơn hàng
+                    </button>
+                    <button class="btn" style="width: 100%; background: #ffc107; color: #856404; margin-top: 10px;" ng-click="vm.reserveTable(vm.currentTable.id)">
+                        <i class="fas fa-clock"></i> Đặt bàn
+                    </button>
+                </div>
+
+                <!-- Occupied Status Actions -->
+                <button ng-if="vm.currentTable.status === 'occupied'" class="btn btn-success" style="width: 100%;" ng-click="vm.completeTable(vm.currentTable.id)">
+                    <i class="fas fa-money-bill-wave"></i> Thanh toán
+                </button>
+
+                <!-- Reserved Status Actions -->
+                <div ng-if="vm.currentTable.status === 'reserved'">
+                    <button class="btn btn-primary" style="width: 100%;" ng-click="vm.startService(vm.currentTable.id)">
+                        <i class="fas fa-play"></i> Bắt đầu phục vụ
+                    </button>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;" ng-click="vm.cancelReservation(vm.currentTable.id)">
+                        <i class="fas fa-times"></i> Hủy đặt bàn
+                    </button>
+                </div>
+
+                <!-- Common Actions -->
+                <button class="btn btn-info" style="width: 100%; margin-top: 10px;" ng-click="vm.openEditModal(vm.currentTable)">
+                    <i class="fas fa-edit"></i> Chỉnh sửa bàn
+                </button>
+                <button class="btn btn-danger" style="width: 100%;" ng-click="vm.deleteTable(vm.currentTable.id)">
+                    <i class="fas fa-trash"></i> Xóa bàn
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS Styles for Tables -->
+<style>
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: #3498db;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+.btn-success {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #229954;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+.btn-info {
+    background: #3498db;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #2980b9;
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.badge-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Dark mode support */
+body.dark-mode {
+    background: #1a1a2e;
+}
+
+body.dark-mode .dashboard-wrapper {
+    background: #1a1a2e;
+}
+
+body.dark-mode .top-header {
+    background: #16213e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .page-title {
+    color: #fff;
+}
+
+body.dark-mode .btn-menu,
+body.dark-mode .btn-theme {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .btn-menu:hover,
+body.dark-mode .btn-theme:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+body.dark-mode .current-time {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .content-area {
+    background: #1a1a2e;
+}
+
+body.dark-mode .stat-card {
+    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .stat-number {
+    color: #fff;
+}
+
+body.dark-mode .stat-label {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .content-card {
+    background: #16213e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .card-title-bar {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .card-title-bar h3 {
+    color: #fff;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="number"],
+body.dark-mode select,
+body.dark-mode textarea {
+    background: #0f3460;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+body.dark-mode input[type="text"]:focus,
+body.dark-mode input[type="number"]:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+    border-color: #3498db;
+    background: #16213e;
+}
+
+body.dark-mode input[type="text"]::placeholder,
+body.dark-mode select option {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark-mode .btn {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .btn-primary {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    border-color: #3498db;
+}
+
+body.dark-mode .btn-primary:hover {
+    background: #3498db;
+    color: #fff;
+}
+
+body.dark-mode .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+body.dark-mode .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .btn-success {
+    background: rgba(39, 174, 96, 0.2);
+    color: #27ae60;
+    border-color: #27ae60;
+}
+
+body.dark-mode .btn-success:hover {
+    background: #27ae60;
+    color: #fff;
+}
+
+body.dark-mode .btn-danger {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+body.dark-mode .btn-danger:hover {
+    background: #e74c3c;
+    color: #fff;
+}
+
+body.dark-mode .btn-info {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+    border-color: #3498db;
+}
+
+body.dark-mode .btn-info:hover {
+    background: #3498db;
+    color: #fff;
+}
+
+body.dark-mode .modal-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .badge-success {
+    background: #155724;
+    color: #d4edda;
+}
+
+body.dark-mode .badge-danger {
+    background: #721c24;
+    color: #f8d7da;
+}
+
+body.dark-mode .badge-warning {
+    background: #856404;
+    color: #fff3cd;
+}
+
+body.dark-mode .table-status-badge.success {
+    background: #155724;
+    color: #d4edda;
+}
+
+body.dark-mode .table-status-badge.danger {
+    background: #721c24;
+    color: #f8d7da;
+}
+
+body.dark-mode .table-status-badge.warning {
+    background: #856404;
+    color: #fff3cd;
+}
+
+body.dark-mode .form-group label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-mode .empty-state {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.dark-mode .empty-state i {
+    opacity: 0.2;
+}
+</style>
+
