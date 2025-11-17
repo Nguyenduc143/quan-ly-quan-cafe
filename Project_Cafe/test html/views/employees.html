@@ -1,0 +1,616 @@
+<!-- Employees View -->
+<div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-coffee"></i>
+            <h2>Coffee BOH</h2>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a href="#!/dashboard" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#!/menu" class="menu-item">
+                <i class="fas fa-mug-hot"></i>
+                <span>Quản lý Menu</span>
+            </a>
+            <a href="#!/orders" class="menu-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Đơn hàng</span>
+            </a>
+            <a href="#!/tables" class="menu-item">
+                <i class="fas fa-table"></i>
+                <span>Sơ đồ bàn</span>
+            </a>
+            <a href="#!/inventory" class="menu-item">
+                <i class="fas fa-warehouse"></i>
+                <span>Kho nguyên liệu</span>
+            </a>
+            <a href="#!/employees" class="menu-item active">
+                <i class="fas fa-users"></i>
+                <span>Nhân viên</span>
+            </a>
+            <a href="#!/reports" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Báo cáo</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-bottom">
+            <div class="user-profile">
+                <i class="fas fa-user-circle"></i>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-weight: 600;" title="{{ vm.currentUser.username }}">{{ vm.currentUser.name || 'User' }}</span>
+                    <span style="font-size: 11px; color: #95a5a6;">{{ vm.currentUser.role || 'Nhân viên' }}</span>
+                </div>
+            </div>
+            <button ng-click="vm.logout()" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-area">
+        <!-- Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button ng-click="vm.toggleSidebar()" class="btn-menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Quản lý Nhân viên</h1>
+            </div>
+            <div class="header-right">
+                <button ng-click="vm.toggleTheme()" class="btn-theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <span class="current-time">{{ vm.currentDateTime }}</span>
+            </div>
+        </header>
+        
+        <!-- Dashboard Content -->
+        <div class="content-area">
+            <!-- Tabs Navigation -->
+            <div style="background: white; border-radius: 12px; padding: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden;">
+                <div style="display: flex; border-bottom: 2px solid #f1f3f5;">
+                    <button ng-click="vm.activeTab = 'employees'" 
+                            style="flex: 1; padding: 16px 24px; border: none; background: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; border-bottom: 3px solid transparent;"
+                            ng-style="vm.activeTab === 'employees' ? {'color': '#3498db', 'border-bottom-color': '#3498db', 'background': '#f8f9fa'} : {'color': '#6c757d', 'border-bottom-color': 'transparent'}">
+                        <i class="fas fa-users"></i> Quản lý Nhân viên
+                    </button>
+                    <button ng-click="vm.activeTab = 'accounts'" 
+                            style="flex: 1; padding: 16px 24px; border: none; background: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; border-bottom: 3px solid transparent;"
+                            ng-style="vm.activeTab === 'accounts' ? {'color': '#3498db', 'border-bottom-color': '#3498db', 'background': '#f8f9fa'} : {'color': '#6c757d', 'border-bottom-color': 'transparent'}">
+                        <i class="fas fa-user-lock"></i> Quản lý Tài khoản
+                    </button>
+                </div>
+            </div>
+
+            <!-- Employees Tab Content -->
+            <div ng-if="vm.activeTab === 'employees'">
+                <!-- Toolbar -->
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <!-- Total Employees Card -->
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; min-width: 180px;">
+                            <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-users" style="font-size: 24px; color: white;"></i>
+                            </div>
+                            <div>
+                                <h3 style="font-size: 28px; font-weight: 700; color: white; margin: 0; line-height: 1;">{{ vm.employees.length }}</h3>
+                                <p style="font-size: 13px; color: rgba(255,255,255,0.9); margin: 0; font-weight: 500;">Tổng nhân viên</p>
+                            </div>
+                        </div>
+                    
+                    <!-- Search Box -->
+                    <div style="position: relative; flex: 2;">
+                        <input 
+                            type="text" 
+                            ng-model="vm.searchQuery"
+                            placeholder="Tìm kiếm nhân viên..."
+                            style="width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                            onfocus="this.style.borderColor='#3498db'; this.style.boxShadow='0 0 0 3px rgba(52, 152, 219, 0.08)'"
+                            onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
+                    </div>
+                    
+                    <!-- Role Filter -->
+                    <select 
+                        ng-model="vm.filterRole"
+                        style="padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; width: auto; transition: all 0.3s; cursor: pointer; background: white;"
+                        onfocus="this.style.borderColor='#3498db'"
+                        onblur="this.style.borderColor='#e0e0e0'">
+                        <option value="all">Tất cả chức vụ</option>
+                        <option value="Quản lý">Quản lý</option>
+                        <option value="Thu ngân">Thu ngân</option>
+                        <option value="Pha chế">Pha chế</option>
+                        <option value="Phục vụ">Phục vụ</option>
+                    </select>
+                    
+                    <!-- Add Button - Chỉ Admin mới thấy -->
+                    <button ng-if="vm.currentUser.role === 'Quản lý'" 
+                            ng-click="vm.openEmployeeModal()" 
+                            style="padding: 12px 24px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; white-space: nowrap;"
+                            onmouseover="this.style.background='#2980b9'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(52, 152, 219, 0.3)'"
+                            onmouseout="this.style.background='#3498db'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <i class="fas fa-plus"></i>
+                        Thêm nhân viên
+                    </button>
+                    
+                    <!-- Message for non-admin users -->
+                    <div ng-if="vm.currentUser.role !== 'Quản lý'" 
+                         style="padding: 12px 20px; background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; border-radius: 8px; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Chỉ quản lý mới có quyền thêm nhân viên</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employees Table -->
+            <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;">
+                <div ng-if="vm.isLoading" style="text-align: center; padding: 80px 20px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #3498db;"></i>
+                    <p style="margin-top: 20px; color: #7f8c8d; font-size: 15px;">Đang tải dữ liệu...</p>
+                </div>
+
+                <div ng-if="!vm.isLoading && vm.filterEmployees().length === 0" style="text-align: center; padding: 80px 20px;">
+                    <i class="fas fa-users" style="font-size: 64px; color: #dfe6e9;"></i>
+                    <p style="margin-top: 20px; color: #95a5a6; font-size: 16px; font-style: italic;">Không tìm thấy nhân viên nào</p>
+                </div>
+
+                <table ng-if="!vm.isLoading && vm.filterEmployees().length > 0" style="width: 100%; border-collapse: collapse;"
+                    <thead style="background: #f8f9fa; border-bottom: 2px solid #ecf0f1;">
+                        <tr>
+                            <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">STT</th>
+                            <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Họ tên</th>
+                            <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Giới tính</th>
+                            <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Ngày sinh</th>
+                            <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Chức vụ</th>
+                            <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Lương</th>
+                            <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Số điện thoại</th>
+                            <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Địa chỉ</th>
+                            <th style="padding: 16px 20px; text-align: center; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="employee in vm.filterEmployees()" style="border-bottom: 1px solid #f1f3f5; transition: background 0.2s;"
+                            onmouseover="this.style.background='#f8f9fa'"
+                            onmouseout="this.style.background='white'">
+                            <td style="padding: 16px 20px; color: #2c3e50; font-weight: 600; font-size: 14px;">#{{ $index + 1 }}</td>
+                            <td style="padding: 16px 20px; color: #2c3e50; font-weight: 500; font-size: 14px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-user-circle" style="font-size: 24px; color: #3498db;"></i>
+                                    <span>{{ employee.name }}</span>
+                                </div>
+                            </td>
+                            <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">
+                                <span ng-if="employee.gender === 'Nam'" style="color: #3498db;">
+                                    <i class="fas fa-mars"></i> Nam
+                                </span>
+                                <span ng-if="employee.gender === 'Nữ'" style="color: #e91e63;">
+                                    <i class="fas fa-venus"></i> Nữ
+                                </span>
+                                <span ng-if="!employee.gender">-</span>
+                            </td>
+                            <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ employee.birthDate | date:'dd/MM/yyyy' || '-' }}</td>
+                            <td style="padding: 16px 20px;">
+                                <span style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;"
+                                    ng-style="{
+                                        'background': employee.role === 'Quản lý' ? '#fee2e2' : employee.role === 'Thu ngân' ? '#dbeafe' : employee.role === 'Pha chế' ? '#e0e7ff' : '#f3f4f6',
+                                        'color': employee.role === 'Quản lý' ? '#dc2626' : employee.role === 'Thu ngân' ? '#2563eb' : employee.role === 'Pha chế' ? '#6366f1' : '#6b7280'
+                                    }">
+                                    {{ employee.role }}
+                                </span>
+                            </td>
+                            <td style="padding: 16px 20px; color: #27ae60; font-size: 14px; font-weight: 600;">
+                                <span ng-if="employee.salary">{{ employee.salary | number:0 }} VNĐ</span>
+                                <span ng-if="!employee.salary">-</span>
+                            </td>
+                            <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ employee.phone || '-' }}</td>
+                            <td style="padding: 16px 20px; color: #6c757d; font-size: 14px;">{{ employee.address || '-' }}</td>
+                            <td style="padding: 16px 20px; text-align: center;">
+                                <!-- Chỉ Admin mới thấy nút Sửa/Xóa -->
+                                <span ng-if="vm.currentUser.role === 'Quản lý'">
+                                    <button ng-click="vm.editEmployee(employee)" style="padding: 8px 12px; background: #17a2b8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 6px; transition: all 0.2s;"
+                                        onmouseover="this.style.background='#138496'; this.style.transform='translateY(-1px)'"
+                                        onmouseout="this.style.background='#17a2b8'; this.style.transform='translateY(0)'">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button ng-click="vm.deleteEmployee(employee.id)" style="padding: 8px 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;"
+                                        onmouseover="this.style.background='#c82333'; this.style.transform='translateY(-1px)'"
+                                        onmouseout="this.style.background='#dc3545'; this.style.transform='translateY(0)'">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </span>
+                                <!-- Non-admin chỉ xem -->
+                                <span ng-if="vm.currentUser.role !== 'Quản lý'" style="color: #95a5a6; font-size: 13px; font-style: italic;">
+                                    <i class="fas fa-eye"></i> Chỉ xem
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            <!-- End Employees Tab -->
+
+            <!-- Accounts Tab Content -->
+            <div ng-if="vm.activeTab === 'accounts'">
+                <!-- Toolbar -->
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <!-- Total Accounts Card -->
+                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 12px; min-width: 180px;">
+                            <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-user-lock" style="font-size: 24px; color: white;"></i>
+                            </div>
+                            <div>
+                                <h3 style="font-size: 28px; font-weight: 700; color: white; margin: 0; line-height: 1;">{{ vm.accounts.length }}</h3>
+                                <p style="font-size: 13px; color: rgba(255,255,255,0.9); margin: 0; font-weight: 500;">Tổng tài khoản</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Search Box -->
+                        <div style="position: relative; flex: 2;">
+                            <input 
+                                type="text" 
+                                ng-model="vm.searchAccountQuery"
+                                placeholder="Tìm kiếm tài khoản..."
+                                style="width: 100%; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: all 0.3s;"
+                                onfocus="this.style.borderColor='#3498db'; this.style.boxShadow='0 0 0 3px rgba(52, 152, 219, 0.08)'"
+                                onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'">
+                        </div>
+                        
+                        <!-- Add Button - Chỉ Admin mới thấy -->
+                        <button ng-if="vm.currentUser.role === 'Quản lý'" 
+                                ng-click="vm.openAccountModal()" 
+                                style="padding: 12px 24px; background: #3498db; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s; white-space: nowrap;"
+                                onmouseover="this.style.background='#2980b9'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(52, 152, 219, 0.3)'"
+                                onmouseout="this.style.background='#3498db'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <i class="fas fa-plus"></i>
+                            Thêm tài khoản
+                        </button>
+                        
+                        <!-- Message for non-admin users -->
+                        <div ng-if="vm.currentUser.role !== 'Quản lý'" 
+                             style="padding: 12px 20px; background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; border-radius: 8px; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Chỉ quản lý mới có quyền thêm tài khoản</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accounts Table -->
+                <div style="background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden;">
+                    <div ng-if="vm.isLoading" style="text-align: center; padding: 80px 20px;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #3498db;"></i>
+                        <p style="margin-top: 20px; color: #7f8c8d; font-size: 15px;">Đang tải dữ liệu...</p>
+                    </div>
+
+                    <div ng-if="!vm.isLoading && vm.filterAccounts().length === 0" style="text-align: center; padding: 80px 20px;">
+                        <i class="fas fa-user-lock" style="font-size: 64px; color: #dfe6e9;"></i>
+                        <p style="margin-top: 20px; color: #95a5a6; font-size: 16px; font-style: italic;">Không tìm thấy tài khoản nào</p>
+                    </div>
+
+                    <table ng-if="!vm.isLoading && vm.filterAccounts().length > 0" style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #f8f9fa; border-bottom: 2px solid #ecf0f1;">
+                            <tr>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">STT</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Tên đăng nhập</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Họ tên</th>
+                                <th style="padding: 16px 20px; text-align: left; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Chức vụ</th>
+                                <th style="padding: 16px 20px; text-align: center; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Mật khẩu</th>
+                                <th style="padding: 16px 20px; text-align: center; font-weight: 600; color: #6c757d; font-size: 13px; text-transform: uppercase;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="account in vm.filterAccounts()" style="border-bottom: 1px solid #f1f3f5; transition: background 0.2s;"
+                                onmouseover="this.style.background='#f8f9fa'"
+                                onmouseout="this.style.background='white'">
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 600; font-size: 14px;">#{{ $index + 1 }}</td>
+                                <td style="padding: 16px 20px;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <i class="fas fa-user-circle" style="font-size: 24px; color: #e74c3c;"></i>
+                                        <span style="color: #2c3e50; font-weight: 500;">{{ account.username || 'N/A' }}</span>
+                                    </div>
+                                </td>
+                                <td style="padding: 16px 20px; color: #2c3e50; font-weight: 500; font-size: 14px;">{{ account.name }}</td>
+                                <td style="padding: 16px 20px;">
+                                    <span style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;"
+                                        ng-style="{
+                                            'background': account.role === 'Quản lý' ? '#fee2e2' : account.role === 'Thu ngân' ? '#dbeafe' : account.role === 'Pha chế' ? '#e0e7ff' : '#f3f4f6',
+                                            'color': account.role === 'Quản lý' ? '#dc2626' : account.role === 'Thu ngân' ? '#2563eb' : account.role === 'Pha chế' ? '#6366f1' : '#6b7280'
+                                        }">
+                                        {{ account.role }}
+                                    </span>
+                                </td>
+                                <td style="padding: 16px 20px; text-align: center;">
+                                    <span style="display: inline-block; padding: 8px 16px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; font-family: monospace; color: #856404; font-weight: 600; letter-spacing: 1px; font-size: 13px;">{{ account.password }}</span>
+                                </td>
+                                <td style="padding: 16px 20px; text-align: center;">
+                                    <!-- Chỉ Admin mới thấy nút Sửa/Xóa -->
+                                    <span ng-if="vm.currentUser.role === 'Quản lý'">
+                                        <button ng-click="vm.editAccount(account)" style="padding: 8px 12px; background: #17a2b8; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 6px; transition: all 0.2s;"
+                                            onmouseover="this.style.background='#138496'; this.style.transform='translateY(-1px)'"
+                                            onmouseout="this.style.background='#17a2b8'; this.style.transform='translateY(0)'">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button ng-click="vm.deleteEmployee(account.id)" style="padding: 8px 12px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; transition: all 0.2s;"
+                                            onmouseover="this.style.background='#c82333'; this.style.transform='translateY(-1px)'"
+                                            onmouseout="this.style.background='#dc3545'; this.style.transform='translateY(0)'">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </span>
+                                    <!-- Non-admin chỉ xem -->
+                                    <span ng-if="vm.currentUser.role !== 'Quản lý'" style="color: #95a5a6; font-size: 13px; font-style: italic;">
+                                        <i class="fas fa-eye"></i> Chỉ xem
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End Accounts Tab -->
+        </div>
+    </main>
+</div>
+
+<!-- Employee/Account Modal -->
+<div ng-if="vm.showEmployeeModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px;">
+    <div style="background: white; border-radius: 12px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+        <!-- Modal Header -->
+        <div style="padding: 24px; border-bottom: 1px solid #ecf0f1; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #2c3e50;">
+                <i ng-class="vm.activeTab === 'accounts' ? 'fas fa-user-lock' : 'fas fa-user-plus'" style="color: #3498db; margin-right: 10px;"></i>
+                {{ vm.currentEmployee.id ? 'Cập nhật' : 'Thêm' }} {{ vm.activeTab === 'accounts' ? 'tài khoản' : 'nhân viên' }}
+            </h2>
+            <button ng-click="vm.closeEmployeeModal()" style="background: none; border: none; font-size: 24px; color: #95a5a6; cursor: pointer; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s;"
+                onmouseover="this.style.background='#f8f9fa'; this.style.color='#2c3e50'"
+                onmouseout="this.style.background='none'; this.style.color='#95a5a6'">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div style="padding: 30px;">
+            <!-- Employee Form -->
+            <form name="employeeForm" ng-submit="vm.saveEmployee()" ng-if="vm.activeTab === 'employees'">
+                <!-- Họ và tên -->
+                <div style="margin-bottom: 24px;">
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                        <i class="fas fa-user" style="color: #3498db; font-size: 16px;"></i>
+                        Họ và tên <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        ng-model="vm.currentEmployee.name" 
+                        placeholder="Nhập họ và tên nhân viên..."
+                        required
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa;"
+                        onfocus="this.style.borderColor='#3498db'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(52, 152, 219, 0.1)'"
+                        onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                </div>
+                
+                <!-- Giới tính và Ngày sinh -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                    <div>
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                            <i class="fas fa-venus-mars" style="color: #e91e63; font-size: 16px;"></i>
+                            Giới tính <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                        </label>
+                        <div style="position: relative;">
+                            <select 
+                                ng-model="vm.currentEmployee.gender" 
+                                required
+                                style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa; cursor: pointer; appearance: none;"
+                                onfocus="this.style.borderColor='#e91e63'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(233, 30, 99, 0.1)'"
+                                onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                                <option value="">-- Chọn giới tính --</option>
+                                <option value="Nam">👨 Nam</option>
+                                <option value="Nữ">👩 Nữ</option>
+                            </select>
+                            <i class="fas fa-chevron-down" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #95a5a6; pointer-events: none;"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                            <i class="fas fa-birthday-cake" style="color: #f39c12; font-size: 16px;"></i>
+                            Ngày sinh <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                        </label>
+                        <input 
+                            type="date" 
+                            ng-model="vm.currentEmployee.birthDate" 
+                            required
+                            style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa;"
+                            onfocus="this.style.borderColor='#f39c12'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(243, 156, 18, 0.1)'"
+                            onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                    </div>
+                </div>
+                
+                <!-- Chức vụ -->
+                <div style="margin-bottom: 24px;">
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                        <i class="fas fa-briefcase" style="color: #9b59b6; font-size: 16px;"></i>
+                        Chức vụ <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                    </label>
+                    <div style="position: relative;">
+                        <select 
+                            ng-model="vm.currentEmployee.role" 
+                            required
+                            style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa; cursor: pointer; appearance: none;"
+                            onfocus="this.style.borderColor='#9b59b6'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(155, 89, 182, 0.1)'"
+                            onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                            <option value="">-- Chọn chức vụ --</option>
+                            <option value="Quản lý">👔 Quản lý</option>
+                            <option value="Thu ngân">💰 Thu ngân</option>
+                            <option value="Pha chế">☕ Pha chế</option>
+                            <option value="Phục vụ">🍽️ Phục vụ</option>
+                        </select>
+                        <i class="fas fa-chevron-down" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #95a5a6; pointer-events: none;"></i>
+                    </div>
+                </div>
+                
+                <!-- Lương -->
+                <div style="margin-bottom: 24px;">
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                        <i class="fas fa-money-bill-wave" style="color: #27ae60; font-size: 16px;"></i>
+                        Lương (VNĐ) <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        ng-model="vm.currentEmployee.salary" 
+                        placeholder="Nhập lương..."
+                        required
+                        min="0"
+                        step="100000"
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa;"
+                        onfocus="this.style.borderColor='#27ae60'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(39, 174, 96, 0.1)'"
+                        onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                </div>
+                
+                <!-- Số điện thoại và Địa chỉ -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+                    <div>
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                            <i class="fas fa-phone" style="color: #27ae60; font-size: 16px;"></i>
+                            Số điện thoại
+                        </label>
+                        <input 
+                            type="tel" 
+                            ng-model="vm.currentEmployee.phone" 
+                            placeholder="0123456789"
+                            pattern="0[0-9]{9}"
+                            style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa;"
+                            onfocus="this.style.borderColor='#27ae60'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(39, 174, 96, 0.1)'"
+                            onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                    </div>
+                    <div>
+                        <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                            <i class="fas fa-map-marker-alt" style="color: #e74c3c; font-size: 16px;"></i>
+                            Địa chỉ
+                        </label>
+                        <input 
+                            type="text" 
+                            ng-model="vm.currentEmployee.address"
+                            placeholder="Nhập địa chỉ..."
+                            style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa;"
+                            onfocus="this.style.borderColor='#e74c3c'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(231, 76, 60, 0.1)'"
+                            onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
+                    <button type="button" ng-click="vm.closeEmployeeModal()" style="padding: 12px 24px; background: white; color: #7f8c8d; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#f8f9fa'"
+                        onmouseout="this.style.background='white'">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#218838'; this.style.transform='translateY(-1px)'"
+                        onmouseout="this.style.background='#28a745'; this.style.transform='translateY(0)'">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Account Form -->
+            <form name="accountForm" ng-submit="vm.saveAccount()" ng-if="vm.activeTab === 'accounts'">
+                <!-- Tên đăng nhập -->
+                <div style="margin-bottom: 24px;">
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                        <i class="fas fa-user-circle" style="color: #3498db; font-size: 16px;"></i>
+                        Tên đăng nhập <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        ng-model="vm.currentEmployee.username" 
+                        ng-disabled="vm.currentEmployee.id"
+                        placeholder="Nhập tên đăng nhập..."
+                        required
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa;"
+                        onfocus="this.style.borderColor='#3498db'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(52, 152, 219, 0.1)'"
+                        onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                </div>
+                
+                <!-- Mật khẩu cũ (chỉ hiển thị khi cập nhật) -->
+                <div style="margin-bottom: 24px;" ng-if="vm.currentEmployee.id">
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                        <i class="fas fa-lock" style="color: #95a5a6; font-size: 16px;"></i>
+                        Mật khẩu cũ <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        ng-model="vm.currentEmployee.oldPassword" 
+                        placeholder="Nhập mật khẩu cũ..."
+                        required
+                        minlength="6"
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa;"
+                        onfocus="this.style.borderColor='#95a5a6'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(149, 165, 166, 0.1)'"
+                        onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                </div>
+                
+                <!-- Mật khẩu mới -->
+                <div style="margin-bottom: 24px;">
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                        <i class="fas fa-key" style="color: #e74c3c; font-size: 16px;"></i>
+                        {{ vm.currentEmployee.id ? 'Mật khẩu mới' : 'Mật khẩu' }} <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        ng-model="vm.currentEmployee.newPassword" 
+                        placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)..."
+                        required
+                        minlength="6"
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa;"
+                        onfocus="this.style.borderColor='#e74c3c'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(231, 76, 60, 0.1)'"
+                        onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                </div>
+                
+                <!-- Chọn nhân viên (chỉ khi tạo mới) -->
+                <div style="margin-bottom: 24px;" ng-if="!vm.currentEmployee.id">
+                    <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 600; color: #2c3e50; font-size: 15px;">
+                        <i class="fas fa-user" style="color: #9b59b6; font-size: 16px;"></i>
+                        Nhân viên <span style="color: #e74c3c; margin-left: 4px;">*</span>
+                    </label>
+                    <select 
+                        ng-model="vm.currentEmployee.selectedEmployeeId" 
+                        ng-change="vm.onEmployeeSelect()"
+                        required
+                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8ecef; border-radius: 10px; font-size: 15px; transition: all 0.3s; background: #f8f9fa; cursor: pointer;"
+                        onfocus="this.style.borderColor='#9b59b6'; this.style.background='white'; this.style.boxShadow='0 0 0 4px rgba(155, 89, 182, 0.1)'"
+                        onblur="this.style.borderColor='#e8ecef'; this.style.background='#f8f9fa'; this.style.boxShadow='none'">
+                        <option value="">-- Chọn nhân viên --</option>
+                        <option ng-repeat="emp in vm.employees" value="{{ emp.id }}">{{ emp.name }} - {{ emp.role }}</option>
+                    </select>
+                </div>
+                
+                <!-- Hiển thị thông tin nhân viên khi cập nhật -->
+                <div style="margin-bottom: 24px; padding: 16px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #9b59b6;" ng-if="vm.currentEmployee.id">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-user-circle" style="font-size: 32px; color: #9b59b6;"></i>
+                        <div>
+                            <p style="margin: 0; font-weight: 600; color: #2c3e50; font-size: 16px;">{{ vm.currentEmployee.name }}</p>
+                            <p style="margin: 0; color: #7f8c8d; font-size: 13px;">{{ vm.currentEmployee.role }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
+                    <button type="button" ng-click="vm.closeEmployeeModal()" style="padding: 12px 24px; background: white; color: #7f8c8d; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#f8f9fa'"
+                        onmouseout="this.style.background='white'">
+                        <i class="fas fa-times"></i> Hủy
+                    </button>
+                    <button type="submit" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        onmouseover="this.style.background='#218838'; this.style.transform='translateY(-1px)'"
+                        onmouseout="this.style.background='#28a745'; this.style.transform='translateY(0)'">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
