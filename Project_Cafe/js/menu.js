@@ -199,7 +199,7 @@ function saveProduct() {
     const name = document.getElementById('productName').value.trim();
     const category = document.getElementById('productCategory').value;
     const price = parseFloat(document.getElementById('productPrice').value);
-    const image = document.getElementById('productImage').value.trim();
+    let image = document.getElementById('productImage').value.trim();
     const description = document.getElementById('productDescription').value.trim();
     const inStock = document.getElementById('productInStock').checked;
     
@@ -212,6 +212,13 @@ function saveProduct() {
     if (price < 0) {
         showNotification('Giá sản phẩm không hợp lệ!', 'error');
         return;
+    }
+    
+    // Xử lý đường dẫn ảnh - tự động thêm /assets/images/ nếu chỉ nhập tên file
+    if (image && !image.startsWith('http') && !image.startsWith('/') && !image.startsWith('.')) {
+        image = '../assets/images/' + image;
+    } else if (image && image.startsWith('/assets/images/')) {
+        image = '..' + image;
     }
     
     let products = getLocalStorage('products', []);
